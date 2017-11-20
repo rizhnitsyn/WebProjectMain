@@ -1,10 +1,12 @@
 package DTO;
 
+import entities.Forecast;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Date;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -19,4 +21,10 @@ public class MatchDto {
     private int firstTeamId;
     private int secondTeamId;
     private Long tournamentId;
+    private int forecastsCount;
+    private Set<Forecast> forecasts;
+    private Forecast currentUserForecast;
+    private int firstTeamWinCount;
+    private int secondTeamWinCount;
+    private int drawCount;
 }

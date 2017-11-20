@@ -20,6 +20,5 @@
     <p>Счет матча ${requestScope.match.firstTeamResult} - ${requestScope.match.secondTeamResult}</p>
     <button type="submit" name="id" value="${requestScope.match.id}">Изменить счет матча</button>
 </form>
-
 </body>
 </html>

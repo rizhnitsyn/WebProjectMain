@@ -63,7 +63,7 @@ public class TournamentDaoTest {
     @Test
     public void registerOnTournament() {
         TournamentDaoImpl tournamentDaoImpl = TournamentDaoImpl.getInstance();
-        Tournament tournament = tournamentDaoImpl.getTournamentById(2L);
+        Tournament tournament = tournamentDaoImpl.getTournamentById(3L);
         User user = UserDaoImpl.getInstance().getUserById(11L);
         boolean added = tournamentDaoImpl.registerOnTournament(tournament, user);
         Assert.assertTrue(added);

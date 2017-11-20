@@ -97,7 +97,7 @@ public class MatchDaoImpl implements MatchDao {
                         resultSet.getInt("a.match_state_id"), resultSet.getInt("a.match_type_id"),
                         resultSet.getInt("a.first_team_id"), resultSet.getInt("a.second_team_id"), tournament);
                 Forecast forecast = new Forecast(resultSet.getLong("c.forecast_id"), resultSet.getInt("c.first_team_forecast"),
-                        resultSet.getInt("c.second_team_forecast"), match);
+                        resultSet.getInt("c.second_team_forecast"), resultSet.getLong("c.user_id"),  match.getId());
                 if (forecast.getId() != 0) {
                     match.addForecast(forecast);
                 }
@@ -105,7 +105,7 @@ public class MatchDaoImpl implements MatchDao {
             }
             while (resultSet.next()) {
                 Forecast forecast = new Forecast(resultSet.getLong("c.forecast_id"), resultSet.getInt("c.first_team_forecast"),
-                        resultSet.getInt("c.second_team_forecast"), match);
+                        resultSet.getInt("c.second_team_forecast"), resultSet.getLong("c.user_id"), match.getId());
                 if (match != null && forecast.getId() != 0) {
                     match.addForecast(forecast);
                 }

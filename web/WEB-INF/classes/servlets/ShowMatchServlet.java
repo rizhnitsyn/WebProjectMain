@@ -19,9 +19,11 @@ public class ShowMatchServlet extends HttpServlet {
         Long id = Long.valueOf(req.getParameter("id"));
         MatchDto foundMatch = MatchService.getInstance().getMatchById(id);
         req.setAttribute("match", foundMatch);
+        //для админа и юзера наименование кнопки разные
         req.getServletContext()
                 .getRequestDispatcher(StaticContent.jspPath + "/show-match.jsp")
                 .forward(req, resp);
+
     }
 
     @Override
@@ -30,8 +32,14 @@ public class ShowMatchServlet extends HttpServlet {
         Long id = Long.valueOf(req.getParameter("id")); //сделать проверку!!!!
         MatchDto foundMatch = MatchService.getInstance().getMatchById(id);
         req.setAttribute("match", foundMatch);
+
+        //это для админа
+//        req.getServletContext()
+//                .getRequestDispatcher(StaticContent.jspPath + "/update-match.jsp")
+//                .forward(req, resp);
+        //это для юзера
         req.getServletContext()
-                .getRequestDispatcher(StaticContent.jspPath + "/update-match.jsp")
+                .getRequestDispatcher(StaticContent.jspPath + "/save-forecast.jsp")
                 .forward(req, resp);
     }
 }

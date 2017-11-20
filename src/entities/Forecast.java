@@ -13,20 +13,13 @@ public class Forecast {
     private Long id;
     private int firstTeamForecast;
     private int secondTeamForecast;
-    private User user;
-    private Match match;
+    private Long userId;
+    private Long matchId;
 
-    public Forecast(Long id, int firstTeamForecast, int secondTeamForecast, Match match) {
-        this.id = id;
+    public Forecast(int firstTeamForecast, int secondTeamForecast, Long userId, Long matchId) {
         this.firstTeamForecast = firstTeamForecast;
         this.secondTeamForecast = secondTeamForecast;
-        this.match = match;
-    }
-
-    public Forecast(Long id, int firstTeamForecast, int secondTeamForecast, User user) {
-        this.id = id;
-        this.firstTeamForecast = firstTeamForecast;
-        this.secondTeamForecast = secondTeamForecast;
-        this.user = user;
+        this.userId = userId;
+        this.matchId = matchId;
     }
 }

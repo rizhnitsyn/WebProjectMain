@@ -75,8 +75,9 @@ public class UserDaoImpl implements UserDao {
                         resultSet.getInt("c.tournament_state_id"));
                 tournament.addUser(user);
                 user.addTournament(tournament);
+                //ДОСТАТЬ MATCH_ID
                 user.addForecast(new Forecast(resultSet.getLong("d.forecast_id"), resultSet.getInt("d.first_team_forecast"),
-                        resultSet.getInt("d.second_team_forecast"), user));
+                        resultSet.getInt("d.second_team_forecast"), user.getId(), resultSet.getLong("d.match_id")));
 
                 while (resultSet.next()) {
                     tournament = new Tournament(resultSet.getLong("c.tournament_id"), resultSet.getString("c.tournament_name"),
@@ -85,7 +86,7 @@ public class UserDaoImpl implements UserDao {
                     tournament.addUser(user);
                     user.addTournament(tournament);
                     user.addForecast(new Forecast(resultSet.getLong("d.forecast_id"), resultSet.getInt("d.first_team_forecast"),
-                            resultSet.getInt("d.second_team_forecast"), user));
+                            resultSet.getInt("d.second_team_forecast"), user.getId(), resultSet.getLong("d.match_id")));
                 }
             }
             resultSet.close();
