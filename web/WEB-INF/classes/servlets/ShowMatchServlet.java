@@ -23,7 +23,6 @@ public class ShowMatchServlet extends HttpServlet {
         req.getServletContext()
                 .getRequestDispatcher(StaticContent.jspPath + "/show-match.jsp")
                 .forward(req, resp);
-
     }
 
     @Override

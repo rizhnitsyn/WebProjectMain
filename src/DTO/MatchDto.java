@@ -1,6 +1,7 @@
 package DTO;
 
 import entities.Forecast;
+import entities.Match;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,4 +28,20 @@ public class MatchDto {
     private int firstTeamWinCount;
     private int secondTeamWinCount;
     private int drawCount;
+    private int guessedWinnersCount;
+    private int guessedDiffInResultsCount;
+    private int guessedResultsCount;
+    private Integer currentUserPoints;
+
+    public MatchDto(Match match) {
+        this.id = match.getId();
+        this.firstTeamResult = match.getFirstTeamResult();
+        this.secondTeamResult = match.getSecondTeamResult();
+        this.matchDateTime = match.getMatchDateTime();
+        this.matchState = match.getMatchState();
+        this.matchType = match.getMatchType();
+        this.firstTeamId = match.getFirstTeamId();
+        this.secondTeamId = match.getSecondTeamId();
+        this.tournamentId = match.getTournament().getId();
+    }
 }

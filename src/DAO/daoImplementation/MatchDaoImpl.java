@@ -102,12 +102,12 @@ public class MatchDaoImpl implements MatchDao {
                     match.addForecast(forecast);
                 }
                 tournament.addFootballMatch(match);
-            }
-            while (resultSet.next()) {
-                Forecast forecast = new Forecast(resultSet.getLong("c.forecast_id"), resultSet.getInt("c.first_team_forecast"),
-                        resultSet.getInt("c.second_team_forecast"), resultSet.getLong("c.user_id"), match.getId());
-                if (match != null && forecast.getId() != 0) {
-                    match.addForecast(forecast);
+                while (resultSet.next()) {
+                    forecast = new Forecast(resultSet.getLong("c.forecast_id"), resultSet.getInt("c.first_team_forecast"),
+                            resultSet.getInt("c.second_team_forecast"), resultSet.getLong("c.user_id"), match.getId());
+                    if (forecast.getId() != 0) {
+                        match.addForecast(forecast);
+                    }
                 }
             }
             resultSet.close();

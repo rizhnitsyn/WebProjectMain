@@ -2,6 +2,7 @@ package services;
 
 import DAO.daoImplementation.MatchDaoImpl;
 import DTO.MatchDto;
+import entities.Forecast;
 import entities.Match;
 
 public class MatchService {
@@ -22,9 +23,7 @@ public class MatchService {
 
     public MatchDto addMatch(Match match) {
         Match savedMatch = MatchDaoImpl.getInstance().addMatch(match);
-        return new MatchDto(savedMatch.getId(), savedMatch.getFirstTeamResult(), savedMatch.getSecondTeamResult(),
-                savedMatch.getMatchDateTime(), savedMatch.getMatchState(), savedMatch.getMatchType(), savedMatch.getFirstTeamId(),
-                savedMatch.getSecondTeamId(), savedMatch.getTournament().getId());
+        return new MatchDto(savedMatch);
     }
 
     public MatchDto getMatchById(Long id) {
@@ -33,9 +32,23 @@ public class MatchService {
         if (foundMatch == null) {
             return null;
         }
-        return new MatchDto(foundMatch.getId(), foundMatch.getFirstTeamResult(), foundMatch.getSecondTeamResult(),
-                foundMatch.getMatchDateTime(), foundMatch.getMatchState(), foundMatch.getMatchType(), foundMatch.getFirstTeamId(),
-                foundMatch.getSecondTeamId(), foundMatch.getTournament().getId());
+        MatchDto matchDto = new MatchDto(foundMatch);
+
+        matchDto.setForecastsCount(foundMatch.getForecasts().size());
+        matchDto.setFirstTeamWinCount(firstTeamWinCount(foundMatch));
+        matchDto.setSecondTeamWinCount(secondTeamWinCount(foundMatch));
+        matchDto.setDrawCount(drawCount(foundMatch));
+        matchDto.setGuessedResultsCount(guessedResultsCount(foundMatch));
+        matchDto.setGuessedWinnersCount(guessedWinnersCount(foundMatch));
+        matchDto.setGuessedDiffInResultsCount(guessedDiffInResultsCount(foundMatch));
+        matchDto.setCurrentUserPoints(calculateUserPoints(foundMatch));
+
+        foundMatch.getForecasts().stream()
+                .filter(forecast -> forecast.getUserId() == 1)
+                .findFirst()
+                .ifPresent(matchDto::setCurrentUserForecast);
+
+        return matchDto;
     }
 
     public MatchDto updateMatch(Long id, int firstTeamResult, int secondTeamResult) {
@@ -43,8 +56,75 @@ public class MatchService {
         foundMatch.setFirstTeamResult(firstTeamResult);
         foundMatch.setSecondTeamResult(secondTeamResult);
         Match updatedMatch = MatchDaoImpl.getInstance().updateMatch(foundMatch);
-        return new MatchDto(updatedMatch.getId(), updatedMatch.getFirstTeamResult(), updatedMatch.getSecondTeamResult(),
-                updatedMatch.getMatchDateTime(), updatedMatch.getMatchState(), updatedMatch.getMatchType(),
-                updatedMatch.getFirstTeamId(), updatedMatch.getSecondTeamId(), updatedMatch.getTournament().getId());
+        return new MatchDto(updatedMatch);
+    }
+
+
+
+    private int guessedDiffInResultsCount(Match foundMatch) {
+        return (int) foundMatch.getForecasts().stream()
+                .filter(forecast -> (forecast.getFirstTeamForecast() - forecast.getSecondTeamForecast() ==
+                                     foundMatch.getFirstTeamResult() - foundMatch.getSecondTeamResult() &&
+                                     foundMatch.getFirstTeamResult() - foundMatch.getSecondTeamResult() != 0))
+                .count();
+    }
+
+    private int guessedWinnersCount(Match foundMatch) {
+        return (int) foundMatch.getForecasts().stream()
+                .filter(forecast -> Integer.compare(forecast.getFirstTeamForecast(), forecast.getSecondTeamForecast()) ==
+                                    Integer.compare(foundMatch.getFirstTeamResult(), foundMatch.getSecondTeamResult()))
+                .count();
+    }
+
+    private int firstTeamWinCount(Match foundMatch) {
+        return (int) foundMatch.getForecasts().stream()
+                .filter(forecast -> (forecast.getFirstTeamForecast() > forecast.getSecondTeamForecast()))
+                .count();
+    }
+
+    private int secondTeamWinCount(Match foundMatch) {
+        return (int) foundMatch.getForecasts().stream()
+                .filter(forecast -> (forecast.getFirstTeamForecast() < forecast.getSecondTeamForecast()))
+                .count();
+    }
+
+    private int drawCount(Match foundMatch) {
+        return (int) foundMatch.getForecasts().stream()
+                .filter(forecast -> (forecast.getFirstTeamForecast() == forecast.getSecondTeamForecast()))
+                .count();
+    }
+
+    private int guessedResultsCount(Match foundMatch) {
+        return (int) foundMatch.getForecasts().stream()
+                .filter(forecast -> forecast.getFirstTeamForecast() == foundMatch.getFirstTeamResult() &&
+                        forecast.getSecondTeamForecast() == foundMatch.getSecondTeamResult())
+                .count();
+    }
+
+    private Integer calculateUserPoints(Match foundMatch) {
+        Forecast userForecast = foundMatch.getForecasts().stream()
+                .filter(forecast -> forecast.getUserId() == 1)
+                .findFirst().orElse(null);
+        if (userForecast == null) {
+            return null;
+        }
+
+        if (foundMatch.getFirstTeamResult() == userForecast.getFirstTeamForecast() &&
+                foundMatch.getSecondTeamResult() == userForecast.getSecondTeamForecast()) {
+            return 6;
+        } else if (userForecast.getFirstTeamForecast() - userForecast.getSecondTeamForecast() ==
+                foundMatch.getFirstTeamResult() - foundMatch.getSecondTeamResult() &&
+                foundMatch.getFirstTeamResult() - foundMatch.getSecondTeamResult() != 0) {
+            return 4;
+        } else if(userForecast.getFirstTeamForecast() - userForecast.getSecondTeamForecast() ==
+                foundMatch.getFirstTeamResult() - foundMatch.getSecondTeamResult() &&
+                foundMatch.getFirstTeamResult() - foundMatch.getSecondTeamResult() == 0) {
+            return 3;
+        } else if (Integer.compare(userForecast.getFirstTeamForecast(), userForecast.getSecondTeamForecast()) ==
+                Integer.compare(foundMatch.getFirstTeamResult(), foundMatch.getSecondTeamResult())) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 }
