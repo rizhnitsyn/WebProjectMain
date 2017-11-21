@@ -73,7 +73,7 @@ public class TournamentDaoImpl implements TournamentDao {
                         resultSet.getInt("b.first_team_id"), resultSet.getInt("b.second_team_id"),
                         tournament));
                 user = new User(resultSet.getLong("d.user_id"), resultSet.getString("d.first_name"),
-                        resultSet.getString("d.second_name"), resultSet.getString("d.email"));
+                        resultSet.getString("d.second_name"), resultSet.getString("d.email"), resultSet.getInt("d.user-state_id"));
                 user.addTournament(tournament);
                 tournament.addUser(user);
                 while (resultSet.next()) {
@@ -83,7 +83,7 @@ public class TournamentDaoImpl implements TournamentDao {
                             resultSet.getInt("b.match_type_id"), resultSet.getInt("b.first_team_id"),
                             resultSet.getInt("b.second_team_id"), tournament));
                     user = new User(resultSet.getLong("d.user_id"), resultSet.getString("d.first_name"),
-                            resultSet.getString("d.second_name"), resultSet.getString("d.email"));
+                            resultSet.getString("d.second_name"), resultSet.getString("d.email"), resultSet.getInt("d.user-state_id"));
                     user.addTournament(tournament);
                     tournament.addUser(user);
                 }

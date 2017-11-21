@@ -63,16 +63,20 @@ public class MatchService {
 
     private int guessedDiffInResultsCount(Match foundMatch) {
         return (int) foundMatch.getForecasts().stream()
-                .filter(forecast -> (forecast.getFirstTeamForecast() - forecast.getSecondTeamForecast() ==
-                                     foundMatch.getFirstTeamResult() - foundMatch.getSecondTeamResult() &&
-                                     foundMatch.getFirstTeamResult() - foundMatch.getSecondTeamResult() != 0))
+                .filter(forecast -> (((forecast.getFirstTeamForecast() - forecast.getSecondTeamForecast()) ==
+                                     (foundMatch.getFirstTeamResult() - foundMatch.getSecondTeamResult())) &&
+                                     (foundMatch.getFirstTeamResult() - foundMatch.getSecondTeamResult()) != 0) &&
+                                     (forecast.getFirstTeamForecast() != foundMatch.getFirstTeamResult() ||
+                                      forecast.getSecondTeamForecast() != foundMatch.getSecondTeamResult()))
                 .count();
     }
 
     private int guessedWinnersCount(Match foundMatch) {
         return (int) foundMatch.getForecasts().stream()
-                .filter(forecast -> Integer.compare(forecast.getFirstTeamForecast(), forecast.getSecondTeamForecast()) ==
-                                    Integer.compare(foundMatch.getFirstTeamResult(), foundMatch.getSecondTeamResult()))
+                .filter(forecast -> (Integer.compare(forecast.getFirstTeamForecast(), forecast.getSecondTeamForecast()) ==
+                                    Integer.compare(foundMatch.getFirstTeamResult(), foundMatch.getSecondTeamResult())) &&
+                                   (forecast.getFirstTeamForecast() != foundMatch.getFirstTeamResult() ||
+                                    forecast.getSecondTeamForecast() != foundMatch.getSecondTeamResult()))
                 .count();
     }
 

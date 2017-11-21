@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet("/tournament")
-public class ShowTournamentServlet extends HttpServlet {
+public class ShowUpdateTournamentServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -28,8 +28,19 @@ public class ShowTournamentServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
-        Long id = Long.valueOf(req.getParameter("id"));
-        TournamentDto updatedTournament = TournamentService.getInstance().updateTournament(id);
-        resp.sendRedirect("/tournament?id=" + updatedTournament.getId());
+        if (req.getParameter("idClose") != null) {
+            Long id = Long.valueOf(req.getParameter("idClose"));
+            TournamentDto foundTournament = TournamentService.getInstance().getTournamentById(id);
+            TournamentDto updatedTournament = TournamentService.getInstance().closeTournament(foundTournament);
+            resp.sendRedirect("/tournament?id=" + updatedTournament.getId());
+        }
+        //для пользователя
+        if (req.getParameter("idReg") != null) {
+            Long id = Long.valueOf(req.getParameter("idReg"));
+            TournamentDto foundTournament = TournamentService.getInstance().getTournamentById(id);
+            //получить id пользователя, передать в функцию и сделать insert в БД
+            TournamentDto updatedTournament = TournamentService.getInstance().registerUserOnTournament(foundTournament);
+            resp.sendRedirect("/tournament?id=" + updatedTournament.getId());
+        }
     }
 }

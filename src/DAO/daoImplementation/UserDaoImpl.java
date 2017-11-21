@@ -30,8 +30,8 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User addUser(User user) {
         try (Connection connection = ConnectionManager.getConnection()){
-            String sql = "INSERT INTO users (first_name, second_name, email) " +
-                    "VALUES (?, ?, ?)";
+            String sql = "INSERT INTO users (first_name, second_name, email, user_state_id) " +
+                    "VALUES (?, ?, ?, 1)";
             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, user.getFirstName());
             statement.setString(2, user.getSecondName());
@@ -69,7 +69,8 @@ public class UserDaoImpl implements UserDao {
                 user = new User(resultSet.getLong("a.user_id"),
                         resultSet.getString("a.first_name"),
                         resultSet.getString("a.second_name"),
-                        resultSet.getString("a.email"));
+                        resultSet.getString("a.email"),
+                        resultSet.getInt("a.user_state_id"));
                 tournament = new Tournament(resultSet.getLong("c.tournament_id"), resultSet.getString("c.tournament_name"),
                         resultSet.getInt("c.team_organizer_id"), resultSet.getDate("c.tournament_start_date"),
                         resultSet.getInt("c.tournament_state_id"));
@@ -101,12 +102,13 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User updateUser(User user) {
         try (Connection connection = ConnectionManager.getConnection()){
-            String sql = "UPDATE users SET first_name =?, second_name =? , email =? WHERE user_id =?";
+            String sql = "UPDATE users SET first_name = ?, second_name = ? , email = ?, user_state_id = ? WHERE user_id = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, user.getFirstName());
             statement.setString(2, user.getSecondName());
             statement.setString(3, user.getEmail());
-            statement.setLong(4,user.getId());
+            statement.setInt(4, user.getUserState());
+            statement.setLong(5,user.getId());
             statement.executeUpdate();
             statement.close();
             return user;
@@ -128,7 +130,8 @@ public class UserDaoImpl implements UserDao {
                 users.add(new User(resultSet.getLong("user_id"),
                         resultSet.getString("first_name"),
                         resultSet.getString("second_name"),
-                        resultSet.getString("email")));
+                        resultSet.getString("email"),
+                        resultSet.getInt("user_state_id")));
             }
             resultSet.close();
             statement.close();
@@ -138,9 +141,4 @@ public class UserDaoImpl implements UserDao {
         }
         return users;
     }
-
-    public void approveUser() {
-        //админ подтверждает регистрацию пользователя. Пользователь может принять участие в турнире.
-    }
-
 }

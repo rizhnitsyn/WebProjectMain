@@ -22,7 +22,7 @@ public class UserService {
 
     public UserDto addUser(User user) {
         User savedUser = UserDaoImpl.getInstance().addUser(user);
-        return new UserDto(savedUser.getId(), savedUser.getFirstName(), savedUser.getSecondName(), savedUser.getEmail());
+        return new UserDto(savedUser);
     }
 
     public UserDto getUserById(Long id) {
@@ -30,6 +30,18 @@ public class UserService {
         if (foundedUser == null) {
             return null;
         }
-        return new UserDto(foundedUser.getId(), foundedUser.getFirstName(), foundedUser.getSecondName(), foundedUser.getEmail());
+        return new UserDto(foundedUser);
+    }
+
+    public UserDto approveUserRegistration(UserDto userDto) {
+        userDto.setUserState(2);
+        User updatedUser = UserDaoImpl.getInstance().updateUser(new User(userDto));
+        return new UserDto(updatedUser);
+    }
+
+    public UserDto blockUser(UserDto userDto) {
+        userDto.setUserState(3);
+        User updatedUser = UserDaoImpl.getInstance().updateUser(new User(userDto));
+        return new UserDto(updatedUser);
     }
 }

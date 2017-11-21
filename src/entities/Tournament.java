@@ -1,5 +1,7 @@
 package entities;
 
+import DTO.TournamentDto;
+import DTO.UserDto;
 import lombok.*;
 
 import java.sql.Date;
@@ -35,6 +37,10 @@ public class Tournament {
     public Tournament(Long id, String name, int organizerId, Date startDate, int stateId) {
         this(name, organizerId, startDate, stateId);
         this.id = id;
+    }
+
+    public Tournament(TournamentDto tournamentDto) {
+        this(tournamentDto.getId(), tournamentDto.getName(), tournamentDto.getOrganizerId(), tournamentDto.getStartDate(), tournamentDto.getStateId());
     }
 
     public void addFootballMatch(Match match) {

@@ -16,7 +16,8 @@
         <p>Дата начала игр турнира: ${requestScope.tournament.startDate}</p>
         <p>Страна организатор турнира: ${requestScope.tournament.organizerId}</p>
         <p>Состояние турнира: ${requestScope.tournament.stateId}</p>
-        <button type="submit" name="id" value="${requestScope.tournament.id}">Сделать неактивным</button>
+        <button type="submit" name="idClose" value="${requestScope.tournament.id}">Завершить турнир</button>
+        <button type="submit" name="idReg" value="${requestScope.tournament.id}">Зарегистрироваться на турнир</button>
    </form>
 </body>
 </html>

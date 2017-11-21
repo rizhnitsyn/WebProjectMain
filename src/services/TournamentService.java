@@ -32,15 +32,18 @@ public class TournamentService {
         if (foundTournament == null) {
             return null;
         }
-        return new TournamentDto(foundTournament.getId(), foundTournament.getName(), foundTournament.getOrganizerId(),
-                foundTournament.getStartDate(), foundTournament.getStateId());
+        return new TournamentDto(foundTournament);
     }
 
-    public TournamentDto updateTournament(Long id) {
-        Tournament foundTournament = TournamentDaoImpl.getInstance().getTournamentById(id);
-        foundTournament.setStateId(2);
-        Tournament updatedTournament = TournamentDaoImpl.getInstance().updateTournament(foundTournament);
-        return new TournamentDto(updatedTournament.getId(), updatedTournament.getName(), updatedTournament.getOrganizerId(),
-                updatedTournament.getStartDate(), updatedTournament.getStateId());
+    public TournamentDto closeTournament(TournamentDto tournamentDto) {
+        tournamentDto.setStateId(2);
+        Tournament updatedTournament = TournamentDaoImpl.getInstance().updateTournament(new Tournament(tournamentDto));
+        return new TournamentDto(updatedTournament);
+    }
+
+    public TournamentDto registerUserOnTournament(TournamentDto tournamentDto) {
+        tournamentDto.setStateId(2);
+        Tournament updatedTournament = TournamentDaoImpl.getInstance().updateTournament(new Tournament(tournamentDto));
+        return new TournamentDto(updatedTournament);
     }
 }

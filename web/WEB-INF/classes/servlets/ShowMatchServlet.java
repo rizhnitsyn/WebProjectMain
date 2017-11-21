@@ -19,7 +19,6 @@ public class ShowMatchServlet extends HttpServlet {
         Long id = Long.valueOf(req.getParameter("id"));
         MatchDto foundMatch = MatchService.getInstance().getMatchById(id);
         req.setAttribute("match", foundMatch);
-        //для админа и юзера наименование кнопки разные
         req.getServletContext()
                 .getRequestDispatcher(StaticContent.jspPath + "/show-match.jsp")
                 .forward(req, resp);
@@ -28,17 +27,23 @@ public class ShowMatchServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
-        Long id = Long.valueOf(req.getParameter("id")); //сделать проверку!!!!
-        MatchDto foundMatch = MatchService.getInstance().getMatchById(id);
-        req.setAttribute("match", foundMatch);
-
-        //это для админа
-//        req.getServletContext()
-//                .getRequestDispatcher(StaticContent.jspPath + "/update-match.jsp")
-//                .forward(req, resp);
-        //это для юзера
-        req.getServletContext()
-                .getRequestDispatcher(StaticContent.jspPath + "/save-forecast.jsp")
-                .forward(req, resp);
+        //для админа
+        if (req.getParameter("idMatch") != null) {
+            Long id = Long.valueOf(req.getParameter("idMatch"));
+            MatchDto foundMatch = MatchService.getInstance().getMatchById(id);
+            req.setAttribute("match", foundMatch);
+            req.getServletContext()
+                    .getRequestDispatcher(StaticContent.jspPath + "/update-match.jsp")
+                    .forward(req, resp);
+        }
+        //для пользователя
+        if (req.getParameter("idForecast") != null) {
+            Long id = Long.valueOf(req.getParameter("idForecast"));
+            MatchDto foundMatch = MatchService.getInstance().getMatchById(id);
+            req.setAttribute("match", foundMatch);
+            req.getServletContext()
+                    .getRequestDispatcher(StaticContent.jspPath + "/save-forecast.jsp")
+                    .forward(req, resp);
+        }
     }
 }
