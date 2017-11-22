@@ -2,6 +2,7 @@ package DAO;
 
 import DAO.daoImplementation.MatchDaoImpl;
 import entities.Match;
+import entities.Team;
 import entities.Tournament;
 import org.junit.Assert;
 import org.junit.Test;
@@ -17,7 +18,8 @@ public class MatchDaoTest {
         java.sql.Date sqlDate = new java.sql.Date(new Date().getTime());
         Tournament tournament = new Tournament();
         tournament.setId(2L);
-        Match match = footballMatchDaoImpl.addMatch(new Match(sqlDate, 1, 1, 1, 2, tournament));
+        Match match = footballMatchDaoImpl.addMatch(new Match(sqlDate, 1, 1, new Team(1L),
+                new Team(3L), tournament));
         Assert.assertNotNull(match);
         Assert.assertTrue(match.getId() != 0);
     }
@@ -27,7 +29,7 @@ public class MatchDaoTest {
         MatchDaoImpl footballMatchDaoImpl = MatchDaoImpl.getInstance();
         Match match = footballMatchDaoImpl.getMatchById(1L);
         Assert.assertNotNull(match);
-        Assert.assertEquals(2, match.getSecondTeamId());
+        Assert.assertEquals(2L, (long)match.getSecondTeam().getId());
 //        System.out.println(match);
         System.out.println(match.getTournament().getName());
         match.getForecasts().forEach(forecast -> System.out.println(forecast.getId()));

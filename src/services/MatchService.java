@@ -2,11 +2,13 @@ package services;
 
 import DAO.daoImplementation.MatchDaoImpl;
 import DAO.daoImplementation.TeamDaoImpl;
+import DAO.daoImplementation.TournamentDaoImpl;
 import DTO.MatchCreateDto;
 import DTO.MatchViewDto;
 import entities.Forecast;
 import entities.Match;
 import entities.Team;
+import entities.Tournament;
 
 public final class MatchService {
     private static MatchService INSTANCE;
@@ -27,7 +29,9 @@ public final class MatchService {
     public MatchViewDto addMatch(MatchCreateDto dto) {
         Team firstTeam = TeamDaoImpl.getInstance().getTeamById(dto.getFirstTeam());
         Team secondTeam = TeamDaoImpl.getInstance().getTeamById(dto.getSecondTeam());
-        Match match = new Match(dto);
+        Tournament tournament = TournamentDaoImpl.getInstance().getTournamentById(dto.getTournamentId());
+        Match match = new Match(dto.getMatchDateTime(), dto.getMatchState(), dto.getMatchType(),
+                firstTeam, secondTeam, tournament);
 
         Match savedMatch = MatchDaoImpl.getInstance().addMatch(match);
         return new MatchViewDto(savedMatch);
@@ -75,8 +79,6 @@ public final class MatchService {
         return MatchDaoImpl.getInstance().getMatchType(id);
 
     }
-
-
 
     private int guessedDiffInResultsCount(Match foundMatch) {
         return (int) foundMatch.getForecasts().stream()

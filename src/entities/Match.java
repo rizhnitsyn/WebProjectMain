@@ -35,7 +35,6 @@ public class Match {
         this.matchType = matchType;
         this.firstTeam = firstTeam;
         this.secondTeam = secondTeam;
-
         this.tournament = tournament;
     }
 

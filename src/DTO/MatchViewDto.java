@@ -21,7 +21,7 @@ public class MatchViewDto {
     private String matchType;
     private String firstTeam;
     private String secondTeam;
-    private Long tournamentId;
+    private String tournamentName;
     private int forecastsCount;
     private Set<Forecast> forecasts;
     private Forecast currentUserForecast;
@@ -40,6 +40,6 @@ public class MatchViewDto {
         this.matchDateTime = match.getMatchDateTime();
         this.firstTeam = match.getFirstTeam().getTeamName();
         this.secondTeam = match.getSecondTeam().getTeamName();
-        this.tournamentId = match.getTournament().getId();
+        this.tournamentName = match.getTournament().getName();
     }
 }

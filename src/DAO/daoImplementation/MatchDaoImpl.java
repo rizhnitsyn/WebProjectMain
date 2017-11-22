@@ -96,7 +96,7 @@ public class MatchDaoImpl implements MatchDao {
                 Tournament tournament = new Tournament(
                         resultSet.getLong("b.tournament_id"),
                         resultSet.getString("b.tournament_name"),
-                        new Team(resultSet.getLong("e.team_organizer_id"), resultSet.getString("e.team_name")),
+                        new Team(resultSet.getLong("b.team_organizer_id"), resultSet.getString("e.team_name")),
                         resultSet.getDate("b.tournament_start_date"),
                         resultSet.getInt("b.tournament_state_id"));
                 match = createMatch(resultSet);
@@ -126,7 +126,7 @@ public class MatchDaoImpl implements MatchDao {
     public List<Match> getListOfMatches() {
         List<Match> matches = new ArrayList<>();
         try (Connection connection = ConnectionManager.getConnection()){
-            String sql = "SELECT * FROM matches b " +
+            String sql = "SELECT * FROM matches a " +
                     "LEFT JOIN teams f ON a.first_team_id = f.team_id " +
                     "LEFT JOIN teams m ON a.second_team_id = m.team_id ";
             PreparedStatement statement = connection.prepareStatement(sql);

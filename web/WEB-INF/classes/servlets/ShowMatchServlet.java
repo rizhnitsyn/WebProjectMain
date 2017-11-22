@@ -34,7 +34,7 @@ public class ShowMatchServlet extends HttpServlet {
             MatchViewDto foundMatch = MatchService.getInstance().getMatchById(id);
             req.setAttribute("match", foundMatch);
             req.getServletContext()
-                    .getRequestDispatcher(PREFIX + "/update-match")
+                    .getRequestDispatcher(createViewPath( "update-match"))
                     .forward(req, resp);
         }
         //для пользователя

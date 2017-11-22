@@ -12,11 +12,11 @@
 </head>
 <body>
 <form action="${pageContext.request.contextPath}/match" method="post">
-    <h2>Турнир: ${requestScope.match.tournamentId}</h2>
+    <h2>Турнир: ${requestScope.match.tournamentName}</h2>
     <p>Начало матча: ${requestScope.match.matchDateTime}</p>
     <p>Состояние матча: ${requestScope.match.matchState}</p>
     <p>Тип матча: ${requestScope.match.matchType}</p>
-    <p>Команды: ${requestScope.match.firstTeamId} - ${requestScope.match.secondTeamId}</p>
+    <p>Команды: ${requestScope.match.firstTeam} - ${requestScope.match.secondTeam}</p>
     <p>Счет матча ${requestScope.match.firstTeamResult} - ${requestScope.match.secondTeamResult}</p>
     <p>Мой прогноз ${requestScope.match.currentUserForecast.firstTeamForecast} - ${requestScope.match.currentUserForecast.secondTeamForecast}</p>
     <p>Всего прогнозов на матч ${requestScope.match.forecastsCount}</p>
