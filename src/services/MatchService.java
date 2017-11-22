@@ -1,11 +1,14 @@
 package services;
 
 import DAO.daoImplementation.MatchDaoImpl;
-import DTO.MatchDto;
+import DAO.daoImplementation.TeamDaoImpl;
+import DTO.MatchCreateDto;
+import DTO.MatchViewDto;
 import entities.Forecast;
 import entities.Match;
+import entities.Team;
 
-public class MatchService {
+public final class MatchService {
     private static MatchService INSTANCE;
 
     private MatchService() {}
@@ -21,42 +24,56 @@ public class MatchService {
         return INSTANCE;
     }
 
-    public MatchDto addMatch(Match match) {
+    public MatchViewDto addMatch(MatchCreateDto dto) {
+        Team firstTeam = TeamDaoImpl.getInstance().getTeamById(dto.getFirstTeam());
+        Team secondTeam = TeamDaoImpl.getInstance().getTeamById(dto.getSecondTeam());
+        Match match = new Match(dto);
+
         Match savedMatch = MatchDaoImpl.getInstance().addMatch(match);
-        return new MatchDto(savedMatch);
+        return new MatchViewDto(savedMatch);
     }
 
-    public MatchDto getMatchById(Long id) {
-        //в слое ДТО позже будем доставать из справочников текстовые значения и выдавать позьзователю
+    public MatchViewDto getMatchById(Long id) {
         Match foundMatch = MatchDaoImpl.getInstance().getMatchById(id);
         if (foundMatch == null) {
             return null;
         }
-        MatchDto matchDto = new MatchDto(foundMatch);
+        MatchViewDto matchViewDto = new MatchViewDto(foundMatch);
 
-        matchDto.setForecastsCount(foundMatch.getForecasts().size());
-        matchDto.setFirstTeamWinCount(firstTeamWinCount(foundMatch));
-        matchDto.setSecondTeamWinCount(secondTeamWinCount(foundMatch));
-        matchDto.setDrawCount(drawCount(foundMatch));
-        matchDto.setGuessedResultsCount(guessedResultsCount(foundMatch));
-        matchDto.setGuessedWinnersCount(guessedWinnersCount(foundMatch));
-        matchDto.setGuessedDiffInResultsCount(guessedDiffInResultsCount(foundMatch));
-        matchDto.setCurrentUserPoints(calculateUserPoints(foundMatch));
+        matchViewDto.setMatchState(getState(foundMatch.getMatchState()));
+        matchViewDto.setMatchType(getType(foundMatch.getMatchType()));
+        matchViewDto.setForecastsCount(foundMatch.getForecasts().size());
+        matchViewDto.setFirstTeamWinCount(firstTeamWinCount(foundMatch));
+        matchViewDto.setSecondTeamWinCount(secondTeamWinCount(foundMatch));
+        matchViewDto.setDrawCount(drawCount(foundMatch));
+        matchViewDto.setGuessedResultsCount(guessedResultsCount(foundMatch));
+        matchViewDto.setGuessedWinnersCount(guessedWinnersCount(foundMatch));
+        matchViewDto.setGuessedDiffInResultsCount(guessedDiffInResultsCount(foundMatch));
+        matchViewDto.setCurrentUserPoints(calculateUserPoints(foundMatch));
 
         foundMatch.getForecasts().stream()
                 .filter(forecast -> forecast.getUserId() == 1)
                 .findFirst()
-                .ifPresent(matchDto::setCurrentUserForecast);
+                .ifPresent(matchViewDto::setCurrentUserForecast);
 
-        return matchDto;
+        return matchViewDto;
     }
 
-    public MatchDto updateMatch(Long id, int firstTeamResult, int secondTeamResult) {
+    public MatchViewDto updateMatch(Long id, int firstTeamResult, int secondTeamResult) {
         Match foundMatch = MatchDaoImpl.getInstance().getMatchById(id);
         foundMatch.setFirstTeamResult(firstTeamResult);
         foundMatch.setSecondTeamResult(secondTeamResult);
         Match updatedMatch = MatchDaoImpl.getInstance().updateMatch(foundMatch);
-        return new MatchDto(updatedMatch);
+        return new MatchViewDto(updatedMatch);
+    }
+
+    private String getState(int id) {
+        return MatchDaoImpl.getInstance().getMatchState(id);
+    }
+
+    private String getType(int id) {
+        return MatchDaoImpl.getInstance().getMatchType(id);
+
     }
 
 

@@ -1,6 +1,6 @@
 package servlets;
 
-import DTO.MatchDto;
+import DTO.MatchViewDto;
 import services.MatchService;
 
 import javax.servlet.ServletException;
@@ -18,7 +18,7 @@ public class UpdateMatchServlet extends HttpServlet {
         Long id = Long.valueOf(req.getParameter("id")); //сделать проверку!!!!
         int firstTeamResult = Integer.parseInt(req.getParameter("firstTeamResult"));
         int secondTeamResult = Integer.parseInt(req.getParameter("secondTeamResult"));
-        MatchDto updatedMatch = MatchService.getInstance().updateMatch(id, firstTeamResult, secondTeamResult);
+        MatchViewDto updatedMatch = MatchService.getInstance().updateMatch(id, firstTeamResult, secondTeamResult);
         resp.sendRedirect("/match?id=" + updatedMatch.getId());
     }
 }

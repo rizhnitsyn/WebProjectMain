@@ -1,8 +1,7 @@
 package servlets;
 
-import DTO.MatchDto;
+import DTO.MatchViewDto;
 import services.MatchService;
-import utils.StaticContent;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,16 +10,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static utils.StaticContent.*;
+
 @WebServlet("/match")
 public class ShowMatchServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long id = Long.valueOf(req.getParameter("id"));
-        MatchDto foundMatch = MatchService.getInstance().getMatchById(id);
+        MatchViewDto foundMatch = MatchService.getInstance().getMatchById(id);
         req.setAttribute("match", foundMatch);
         req.getServletContext()
-                .getRequestDispatcher(StaticContent.jspPath + "/show-match.jsp")
+                .getRequestDispatcher(createViewPath( "show-match"))
                 .forward(req, resp);
     }
 
@@ -30,19 +31,19 @@ public class ShowMatchServlet extends HttpServlet {
         //для админа
         if (req.getParameter("idMatch") != null) {
             Long id = Long.valueOf(req.getParameter("idMatch"));
-            MatchDto foundMatch = MatchService.getInstance().getMatchById(id);
+            MatchViewDto foundMatch = MatchService.getInstance().getMatchById(id);
             req.setAttribute("match", foundMatch);
             req.getServletContext()
-                    .getRequestDispatcher(StaticContent.jspPath + "/update-match.jsp")
+                    .getRequestDispatcher(PREFIX + "/update-match")
                     .forward(req, resp);
         }
         //для пользователя
         if (req.getParameter("idForecast") != null) {
             Long id = Long.valueOf(req.getParameter("idForecast"));
-            MatchDto foundMatch = MatchService.getInstance().getMatchById(id);
+            MatchViewDto foundMatch = MatchService.getInstance().getMatchById(id);
             req.setAttribute("match", foundMatch);
             req.getServletContext()
-                    .getRequestDispatcher(StaticContent.jspPath + "/save-forecast.jsp")
+                    .getRequestDispatcher(createViewPath("save-forecast"))
                     .forward(req, resp);
         }
     }

@@ -2,6 +2,8 @@ package DAO;
 
 import DAO.daoImplementation.TournamentDaoImpl;
 import DAO.daoImplementation.UserDaoImpl;
+import DTO.TournamentViewDto;
+import entities.Team;
 import entities.Tournament;
 import entities.User;
 import jdk.management.resource.internal.TotalResourceContext;
@@ -25,7 +27,7 @@ public class TournamentDaoTest {
         Date parsedDate = formatter.parse("10.06.2018");
         java.sql.Date sqlDate = new java.sql.Date(parsedDate.getTime());
         Tournament savedTournament = tournamentDaoImpl.addTournament(new Tournament(String.valueOf(random.nextInt(1000000)),
-                 2, sqlDate, 2));
+                 new Team(2L), sqlDate, 2));
         Assert.assertNotNull(savedTournament);
         Assert.assertTrue(savedTournament.getId() != 0);
     }
@@ -63,9 +65,10 @@ public class TournamentDaoTest {
     @Test
     public void registerOnTournament() {
         TournamentDaoImpl tournamentDaoImpl = TournamentDaoImpl.getInstance();
-        Tournament tournament = tournamentDaoImpl.getTournamentById(3L);
+        Tournament tournament = tournamentDaoImpl.getTournamentById(4L);
         User user = UserDaoImpl.getInstance().getUserById(11L);
-        boolean added = tournamentDaoImpl.registerOnTournament(tournament, user);
-        Assert.assertTrue(added);
+        Tournament registered = tournamentDaoImpl.registerOnTournament(tournament, user);
+        Assert.assertNotNull(registered);
+        Assert.assertTrue(registered.getUsers().contains(user));
     }
 }

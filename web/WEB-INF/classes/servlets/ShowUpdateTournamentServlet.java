@@ -1,9 +1,7 @@
 package servlets;
 
-import DTO.TournamentDto;
-import entities.Tournament;
+import DTO.TournamentViewDto;
 import services.TournamentService;
-import utils.StaticContent;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,16 +10,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static utils.StaticContent.*;
+
 @WebServlet("/tournament")
 public class ShowUpdateTournamentServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long id = Long.valueOf(req.getParameter("id"));
-        TournamentDto foundTournament = TournamentService.getInstance().getTournamentById(id);
+        TournamentViewDto foundTournament = TournamentService.getInstance().getTournamentById(id);
         req.setAttribute("tournament", foundTournament);
         getServletContext()
-                .getRequestDispatcher(StaticContent.jspPath + "/show-tournament.jsp")
+                .getRequestDispatcher(createViewPath( "show-tournament"))
                 .forward(req, resp);
     }
 
@@ -30,16 +30,17 @@ public class ShowUpdateTournamentServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         if (req.getParameter("idClose") != null) {
             Long id = Long.valueOf(req.getParameter("idClose"));
-            TournamentDto foundTournament = TournamentService.getInstance().getTournamentById(id);
-            TournamentDto updatedTournament = TournamentService.getInstance().closeTournament(foundTournament);
+//            TournamentViewDto foundTournament = TournamentService.getInstance().getTournamentById(id);
+            TournamentViewDto updatedTournament = TournamentService.getInstance().closeTournament(id);
             resp.sendRedirect("/tournament?id=" + updatedTournament.getId());
         }
         //для пользователя
         if (req.getParameter("idReg") != null) {
-            Long id = Long.valueOf(req.getParameter("idReg"));
-            TournamentDto foundTournament = TournamentService.getInstance().getTournamentById(id);
+            Long tournamentId = Long.valueOf(req.getParameter("idReg"));
             //получить id пользователя, передать в функцию и сделать insert в БД
-            TournamentDto updatedTournament = TournamentService.getInstance().registerUserOnTournament(foundTournament);
+            //не давать региться на уже оконченные турниры, убрать кнопку
+            Long userId = 8L;
+            TournamentViewDto updatedTournament = TournamentService.getInstance().registerUserOnTournament(tournamentId, userId);
             resp.sendRedirect("/tournament?id=" + updatedTournament.getId());
         }
     }

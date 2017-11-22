@@ -1,10 +1,9 @@
 package servlets;
 
-import DTO.MatchDto;
+import DTO.MatchViewDto;
 import entities.Forecast;
 import services.ForecastService;
 import services.MatchService;
-import utils.StaticContent;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,13 +12,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static utils.StaticContent.*;
+
 @WebServlet("/saveForecast")
 public class SaveForecastServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         getServletContext()
-                .getRequestDispatcher(StaticContent.jspPath + "/save-forecast.jsp")
+                .getRequestDispatcher(createViewPath( "save-forecast"))
                 .forward(req, resp);
     }
 
@@ -38,10 +39,10 @@ public class SaveForecastServlet extends HttpServlet {
         } catch (NumberFormatException e) {}
 
         if (firstTeamResult == null || secondTeamResult == null || userId == 0L || matchId == 0L) {
-            MatchDto foundMatch = MatchService.getInstance().getMatchById(matchId);
+            MatchViewDto foundMatch = MatchService.getInstance().getMatchById(matchId);
             req.setAttribute("match", foundMatch);
             getServletContext()
-                    .getRequestDispatcher(StaticContent.jspPath + "/save-forecast.jsp")
+                    .getRequestDispatcher(createViewPath( "save-forecast"))
                     .forward(req, resp);
         } else {
             ForecastService.getInstance().addForecast(new Forecast(firstTeamResult, secondTeamResult, userId, matchId));

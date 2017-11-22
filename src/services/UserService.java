@@ -4,7 +4,7 @@ import DAO.daoImplementation.UserDaoImpl;
 import DTO.UserDto;
 import entities.User;
 
-public class UserService {
+public final class UserService {
     private static UserService INSTANCE;
 
     private UserService() {}

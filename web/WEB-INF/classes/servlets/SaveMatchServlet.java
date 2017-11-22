@@ -1,10 +1,9 @@
 package servlets;
 
-import DTO.MatchDto;
+import DTO.MatchViewDto;
 import entities.Match;
 import entities.Tournament;
 import services.MatchService;
-import utils.StaticContent;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,13 +14,16 @@ import java.io.IOException;
 import java.sql.Date;
 import java.text.ParseException;
 
+import static utils.StaticContent.*;
+
+
 @WebServlet("/saveMatch")
 public class SaveMatchServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         getServletContext()
-                .getRequestDispatcher(StaticContent.jspPath + "/save-match.jsp")
+                .getRequestDispatcher(createViewPath( "save-match"))
                 .forward(req, resp);
     }
 
@@ -39,13 +41,13 @@ public class SaveMatchServlet extends HttpServlet {
             tournamentId = Long.valueOf(req.getParameter("tournamentId"));
             matchType = Integer.parseInt(req.getParameter("matchType"));
             String startDate = req.getParameter("matchDateTime");
-            startDateLong = StaticContent.dateTimeFormat.parse(startDate).getTime();
+            startDateLong = dateTimeFormat.parse(startDate).getTime();
         } catch (NumberFormatException | ParseException e) {}
 
         if (firstTeamId == 0 || secondTeamId == 0 || matchType == 0 || tournamentId == 0L || startDateLong == 0) {
             resp.sendRedirect("/saveMatch");
         } else {
-            MatchDto savedMatch = MatchService.getInstance().addMatch(
+            MatchViewDto savedMatch = MatchService.getInstance().addMatch(
                     new Match(new Date(startDateLong), 1, matchType, firstTeamId, secondTeamId,
                     new Tournament(tournamentId)));
             resp.sendRedirect("/match?id=" + savedMatch.getId());

@@ -3,6 +3,7 @@ package DAO.daoImplementation;
 import connection.ConnectionManager;
 import DAO.UserDao;
 import entities.Forecast;
+import entities.Team;
 import entities.Tournament;
 import entities.User;
 
@@ -60,6 +61,7 @@ public class UserDaoImpl implements UserDao {
                     "LEFT JOIN registration_desc b ON a.user_id = b.user_id " +
                     "LEFT JOIN tournaments c ON b.tournament_id = c.tournament_id " +
                     "LEFT JOIN forecasts d ON a.user_id = d.user_id " +
+                    "LEFT JOIN teams e ON e.team_id = c.team_organizer_id " +
                     "WHERE a.user_id = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setLong(1, userId);
@@ -72,8 +74,8 @@ public class UserDaoImpl implements UserDao {
                         resultSet.getString("a.email"),
                         resultSet.getInt("a.user_state_id"));
                 tournament = new Tournament(resultSet.getLong("c.tournament_id"), resultSet.getString("c.tournament_name"),
-                        resultSet.getInt("c.team_organizer_id"), resultSet.getDate("c.tournament_start_date"),
-                        resultSet.getInt("c.tournament_state_id"));
+                        new Team(resultSet.getLong("e.team_organizer_id"), resultSet.getString("e.team_name")),
+                        resultSet.getDate("c.tournament_start_date"), resultSet.getInt("c.tournament_state_id"));
                 tournament.addUser(user);
                 user.addTournament(tournament);
                 //ДОСТАТЬ MATCH_ID
@@ -82,8 +84,8 @@ public class UserDaoImpl implements UserDao {
 
                 while (resultSet.next()) {
                     tournament = new Tournament(resultSet.getLong("c.tournament_id"), resultSet.getString("c.tournament_name"),
-                            resultSet.getInt("c.team_organizer_id"), resultSet.getDate("c.tournament_start_date"),
-                            resultSet.getInt("c.tournament_state_id"));
+                            new Team(resultSet.getLong("e.team_organizer_id"), resultSet.getString("e.team_name")),
+                            resultSet.getDate("c.tournament_start_date"), resultSet.getInt("c.tournament_state_id"));
                     tournament.addUser(user);
                     user.addTournament(tournament);
                     user.addForecast(new Forecast(resultSet.getLong("d.forecast_id"), resultSet.getInt("d.first_team_forecast"),

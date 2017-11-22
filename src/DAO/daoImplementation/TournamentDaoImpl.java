@@ -2,6 +2,7 @@ package DAO.daoImplementation;
 
 import DAO.TournamentDao;
 import entities.Match;
+import entities.Team;
 import entities.Tournament;
 import connection.ConnectionManager;
 import entities.User;
@@ -33,7 +34,7 @@ public class TournamentDaoImpl implements TournamentDao {
                     "VALUES (?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, tournament.getName());
-            statement.setLong(2, tournament.getOrganizerId());
+            statement.setLong(2, tournament.getOrganizer().getId());
             statement.setDate(3, tournament.getStartDate());
             statement.setLong(4,tournament.getStateId());
             statement.executeUpdate();
@@ -55,6 +56,7 @@ public class TournamentDaoImpl implements TournamentDao {
         try (Connection connection = ConnectionManager.getConnection()){
             String sql = "SELECT * FROM tournaments a " +
                     "LEFT JOIN matches b on a.tournament_id = b.tournament_id " +
+                    "LEFT JOIN teams e on a.team_organizer_id = e.team_id " +
                     "LEFT JOIN registration_desc c ON a.tournament_id = c.tournament_id " +
                     "LEFT JOIN users d ON c.user_id = d.user_id " +
                     "WHERE a.tournament_id = ?";
@@ -62,28 +64,21 @@ public class TournamentDaoImpl implements TournamentDao {
             statement.setLong(1, tournamentId);
             ResultSet resultSet = statement.executeQuery();
             Tournament tournament = null;
-            User user = null;
+            User user;
             if (resultSet.next()) {
-                tournament = new Tournament(resultSet.getLong("a.tournament_id"), resultSet.getString("a.tournament_name"),
-                        resultSet.getInt("a.team_organizer_id"), resultSet.getDate("a.tournament_start_date"),
+                tournament = new Tournament(
+                        resultSet.getLong("a.tournament_id"),
+                        resultSet.getString("a.tournament_name"),
+                        new Team(resultSet.getLong("a.team_organizer_id"), resultSet.getString("e.team_name")),
+                        resultSet.getDate("a.tournament_start_date"),
                         resultSet.getInt("a.tournament_state_id"));
-                tournament.addFootballMatch(new Match(resultSet.getLong("b.match_id"), resultSet.getInt("b.first_team_result"),
-                        resultSet.getInt("b.second_team_result"), resultSet.getDate("b.match_datetime"),
-                        resultSet.getInt("b.match_state_id"), resultSet.getInt("b.match_type_id"),
-                        resultSet.getInt("b.first_team_id"), resultSet.getInt("b.second_team_id"),
-                        tournament));
-                user = new User(resultSet.getLong("d.user_id"), resultSet.getString("d.first_name"),
-                        resultSet.getString("d.second_name"), resultSet.getString("d.email"), resultSet.getInt("d.user-state_id"));
+                tournament.addFootballMatch(createMatch(resultSet, tournament));
+                user = createUser(resultSet);
                 user.addTournament(tournament);
                 tournament.addUser(user);
                 while (resultSet.next()) {
-                    tournament.addFootballMatch(new Match(resultSet.getLong("b.match_id"),
-                            resultSet.getInt("b.first_team_result"), resultSet.getInt("b.second_team_result"),
-                            resultSet.getDate("b.match_datetime"), resultSet.getInt("b.match_state_id"),
-                            resultSet.getInt("b.match_type_id"), resultSet.getInt("b.first_team_id"),
-                            resultSet.getInt("b.second_team_id"), tournament));
-                    user = new User(resultSet.getLong("d.user_id"), resultSet.getString("d.first_name"),
-                            resultSet.getString("d.second_name"), resultSet.getString("d.email"), resultSet.getInt("d.user-state_id"));
+                    tournament.addFootballMatch(createMatch(resultSet, tournament));
+                    user = createUser(resultSet);
                     user.addTournament(tournament);
                     tournament.addUser(user);
                 }
@@ -97,16 +92,33 @@ public class TournamentDaoImpl implements TournamentDao {
         return null;
     }
 
+    private Match createMatch(ResultSet resultSet, Tournament tournament) throws SQLException {
+        return new Match(
+                resultSet.getLong("b.match_id"),
+                resultSet.getDate("b.match_datetime"),
+                resultSet.getInt("b.match_state_id"),
+                resultSet.getInt("b.match_type_id"),
+                tournament);
+    }
+
+    private User createUser(ResultSet resultSet) throws SQLException {
+        return new User(
+                resultSet.getLong("d.user_id"),
+                resultSet.getString("d.first_name"),
+                resultSet.getString("d.second_name"),
+                resultSet.getString("d.email"),
+                resultSet.getInt("d.user_state_id"));
+    }
+
     @Override
     public Tournament updateTournament(Tournament tournament) {
         try (Connection connection = ConnectionManager.getConnection()){
-            String sql = "UPDATE tournaments SET tournament_name =?, team_organizer_id =? , tournament_start_date =?, tournament_state_id =? WHERE tournament_id =?";
+            String sql = "UPDATE tournaments SET tournament_name =?, tournament_start_date =?, tournament_state_id =? WHERE tournament_id =?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, tournament.getName());
-            statement.setLong(2, tournament.getOrganizerId());
-            statement.setDate(3, tournament.getStartDate());
-            statement.setLong(4,tournament.getStateId());
-            statement.setLong(5,tournament.getId());
+            statement.setDate(2, tournament.getStartDate());
+            statement.setLong(3,tournament.getStateId());
+            statement.setLong(4,tournament.getId());
             statement.executeUpdate();
             statement.close();
             return tournament;
@@ -116,19 +128,40 @@ public class TournamentDaoImpl implements TournamentDao {
         }
     }
 
+    public String getTournamentState(int stateId) {
+        String tournamentState = null;
+        try (Connection connection = ConnectionManager.getConnection()){
+            String sql = "SELECT * FROM tournament_states where tournament_state_id = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, stateId);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                tournamentState = resultSet.getString("tournament_state");
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return tournamentState;
+    }
+
     @Override
     public List<Tournament> getListOfTournaments() {
         List<Tournament> tournaments = new ArrayList<>();
         try (Connection connection = ConnectionManager.getConnection()){
-            String sql = "SELECT * FROM tournaments";
+            String sql = "SELECT * FROM tournaments a " +
+                    "LEFT JOIN teams b on a.team_organizer_id = b.team_id";
             PreparedStatement statement = connection.prepareStatement(sql);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                tournaments.add(new Tournament(resultSet.getLong("tournament_id"),
-                        resultSet.getString("tournament_name"),
-                        resultSet.getInt("team_organizer_id"),
-                        resultSet.getDate("tournament_start_date"),
-                        resultSet.getInt("tournament_state_id")));
+                tournaments.add(new Tournament(resultSet.getLong("a.tournament_id"),
+                        resultSet.getString("a.tournament_name"),
+                        new Team(resultSet.getLong("a.team_organizer_id"), resultSet.getString("b.team_name")),
+                        resultSet.getDate("a.tournament_start_date"),
+                        resultSet.getInt("a.tournament_state_id")));
             }
             resultSet.close();
             statement.close();
@@ -139,7 +172,8 @@ public class TournamentDaoImpl implements TournamentDao {
         return tournaments;
     }
 
-    public boolean registerOnTournament(Tournament tournament, User user) {
+
+    public Tournament registerOnTournament(Tournament tournament, User user) {
         try (Connection connection = ConnectionManager.getConnection()){
             String sql = "INSERT INTO registration_desc (tournament_id, user_id) " +
                     "VALUES (?, ?)";
@@ -152,8 +186,10 @@ public class TournamentDaoImpl implements TournamentDao {
             statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            return null;
         }
-        return true;
+        return tournament;
     }
+
+
 }

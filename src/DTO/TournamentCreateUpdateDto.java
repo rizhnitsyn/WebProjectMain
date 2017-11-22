@@ -10,17 +10,15 @@ import java.sql.Date;
 @Getter
 @Setter
 @AllArgsConstructor
-public class TournamentDto {
-    private Long id;
+public class TournamentCreateUpdateDto {
     private String name;
-    private int organizerId;
+    private Long organizerId;
     private Date startDate;
     private int stateId;
 
-    public TournamentDto(Tournament tournament) {
-        this.id = tournament.getId();
+    public TournamentCreateUpdateDto(Tournament tournament) {
         this.name = tournament.getName();
-        this.organizerId = tournament.getOrganizerId();
+        this.organizerId = tournament.getOrganizer().getId();
         this.startDate = tournament.getStartDate();
         this.stateId = tournament.getStateId();
     }

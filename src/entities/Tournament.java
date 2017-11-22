@@ -1,7 +1,6 @@
 package entities;
 
-import DTO.TournamentDto;
-import DTO.UserDto;
+import DTO.TournamentCreateUpdateDto;
 import lombok.*;
 
 import java.sql.Date;
@@ -16,7 +15,7 @@ import java.util.Set;
 public class Tournament {
     private Long id;
     private String name;
-    private int organizerId;
+    private Team organizer;
     private Date startDate;
     private int stateId;
     private Set<Match> matches = new HashSet<>();
@@ -26,21 +25,20 @@ public class Tournament {
         this.id = id;
     }
 
-    public Tournament(String name, int organizerId, Date startDate, int stateId) {
+    public Tournament(String name, Team organizer, Date startDate, int stateId) {
         this.name = name;
-        this.organizerId = organizerId;
+        this.organizer = organizer;
         this.startDate = startDate;
-
         this.stateId = stateId;
     }
 
-    public Tournament(Long id, String name, int organizerId, Date startDate, int stateId) {
-        this(name, organizerId, startDate, stateId);
+    public Tournament(Long id, String name, Team organizer, Date startDate, int stateId) {
+        this(name, organizer, startDate, stateId);
         this.id = id;
     }
 
-    public Tournament(TournamentDto tournamentDto) {
-        this(tournamentDto.getId(), tournamentDto.getName(), tournamentDto.getOrganizerId(), tournamentDto.getStartDate(), tournamentDto.getStateId());
+    public Tournament(TournamentCreateUpdateDto dto, Team team) {
+        this(dto.getName(), team, dto.getStartDate(), dto.getStateId());
     }
 
     public void addFootballMatch(Match match) {

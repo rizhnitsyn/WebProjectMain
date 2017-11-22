@@ -14,8 +14,8 @@
     <form action="${pageContext.request.contextPath}/tournament" method="post">
         <h2>Турнир: ${requestScope.tournament.name}</h2>
         <p>Дата начала игр турнира: ${requestScope.tournament.startDate}</p>
-        <p>Страна организатор турнира: ${requestScope.tournament.organizerId}</p>
-        <p>Состояние турнира: ${requestScope.tournament.stateId}</p>
+        <p>Страна организатор турнира: ${requestScope.tournament.teamName}</p>
+        <p>Состояние турнира: ${requestScope.tournament.state}</p>
         <button type="submit" name="idClose" value="${requestScope.tournament.id}">Завершить турнир</button>
         <button type="submit" name="idReg" value="${requestScope.tournament.id}">Зарегистрироваться на турнир</button>
    </form>

@@ -12,15 +12,15 @@ import java.util.Set;
 @Getter
 @Setter
 @AllArgsConstructor
-public class MatchDto {
+public class MatchViewDto {
     private Long id;
     private Integer firstTeamResult = null;
     private Integer secondTeamResult = null;
     private Date matchDateTime;
-    private int matchState;
-    private int matchType;
-    private int firstTeamId;
-    private int secondTeamId;
+    private String matchState;
+    private String matchType;
+    private String firstTeam;
+    private String secondTeam;
     private Long tournamentId;
     private int forecastsCount;
     private Set<Forecast> forecasts;
@@ -33,15 +33,13 @@ public class MatchDto {
     private int guessedResultsCount;
     private Integer currentUserPoints;
 
-    public MatchDto(Match match) {
+    public MatchViewDto(Match match) {
         this.id = match.getId();
         this.firstTeamResult = match.getFirstTeamResult();
         this.secondTeamResult = match.getSecondTeamResult();
         this.matchDateTime = match.getMatchDateTime();
-        this.matchState = match.getMatchState();
-        this.matchType = match.getMatchType();
-        this.firstTeamId = match.getFirstTeamId();
-        this.secondTeamId = match.getSecondTeamId();
+        this.firstTeam = match.getFirstTeam().getTeamName();
+        this.secondTeam = match.getSecondTeam().getTeamName();
         this.tournamentId = match.getTournament().getId();
     }
 }

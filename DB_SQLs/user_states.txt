@@ -1,0 +1,8 @@
+select CREATE TABLE `user_states` (
+  `user_state_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  PRIMARY KEY (`user_state_id`),
+  UNIQUE KEY `user_state_name_uindex` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+

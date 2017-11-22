@@ -3,7 +3,7 @@ package services;
 import DAO.daoImplementation.ForecastDaoImpl;
 import entities.Forecast;
 
-public class ForecastService {
+public final class ForecastService {
     private static ForecastService INSTANCE;
 
     private ForecastService() {}

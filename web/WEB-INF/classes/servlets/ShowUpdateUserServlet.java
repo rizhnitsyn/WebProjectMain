@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static utils.StaticContent.*;
+
 @WebServlet("/user")
 public class ShowUpdateUserServlet extends HttpServlet {
 
@@ -20,7 +22,7 @@ public class ShowUpdateUserServlet extends HttpServlet {
         UserDto foundUser = UserService.getInstance().getUserById(id);
         req.setAttribute("user", foundUser);
         getServletContext()
-                .getRequestDispatcher(StaticContent.jspPath + "/show-user.jsp")
+                .getRequestDispatcher(createViewPath("show-user"))
                 .forward(req, resp);
     }
 
