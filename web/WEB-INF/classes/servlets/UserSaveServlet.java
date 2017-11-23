@@ -1,9 +1,9 @@
 package servlets;
 
-import DTO.UserDto;
+import DTO.UserCreateDto;
+import DTO.UserViewDto;
 import entities.User;
 import services.UserService;
-import utils.StaticContent;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,7 +15,7 @@ import java.io.IOException;
 import static utils.StaticContent.*;
 
 @WebServlet("/saveUser")
-public class SaveUserServlet extends HttpServlet {
+public class UserSaveServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         getServletContext()
@@ -33,7 +33,7 @@ public class SaveUserServlet extends HttpServlet {
         if (firstName.isEmpty() || secondName.isEmpty() || email.isEmpty()) {
             resp.sendRedirect("/saveUser");
         } else {
-            UserDto savedUser = UserService.getInstance().addUser(new User(firstName, secondName, email));
+            UserViewDto savedUser = UserService.getInstance().addUser(new UserCreateDto(firstName, secondName, email));
             resp.sendRedirect("/user?id=" + savedUser.getId());
         }
     }

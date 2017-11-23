@@ -15,7 +15,7 @@
     <p>Имя: ${requestScope.user.firstName}</p>
     <p>Фамилия: ${requestScope.user.secondName}</p>
     <p>Email: ${requestScope.user.email}</p>
-    <p>Состояние пользователя ${requestScope.user.userState}</p>
+    <p>Состояние пользователя: ${requestScope.user.userState}</p>
     <button type="submit" name="idReg" value="${requestScope.user.id}">Подтвердить регистрацию</button>
     <button type="submit" name="idBlock" value="${requestScope.user.id}">Заблокировать</button>
 </form>

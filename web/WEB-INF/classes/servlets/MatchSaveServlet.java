@@ -19,7 +19,7 @@ import static utils.StaticContent.*;
 
 
 @WebServlet("/saveMatch")
-public class SaveMatchServlet extends HttpServlet {
+public class MatchSaveServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

@@ -23,7 +23,7 @@ public class MatchViewDto {
     private String secondTeam;
     private String tournamentName;
     private int forecastsCount;
-    private Set<Forecast> forecasts;
+//    private Set<Forecast> forecasts;
     private Forecast currentUserForecast;
     private int firstTeamWinCount;
     private int secondTeamWinCount;

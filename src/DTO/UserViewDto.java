@@ -8,18 +8,18 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class UserDto {
+public class UserViewDto {
     private Long id;
     private String firstName;
     private String secondName;
     private String email;
-    private int userState;
+    private String userState;
 
-    public UserDto(User user) {
+    public UserViewDto(User user, String userState) {
         this.id = user.getId();
         this.firstName = user.getFirstName();
         this.secondName = user.getSecondName();
         this.email = user.getEmail();
-        this.userState = user.getUserState();
+        this.userState = userState;
     }
 }

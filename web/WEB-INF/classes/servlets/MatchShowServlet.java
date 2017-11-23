@@ -13,7 +13,7 @@ import java.io.IOException;
 import static utils.StaticContent.*;
 
 @WebServlet("/match")
-public class ShowMatchServlet extends HttpServlet {
+public class MatchShowServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

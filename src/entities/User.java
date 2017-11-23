@@ -1,6 +1,7 @@
 package entities;
 
-import DTO.UserDto;
+import DTO.UserCreateDto;
+import DTO.UserViewDto;
 import lombok.*;
 
 import java.util.HashSet;
@@ -26,6 +27,9 @@ public class User {
         this.email = email;
     }
 
+    public User(UserCreateDto dto) {
+        this(dto.getFirstName(), dto.getSecondName(), dto.getEmail());
+    }
 
     public User(Long id, String firstName, String secondName, String email, int userState) {
         this(firstName, secondName, email);
@@ -33,8 +37,8 @@ public class User {
         this.userState = userState;
     }
 
-    public User(UserDto userDto) {
-        this(userDto.getId(), userDto.getFirstName(), userDto.getSecondName(), userDto.getEmail(), userDto.getUserState());
+    public User(UserViewDto dto, int userState) {
+        this(dto.getId(), dto.getFirstName(), dto.getSecondName(), dto.getEmail(), userState);
     }
 
     public void addTournament(Tournament tournament) {

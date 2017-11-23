@@ -123,12 +123,42 @@ public class MatchDaoImpl implements MatchDao {
     }
 
     @Override
+    public List<Match> getMatchesForForecast(Long tournamentId, Long userId) {
+        List<Match> matches = new ArrayList<>();
+        try (Connection connection = ConnectionManager.getConnection()){
+            String sql = "SELECT * FROM matches a " +
+                    "LEFT JOIN tournaments b on a.tournament_id = b.tournament_id " +
+                    "LEFT JOIN (SELECT * FROM forecasts WHERE user_id = ?) c ON a.match_id = c.match_id " +
+                    "LEFT JOIN teams f ON a.first_team_id = f.team_id " +
+                    "LEFT JOIN teams m ON a.second_team_id = m.team_id " +
+                    "WHERE a.match_state_id = 1 " +
+                    "AND b.tournament_state_id = 1 " +
+                    "AND a.tournament_id = ? " +
+                    "AND c.user_id IS NULL";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setLong(1,userId);
+            statement.setLong(2,tournamentId);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                matches.add(createMatch(resultSet));
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return matches;
+    }
+
+    @Override
     public List<Match> getListOfMatches() {
         List<Match> matches = new ArrayList<>();
         try (Connection connection = ConnectionManager.getConnection()){
             String sql = "SELECT * FROM matches a " +
                     "LEFT JOIN teams f ON a.first_team_id = f.team_id " +
-                    "LEFT JOIN teams m ON a.second_team_id = m.team_id ";
+                    "LEFT JOIN teams m ON a.second_team_id = m.team_id " +
+                    "WHERE a.match_state_id = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {

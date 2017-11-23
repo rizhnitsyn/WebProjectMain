@@ -74,7 +74,7 @@ public class UserDaoImpl implements UserDao {
                         resultSet.getString("a.email"),
                         resultSet.getInt("a.user_state_id"));
                 tournament = new Tournament(resultSet.getLong("c.tournament_id"), resultSet.getString("c.tournament_name"),
-                        new Team(resultSet.getLong("e.team_organizer_id"), resultSet.getString("e.team_name")),
+                        new Team(resultSet.getLong("c.team_organizer_id"), resultSet.getString("e.team_name")),
                         resultSet.getDate("c.tournament_start_date"), resultSet.getInt("c.tournament_state_id"));
                 tournament.addUser(user);
                 user.addTournament(tournament);
@@ -84,7 +84,7 @@ public class UserDaoImpl implements UserDao {
 
                 while (resultSet.next()) {
                     tournament = new Tournament(resultSet.getLong("c.tournament_id"), resultSet.getString("c.tournament_name"),
-                            new Team(resultSet.getLong("e.team_organizer_id"), resultSet.getString("e.team_name")),
+                            new Team(resultSet.getLong("c.team_organizer_id"), resultSet.getString("e.team_name")),
                             resultSet.getDate("c.tournament_start_date"), resultSet.getInt("c.tournament_state_id"));
                     tournament.addUser(user);
                     user.addTournament(tournament);
@@ -122,11 +122,12 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<User> getListOfUsers() {
+    public List<User> getListOfUsers(int state) {
         List<User> users = new ArrayList<>();
         try (Connection connection = ConnectionManager.getConnection()){
-            String sql = "SELECT * FROM users";
+            String sql = "SELECT * FROM users WHERE user_state_id = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, state);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 users.add(new User(resultSet.getLong("user_id"),
@@ -142,5 +143,25 @@ public class UserDaoImpl implements UserDao {
             return null;
         }
         return users;
+    }
+
+    public String getUserState(int stateId) {
+        String matchState = null;
+        try (Connection connection = ConnectionManager.getConnection()){
+            String sql = "SELECT * FROM user_states WHERE user_state_id = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, stateId);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                matchState = resultSet.getString("user_state");
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return matchState;
     }
 }

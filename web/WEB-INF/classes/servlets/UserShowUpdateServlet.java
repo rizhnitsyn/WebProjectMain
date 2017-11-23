@@ -1,8 +1,7 @@
 package servlets;
 
-import DTO.UserDto;
+import DTO.UserViewDto;
 import services.UserService;
-import utils.StaticContent;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,12 +13,12 @@ import java.io.IOException;
 import static utils.StaticContent.*;
 
 @WebServlet("/user")
-public class ShowUpdateUserServlet extends HttpServlet {
+public class UserShowUpdateServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long id = Long.valueOf(req.getParameter("id"));
-        UserDto foundUser = UserService.getInstance().getUserById(id);
+        UserViewDto foundUser = UserService.getInstance().getUserById(id);
         req.setAttribute("user", foundUser);
         getServletContext()
                 .getRequestDispatcher(createViewPath("show-user"))
@@ -32,15 +31,15 @@ public class ShowUpdateUserServlet extends HttpServlet {
 
         if (req.getParameter("idReg") != null) {
             Long id = Long.valueOf(req.getParameter("idReg"));
-            UserDto foundUser = UserService.getInstance().getUserById(id);
-            UserDto updatedUser = UserService.getInstance().approveUserRegistration(foundUser);
+            UserViewDto foundUser = UserService.getInstance().getUserById(id);
+            UserViewDto updatedUser = UserService.getInstance().approveUserRegistration(foundUser);
             resp.sendRedirect("/user?id=" + updatedUser.getId());
         }
         //для пользователя
         if (req.getParameter("idBlock") != null) {
             Long id = Long.valueOf(req.getParameter("idBlock"));
-            UserDto foundUser = UserService.getInstance().getUserById(id);
-            UserDto updatedUser = UserService.getInstance().blockUser(foundUser);
+            UserViewDto foundUser = UserService.getInstance().getUserById(id);
+            UserViewDto updatedUser = UserService.getInstance().blockUser(foundUser);
             resp.sendRedirect("/user?id=" + updatedUser.getId());
         }
     }

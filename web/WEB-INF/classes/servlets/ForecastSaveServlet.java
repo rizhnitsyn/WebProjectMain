@@ -15,7 +15,7 @@ import java.io.IOException;
 import static utils.StaticContent.*;
 
 @WebServlet("/saveForecast")
-public class SaveForecastServlet extends HttpServlet {
+public class ForecastSaveServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

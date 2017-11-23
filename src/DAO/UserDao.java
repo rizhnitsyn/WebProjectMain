@@ -8,5 +8,5 @@ public interface UserDao {
     User addUser(User user);
     User updateUser(User user);
     User getUserById(Long userId);
-    List<User> getListOfUsers();
+    List<User> getListOfUsers(int state);
 }

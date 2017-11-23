@@ -4,11 +4,15 @@ import DAO.daoImplementation.MatchDaoImpl;
 import DAO.daoImplementation.TeamDaoImpl;
 import DAO.daoImplementation.TournamentDaoImpl;
 import DTO.MatchCreateDto;
+import DTO.MatchShortViewDto;
 import DTO.MatchViewDto;
 import entities.Forecast;
 import entities.Match;
 import entities.Team;
 import entities.Tournament;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public final class MatchService {
     private static MatchService INSTANCE;
@@ -59,7 +63,6 @@ public final class MatchService {
                 .filter(forecast -> forecast.getUserId() == 1)
                 .findFirst()
                 .ifPresent(matchViewDto::setCurrentUserForecast);
-
         return matchViewDto;
     }
 
@@ -71,13 +74,22 @@ public final class MatchService {
         return new MatchViewDto(updatedMatch);
     }
 
+    public List<MatchShortViewDto> matchesForForecast(Long tournamentId, Long userId) {
+        List<Match> matches = MatchDaoImpl.getInstance().getMatchesForForecast(tournamentId,userId);
+        if (matches == null) {
+            return null;
+        }
+        return matches.stream()
+                .map(match -> new MatchShortViewDto(match.getId(), match.getMatchDateTime(), match.getFirstTeam().getTeamName(), match.getSecondTeam().getTeamName()                        ))
+                .collect(Collectors.toList());
+    }
+
     private String getState(int id) {
         return MatchDaoImpl.getInstance().getMatchState(id);
     }
 
     private String getType(int id) {
         return MatchDaoImpl.getInstance().getMatchType(id);
-
     }
 
     private int guessedDiffInResultsCount(Match foundMatch) {

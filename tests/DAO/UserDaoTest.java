@@ -45,7 +45,7 @@ public class UserDaoTest {
     @Test
     public void getListOfUsers() {
         UserDaoImpl userDaoImpl = UserDaoImpl.getInstance();
-        List<User> users = userDaoImpl.getListOfUsers();
+        List<User> users = userDaoImpl.getListOfUsers(2);
         Assert.assertNotNull(users);
         Assert.assertTrue(users.size() > 0);
     }
