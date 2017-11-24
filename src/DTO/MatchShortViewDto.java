@@ -14,4 +14,7 @@ public class MatchShortViewDto {
     private Date matchDateTime;
     private String firstTeam;
     private String secondTeam;
+    //int state
+//    Integer firstteamrResult
+//    Integer secondTeamResult
 }

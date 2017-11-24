@@ -12,14 +12,14 @@ import java.io.IOException;
 import static utils.StaticContent.createViewPath;
 
 
-@WebServlet("/forecastMatches")
-public class MatchesAvailableForForecastServlet extends HttpServlet {
+@WebServlet("/allMatches")
+public class MatchesForSelectedTournamentServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long tournamentId = Long.valueOf(req.getParameter("id"));
-        req.setAttribute("matches", MatchService.getInstance().matchesForForecast(tournamentId,1L));
+        req.setAttribute("matches", MatchService.getInstance().getAllMatchesOfSelectedTournament(tournamentId));
         req.getServletContext()
-                .getRequestDispatcher(createViewPath("show-forecast-matches"))
+                .getRequestDispatcher(createViewPath("show-all-matches"))
                 .forward(req, resp);
     }
 }

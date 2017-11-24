@@ -84,6 +84,16 @@ public final class MatchService {
                 .collect(Collectors.toList());
     }
 
+    public List<MatchShortViewDto> getAllMatchesOfSelectedTournament(Long tournamentId) {
+        List<Match> matches = MatchDaoImpl.getInstance().getListOfMatches(tournamentId);
+        if (matches == null) {
+            return null;
+        }
+        return matches.stream()
+                .map(match -> new MatchShortViewDto(match.getId(), match.getMatchDateTime(), match.getFirstTeam().getTeamName(), match.getSecondTeam().getTeamName()                        ))
+                .collect(Collectors.toList());
+    }
+
     private String getState(int id) {
         return MatchDaoImpl.getInstance().getMatchState(id);
     }

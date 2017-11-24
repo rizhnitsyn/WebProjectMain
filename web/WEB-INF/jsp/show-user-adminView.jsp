@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <title>Show User</title>
@@ -16,8 +17,14 @@
     <p>Фамилия: ${requestScope.user.secondName}</p>
     <p>Email: ${requestScope.user.email}</p>
     <p>Состояние пользователя: ${requestScope.user.userState}</p>
-    <button type="submit" name="idReg" value="${requestScope.user.id}">Подтвердить регистрацию</button>
-    <button type="submit" name="idBlock" value="${requestScope.user.id}">Заблокировать</button>
+
+    <p>
+    <select name="userState">
+        <c:forEach var="userState" items="${requestScope.userStates}">
+            <option value="${userState.key}">${userState.value}</option>
+        </c:forEach>
+    </select> <button type="submit" name="id" value="${requestScope.user.id}">Сменить статус пользователя</button></p>
+
 </form>
 </body>
 </html>

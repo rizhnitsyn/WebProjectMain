@@ -1,6 +1,6 @@
 package servlets;
 
-import services.MatchService;
+import utils.StaticContent;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,15 +11,21 @@ import java.io.IOException;
 
 import static utils.StaticContent.createViewPath;
 
+@WebServlet("/homepage")
+public class HomePageServlet extends HttpServlet{
 
-@WebServlet("/forecastMatches")
-public class MatchesAvailableForForecastServlet extends HttpServlet {
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Long tournamentId = Long.valueOf(req.getParameter("id"));
-        req.setAttribute("matches", MatchService.getInstance().matchesForForecast(tournamentId,1L));
-        req.getServletContext()
-                .getRequestDispatcher(createViewPath("show-forecast-matches"))
+        getServletContext()
+                .getRequestDispatcher(createViewPath("home-page"))
                 .forward(req, resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+
+
     }
 }

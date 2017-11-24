@@ -149,20 +149,40 @@ public class TournamentDaoImpl implements TournamentDao {
     }
 
     @Override
-    public List<Tournament> getListOfTournaments() {
+    public List<Tournament> getTournamentsFilterByState(int tournamentState) {
         List<Tournament> tournaments = new ArrayList<>();
         try (Connection connection = ConnectionManager.getConnection()){
             String sql = "SELECT * FROM tournaments a " +
-                    "LEFT JOIN teams b on a.team_organizer_id = b.team_id";
+                    "LEFT JOIN teams b on a.team_organizer_id = b.team_id " +
+                    "WHERE tournament_state_id = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, tournamentState);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                tournaments.add(new Tournament(resultSet.getLong("a.tournament_id"),
-                        resultSet.getString("a.tournament_name"),
-                        new Team(resultSet.getLong("a.team_organizer_id"), resultSet.getString("b.team_name")),
-                        resultSet.getDate("a.tournament_start_date"),
-                        resultSet.getInt("a.tournament_state_id")));
+                tournaments.add(createTournament(resultSet));
             }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return tournaments;
+    }
+
+    public List<Tournament> getTournamentsFilterByUser(Long userId) {
+        List<Tournament> tournaments = new ArrayList<>();
+        try (Connection connection = ConnectionManager.getConnection()){
+            String sql = "SELECT * FROM tournaments a " +
+                    "LEFT JOIN teams b on a.team_organizer_id = b.team_id " +
+                    "JOIN registration_desc c on a.tournament_id = c.tournament_id " +
+                    "WHERE tournament_state_id = 1 " +
+                    "AND c.user_id = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setLong(1, userId);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                tournaments.add(createTournament(resultSet));            }
             resultSet.close();
             statement.close();
         } catch (SQLException e) {
@@ -189,6 +209,14 @@ public class TournamentDaoImpl implements TournamentDao {
             return null;
         }
         return tournament;
+    }
+
+    private Tournament createTournament(ResultSet resultSet) throws SQLException {
+        return new Tournament(resultSet.getLong("a.tournament_id"),
+                resultSet.getString("a.tournament_name"),
+                new Team(resultSet.getLong("a.team_organizer_id"), resultSet.getString("b.team_name")),
+                resultSet.getDate("a.tournament_start_date"),
+                resultSet.getInt("a.tournament_state_id"));
     }
 
 

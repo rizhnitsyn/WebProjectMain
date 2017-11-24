@@ -30,7 +30,7 @@
     <p>Угадана разница счета, количество: ${requestScope.match.guessedDiffInResultsCount}</p>
     <p>Получено очков в этом матче: ${requestScope.match.currentUserPoints} </p>
     <button type="submit" name="idMatch" value="${requestScope.match.id}">Изменить счет матча</button>
-    <button type="submit" name="idForecast" value="${requestScope.match.id}">Сохранить прогноз</button>
+    <button type="submit" name="idForecast" value="${requestScope.match.id}">Сделать прогноз</button>
 </form>
 </body>
 </html>

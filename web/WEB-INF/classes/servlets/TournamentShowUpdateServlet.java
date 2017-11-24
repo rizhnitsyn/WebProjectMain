@@ -39,7 +39,7 @@ public class TournamentShowUpdateServlet extends HttpServlet {
             Long tournamentId = Long.valueOf(req.getParameter("idReg"));
             //получить id пользователя, передать в функцию и сделать insert в БД
             //не давать региться на уже оконченные турниры, убрать кнопку
-            Long userId = 8L;
+            Long userId = 1L;
             TournamentViewDto updatedTournament = TournamentService.getInstance().registerUserOnTournament(tournamentId, userId);
             resp.sendRedirect("/tournament?id=" + updatedTournament.getId());
         }

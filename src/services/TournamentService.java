@@ -42,8 +42,13 @@ public final class TournamentService {
             return null;
         }
         String tournamentState = TournamentDaoImpl.getInstance().getTournamentState(foundTournament.getStateId());
+        User currentUser = foundTournament.getUsers().stream()
+                .filter(user -> user.getId() == 1)
+                .findFirst().orElse(null);
+        Long userId = currentUser == null ? null : currentUser.getId();
+
         return new TournamentViewDto(foundTournament.getId(), foundTournament.getName(), foundTournament.getOrganizer().getTeamName(),
-                foundTournament.getStartDate(), tournamentState);
+                foundTournament.getStartDate(), tournamentState, userId);
     }
 
     public TournamentViewDto closeTournament(Long id) {
@@ -66,8 +71,14 @@ public final class TournamentService {
                 updatedTournament.getStartDate(), tournamentState);
     }
 
-    public List<TournamentViewDto> getListOfTournaments() {
-        return TournamentDaoImpl.getInstance().getListOfTournaments().stream()
+    public List<TournamentViewDto> getAlLActiveTournaments() {
+        return TournamentDaoImpl.getInstance().getTournamentsFilterByState(1).stream()
+                .map(tr -> new TournamentViewDto(tr.getId(), tr.getName(), tr.getOrganizer().getTeamName(), tr.getStartDate(), getState(tr.getStateId())))
+                .collect(Collectors.toList());
+    }
+
+    public List<TournamentViewDto> getTournamentsForForecasts(Long userId) {
+        return TournamentDaoImpl.getInstance().getTournamentsFilterByUser(userId).stream()
                 .map(tr -> new TournamentViewDto(tr.getId(), tr.getName(), tr.getOrganizer().getTeamName(), tr.getStartDate(), getState(tr.getStateId())))
                 .collect(Collectors.toList());
     }

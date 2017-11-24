@@ -152,13 +152,13 @@ public class MatchDaoImpl implements MatchDao {
     }
 
     @Override
-    public List<Match> getListOfMatches() {
+    public List<Match> getListOfMatches(Long tournamentId) {
         List<Match> matches = new ArrayList<>();
         try (Connection connection = ConnectionManager.getConnection()){
             String sql = "SELECT * FROM matches a " +
                     "LEFT JOIN teams f ON a.first_team_id = f.team_id " +
                     "LEFT JOIN teams m ON a.second_team_id = m.team_id " +
-                    "WHERE a.match_state_id = ?";
+                    "WHERE a.tournament_id = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {

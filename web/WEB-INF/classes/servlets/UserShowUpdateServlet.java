@@ -18,10 +18,11 @@ public class UserShowUpdateServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long id = Long.valueOf(req.getParameter("id"));
-        UserViewDto foundUser = UserService.getInstance().getUserById(id);
-        req.setAttribute("user", foundUser);
+//        UserViewDto foundUser = ;
+        req.setAttribute("user", UserService.getInstance().getUserById(id));
+        req.setAttribute("userStates", UserService.getInstance().getUserStates());
         getServletContext()
-                .getRequestDispatcher(createViewPath("show-user"))
+                .getRequestDispatcher(createViewPath("show-user-adminView"))
                 .forward(req, resp);
     }
 
@@ -29,18 +30,19 @@ public class UserShowUpdateServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
 
-        if (req.getParameter("idReg") != null) {
-            Long id = Long.valueOf(req.getParameter("idReg"));
+//        if (req.getParameter("idReg") != null) {
+            Long id = Long.valueOf(req.getParameter("id"));
             UserViewDto foundUser = UserService.getInstance().getUserById(id);
-            UserViewDto updatedUser = UserService.getInstance().approveUserRegistration(foundUser);
-            resp.sendRedirect("/user?id=" + updatedUser.getId());
-        }
+            Integer userStateId = Integer.valueOf(req.getParameter("userState"));
+            UserViewDto updatedUser = UserService.getInstance().changeUserState(foundUser, userStateId);
+            resp.sendRedirect("/userList");
+//        }
         //для пользователя
-        if (req.getParameter("idBlock") != null) {
-            Long id = Long.valueOf(req.getParameter("idBlock"));
-            UserViewDto foundUser = UserService.getInstance().getUserById(id);
-            UserViewDto updatedUser = UserService.getInstance().blockUser(foundUser);
-            resp.sendRedirect("/user?id=" + updatedUser.getId());
-        }
+//        if (req.getParameter("idBlock") != null) {
+//            Long id = Long.valueOf(req.getParameter("idBlock"));
+//            UserViewDto foundUser = UserService.getInstance().getUserById(id);
+//            UserViewDto updatedUser = UserService.getInstance().blockUser(foundUser);
+//            resp.sendRedirect("/user?id=" + updatedUser.getId());
+//        }
     }
 }

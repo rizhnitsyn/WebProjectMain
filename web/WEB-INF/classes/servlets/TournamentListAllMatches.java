@@ -9,16 +9,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static utils.StaticContent.*;
+import static utils.StaticContent.createViewPath;
 
-@WebServlet("/tournamentList")
-public class TournamentListServlet extends HttpServlet {
+@WebServlet("/tournamentAllMatches")
+public class TournamentListAllMatches extends HttpServlet {
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("tournaments", TournamentService.getInstance().getListOfTournaments());
+        //передавать ID тукущего юзера
+        req.setAttribute("tournaments", TournamentService.getInstance().getTournamentsForForecasts(1L));
         getServletContext()
-                .getRequestDispatcher(createViewPath("tournament-list"))
+                .getRequestDispatcher(createViewPath("tournament-list-allMatches"))
                 .forward(req, resp);
     }
-
 }

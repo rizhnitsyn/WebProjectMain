@@ -2,11 +2,9 @@ package DAO;
 
 import DAO.daoImplementation.TournamentDaoImpl;
 import DAO.daoImplementation.UserDaoImpl;
-import DTO.TournamentViewDto;
 import entities.Team;
 import entities.Tournament;
 import entities.User;
-import jdk.management.resource.internal.TotalResourceContext;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -57,7 +55,7 @@ public class TournamentDaoTest {
 
     @Test
     public void getListOfTournaments() {
-        List<Tournament> tournaments = TournamentDaoImpl.getInstance().getListOfTournaments();
+        List<Tournament> tournaments = TournamentDaoImpl.getInstance().getTournamentsFilterByState(1);
         Assert.assertNotNull(tournaments);
         Assert.assertTrue(tournaments.size() > 0);
     }

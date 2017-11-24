@@ -9,5 +9,5 @@ public interface MatchDao {
     Match updateMatch(Match match);
     Match getMatchById(Long matchId);
     List<Match> getMatchesForForecast(Long tournamentId, Long userId);
-    List<Match> getListOfMatches();
+    List<Match> getListOfMatches(Long tournamentId);
 }

@@ -2,14 +2,13 @@ package DAO.daoImplementation;
 
 import connection.ConnectionManager;
 import DAO.UserDao;
-import entities.Forecast;
-import entities.Team;
-import entities.Tournament;
-import entities.User;
+import entities.*;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class UserDaoImpl implements UserDao {
 
@@ -163,5 +162,23 @@ public class UserDaoImpl implements UserDao {
             return null;
         }
         return matchState;
+    }
+
+    public Map<Integer, String> getUserStates() {
+        Map<Integer, String> userRoles = new HashMap<>();
+        try (Connection connection = ConnectionManager.getConnection()){
+            String sql = "SELECT * FROM user_states";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                userRoles.put(resultSet.getInt("user_state_id"), resultSet.getString("user_state"));
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return userRoles;
     }
 }

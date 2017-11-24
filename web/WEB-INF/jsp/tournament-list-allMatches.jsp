@@ -9,14 +9,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-    <title>Tournament List</title>
+    <title>TournamentList Forecasts</title>
 </head>
 <body>
-<form action="${pageContext.request.contextPath}/tournamentList" method="post">
-    <button type="submit">Добавить новый турнир</button>
-</form>
+    <p>Выберите турнир для просмотра календаря турнира и результатов матча:</p>
     <c:forEach var="tournament" items="${requestScope.tournaments}">
-        <p><a href="${pageContext.request.contextPath}/tournament?id=${tournament.id}">${tournament.name}</a>  Начало: ${tournament.startDate} Состояние: ${tournament.state}</p>
+        <p><a href="${pageContext.request.contextPath}/allMatches?id=${tournament.id}">${tournament.name}</a>  Начало: ${tournament.startDate} Состояние: ${tournament.state}</p>
     </c:forEach>
 </body>
 </html>

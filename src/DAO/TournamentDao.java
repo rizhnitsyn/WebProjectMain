@@ -8,5 +8,6 @@ public interface TournamentDao {
     Tournament addTournament(Tournament tournament);
     Tournament updateTournament(Tournament tournament);
     Tournament getTournamentById(Long tournamentId);
-    List<Tournament> getListOfTournaments();
+    List<Tournament> getTournamentsFilterByState(int tournamentState);
+    List<Tournament> getTournamentsFilterByUser(Long userId);
 }
