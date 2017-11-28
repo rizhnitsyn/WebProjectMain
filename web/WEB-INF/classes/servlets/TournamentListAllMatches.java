@@ -17,7 +17,7 @@ public class TournamentListAllMatches extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         //передавать ID тукущего юзера
-        req.setAttribute("tournaments", TournamentService.getInstance().getTournamentsForForecasts(1L));
+        req.setAttribute("tournaments", TournamentService.getInstance().getAllUserTournaments(1L));
         getServletContext()
                 .getRequestDispatcher(createViewPath("tournament-list-allMatches"))
                 .forward(req, resp);

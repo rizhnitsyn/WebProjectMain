@@ -1,6 +1,6 @@
 package services;
 
-import DAO.daoImplementation.ForecastDaoImpl;
+import DAO.ForecastDao;
 import entities.Forecast;
 
 public final class ForecastService {
@@ -20,6 +20,6 @@ public final class ForecastService {
     }
 
     public void addForecast(Forecast forecast) {
-        ForecastDaoImpl.getInstance().addForecast(forecast);
+        ForecastDao.getInstance().addForecast(forecast);
     }
 }

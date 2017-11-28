@@ -22,9 +22,9 @@
         <br>
         <li><a href="${pageContext.request.contextPath}/forecastTournaments">Список матчей для прогнозов</a></li>
         <br>
-        <li><a href="">Календарь матчей</a></li>
+        <li><a href="${pageContext.request.contextPath}/tournamentAllMatches">Календарь матчей</a></li>
         <br>
-        <li><a href="">Результаты турниров</a></li>
+        <li><a href="${pageContext.request.contextPath}/tournamentStatistic">Результаты турниров</a></li>
         <br>
         <li><a href="">Правила игры</a></li>
         <br>

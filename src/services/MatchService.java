@@ -1,8 +1,8 @@
 package services;
 
-import DAO.daoImplementation.MatchDaoImpl;
-import DAO.daoImplementation.TeamDaoImpl;
-import DAO.daoImplementation.TournamentDaoImpl;
+import DAO.MatchDao;
+import DAO.TeamDao;
+import DAO.TournamentDao;
 import DTO.MatchCreateDto;
 import DTO.MatchShortViewDto;
 import DTO.MatchViewDto;
@@ -12,6 +12,7 @@ import entities.Team;
 import entities.Tournament;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public final class MatchService {
@@ -31,18 +32,22 @@ public final class MatchService {
     }
 
     public MatchViewDto addMatch(MatchCreateDto dto) {
-        Team firstTeam = TeamDaoImpl.getInstance().getTeamById(dto.getFirstTeam());
-        Team secondTeam = TeamDaoImpl.getInstance().getTeamById(dto.getSecondTeam());
-        Tournament tournament = TournamentDaoImpl.getInstance().getTournamentById(dto.getTournamentId());
+        Team firstTeam = TeamDao.getInstance().getTeamById(dto.getFirstTeam());
+        Team secondTeam = TeamDao.getInstance().getTeamById(dto.getSecondTeam());
+        Tournament tournament = TournamentDao.getInstance().getTournamentById(dto.getTournamentId());
         Match match = new Match(dto.getMatchDateTime(), dto.getMatchState(), dto.getMatchType(),
                 firstTeam, secondTeam, tournament);
 
-        Match savedMatch = MatchDaoImpl.getInstance().addMatch(match);
+        Match savedMatch = MatchDao.getInstance().addMatch(match);
         return new MatchViewDto(savedMatch);
     }
 
+    public Map<Integer, String> getMatchTypes() {
+        return MatchDao.getInstance().getListOfMatchTypes();
+    }
+
     public MatchViewDto getMatchById(Long id) {
-        Match foundMatch = MatchDaoImpl.getInstance().getMatchById(id);
+        Match foundMatch = MatchDao.getInstance().getMatchById(id);
         if (foundMatch == null) {
             return null;
         }
@@ -67,39 +72,39 @@ public final class MatchService {
     }
 
     public MatchViewDto updateMatch(Long id, int firstTeamResult, int secondTeamResult) {
-        Match foundMatch = MatchDaoImpl.getInstance().getMatchById(id);
+        Match foundMatch = MatchDao.getInstance().getMatchById(id);
         foundMatch.setFirstTeamResult(firstTeamResult);
         foundMatch.setSecondTeamResult(secondTeamResult);
-        Match updatedMatch = MatchDaoImpl.getInstance().updateMatch(foundMatch);
+        Match updatedMatch = MatchDao.getInstance().updateMatch(foundMatch);
         return new MatchViewDto(updatedMatch);
     }
 
     public List<MatchShortViewDto> matchesForForecast(Long tournamentId, Long userId) {
-        List<Match> matches = MatchDaoImpl.getInstance().getMatchesForForecast(tournamentId,userId);
+        List<Match> matches = MatchDao.getInstance().getMatchesForForecast(tournamentId,userId);
         if (matches == null) {
             return null;
         }
         return matches.stream()
-                .map(match -> new MatchShortViewDto(match.getId(), match.getMatchDateTime(), match.getFirstTeam().getTeamName(), match.getSecondTeam().getTeamName()                        ))
+                .map(match -> new MatchShortViewDto(match.getId(), match.getMatchDateTime(), match.getFirstTeam().getTeamName(), match.getSecondTeam().getTeamName(),tournamentId))
                 .collect(Collectors.toList());
     }
 
     public List<MatchShortViewDto> getAllMatchesOfSelectedTournament(Long tournamentId) {
-        List<Match> matches = MatchDaoImpl.getInstance().getListOfMatches(tournamentId);
+        List<Match> matches = MatchDao.getInstance().getMatchesOfSelectedTournament(tournamentId);
         if (matches == null) {
             return null;
         }
         return matches.stream()
-                .map(match -> new MatchShortViewDto(match.getId(), match.getMatchDateTime(), match.getFirstTeam().getTeamName(), match.getSecondTeam().getTeamName()                        ))
+                .map(match -> new MatchShortViewDto(match.getId(), match.getMatchDateTime(), match.getFirstTeam().getTeamName(), match.getSecondTeam().getTeamName(), tournamentId))
                 .collect(Collectors.toList());
     }
 
     private String getState(int id) {
-        return MatchDaoImpl.getInstance().getMatchState(id);
+        return MatchDao.getInstance().getMatchState(id);
     }
 
     private String getType(int id) {
-        return MatchDaoImpl.getInstance().getMatchType(id);
+        return MatchDao.getInstance().getMatchType(id);
     }
 
     private int guessedDiffInResultsCount(Match foundMatch) {

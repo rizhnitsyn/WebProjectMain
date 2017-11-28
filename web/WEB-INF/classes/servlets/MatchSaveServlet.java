@@ -23,9 +23,9 @@ public class MatchSaveServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        getServletContext()
-                .getRequestDispatcher(createViewPath( "save-match"))
-                .forward(req, resp);
+//        getServletContext()
+//                .getRequestDispatcher(createViewPath( "save-match"))
+//                .forward(req, resp);
     }
 
     @Override
@@ -34,18 +34,18 @@ public class MatchSaveServlet extends HttpServlet {
         Long firstTeamId = null;
         Long secondTeamId = null;
         Long tournamentId = null;
-        int matchType = 0;
+        Integer matchType = 0;
         Long startDateLong = 0L;
         try {
             firstTeamId = Long.valueOf(req.getParameter("firstTeamId"));
             secondTeamId = Long.valueOf(req.getParameter("secondTeamId"));
             tournamentId = Long.valueOf(req.getParameter("tournamentId"));
-            matchType = Integer.parseInt(req.getParameter("matchType"));
+            matchType = Integer.valueOf(req.getParameter("matchType"));
             String startDate = req.getParameter("matchDateTime");
             startDateLong = dateTimeFormat.parse(startDate).getTime();
         } catch (NumberFormatException | ParseException e) {}
 
-        if (firstTeamId == null || secondTeamId == null || matchType == 0 || tournamentId == null || startDateLong == 0) {
+        if (firstTeamId == null || secondTeamId == null || matchType == null || tournamentId == null || startDateLong == 0) {
             resp.sendRedirect("/saveMatch");
         } else {
             MatchViewDto savedMatch = MatchService.getInstance().addMatch(

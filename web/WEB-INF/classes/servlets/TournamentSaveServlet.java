@@ -23,7 +23,7 @@ public class TournamentSaveServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("teams", TeamService.getInstance().getListOfteams());
+        req.setAttribute("teams", TeamService.getInstance().getListOfTeams());
         getServletContext()
                 .getRequestDispatcher(createViewPath( "save-tournament"))
                 .forward(req, resp);

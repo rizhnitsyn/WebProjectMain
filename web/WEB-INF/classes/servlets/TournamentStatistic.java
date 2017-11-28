@@ -1,6 +1,6 @@
 package servlets;
 
-import services.MatchService;
+import services.TournamentService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,15 +11,15 @@ import java.io.IOException;
 
 import static utils.StaticContent.createViewPath;
 
+@WebServlet("/tournamentStatistic")
+public class TournamentStatistic extends HttpServlet {
 
-@WebServlet("/allMatches")
-public class MatchesForSelectedTournamentServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Long tournamentId = Long.valueOf(req.getParameter("id"));
-        req.setAttribute("matches", MatchService.getInstance().getAllMatchesOfSelectedTournament(tournamentId));
-        req.getServletContext()
-                .getRequestDispatcher(createViewPath("show-all-matches"))
+        //передавать ID тукущего юзера
+        req.setAttribute("tournaments", TournamentService.getInstance().getAllUserTournaments(1L));
+        getServletContext()
+                .getRequestDispatcher(createViewPath("tournament-list-statistic"))
                 .forward(req, resp);
     }
 }

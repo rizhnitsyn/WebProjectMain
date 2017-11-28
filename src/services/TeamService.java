@@ -1,6 +1,6 @@
 package services;
 
-import DAO.daoImplementation.TeamDaoImpl;
+import DAO.TeamDao;
 import entities.Team;
 
 import java.util.List;
@@ -21,12 +21,12 @@ public final class TeamService {
         return INSTANCE;
     }
 
-    public List<Team> getListOfteams() {
-        return TeamDaoImpl.getInstance().getListOfTeams();
+    public List<Team> getListOfTeams() {
+        return TeamDao.getInstance().getListOfTeams();
     }
 
     public Team getTeamById(Long teamId) {
-        return TeamDaoImpl.getInstance().getTeamById(teamId);
+        return TeamDao.getInstance().getTeamById(teamId);
     }
 
 }

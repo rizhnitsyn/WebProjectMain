@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <title>Save Match</title>
@@ -16,14 +17,24 @@
     <p>Дата и время начала матча</p>
     <input id="matchDateTime" name="matchDateTime">
     <p>Тип матча</p>
-    <input id="matchType" name="matchType">
+    <select name="matchType">
+        <c:forEach var="type" items="${requestScope.matchTypes}">
+            <option value="${type.key}">${type.value}</option>
+        </c:forEach>
+    </select>
     <p>Первая команда участник</p>
-    <input id="firstTeamId" name="firstTeamId">
+    <select name="firstTeamId">
+        <c:forEach var="country" items="${requestScope.countries}">
+            <option value="${country.id}">${country.teamName}</option>
+        </c:forEach>
+    </select>
     <p>Вторая команда участник</p>
-    <input id="secondTeamId" name="secondTeamId">
-    <p>Турнир</p>
-    <input id="tournamentId" name="tournamentId">
-    <button type="submit">Сохранить матч</button>
+    <select name="secondTeamId">
+        <c:forEach var="country" items="${requestScope.countries}">
+            <option value="${country.id}">${country.teamName}</option>
+        </c:forEach>
+    </select>
+    <button type="submit" name="tournamentId" value="${requestScope.tournamentId}">Сохранить матч</button>
 </form>
 
 </body>
