@@ -2,12 +2,18 @@ package DAO;
 
 import connection.ConnectionManager;
 import entities.*;
+import utils.StaticContent;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static utils.StaticContent.*;
+import static utils.StaticContent.dateTimeFormatter;
 
 public class UserDao {
 
@@ -56,36 +62,28 @@ public class UserDao {
             String sql = "SELECT * FROM users a " +
                     "LEFT JOIN registration_desc b ON a.user_id = b.user_id " +
                     "LEFT JOIN tournaments c ON b.tournament_id = c.tournament_id " +
-                    "LEFT JOIN forecasts d ON a.user_id = d.user_id " +
-                    "LEFT JOIN teams e ON e.team_id = c.team_organizer_id " +
+//                    "LEFT JOIN forecasts d ON a.user_id = d.user_id " +
+//                    "LEFT JOIN teams e ON e.team_id = c.team_organizer_id " +
                     "WHERE a.user_id = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setLong(1, userId);
             ResultSet resultSet = statement.executeQuery();
             Tournament tournament;
             if (resultSet.next()) {
-                user = new User(resultSet.getLong("a.user_id"),
-                        resultSet.getString("a.first_name"),
-                        resultSet.getString("a.second_name"),
-                        resultSet.getString("a.email"),
-                        resultSet.getInt("a.user_state_id"));
-                tournament = new Tournament(resultSet.getLong("c.tournament_id"), resultSet.getString("c.tournament_name"),
-                        new Team(resultSet.getLong("c.team_organizer_id"), resultSet.getString("e.team_name")),
-                        resultSet.getDate("c.tournament_start_date"), resultSet.getInt("c.tournament_state_id"));
+                user = createUser(resultSet);
+                tournament = createTournament(resultSet);
                 tournament.addUser(user);
                 user.addTournament(tournament);
                 //ДОСТАТЬ MATCH_ID
-                user.addForecast(new Forecast(resultSet.getLong("d.forecast_id"), resultSet.getInt("d.first_team_forecast"),
-                        resultSet.getInt("d.second_team_forecast"), user.getId(), resultSet.getLong("d.match_id")));
+//                user.addForecast(new Forecast(resultSet.getLong("d.forecast_id"), resultSet.getInt("d.first_team_forecast"),
+//                        resultSet.getInt("d.second_team_forecast"), user.getId(), resultSet.getLong("d.match_id"), null));
 
                 while (resultSet.next()) {
-                    tournament = new Tournament(resultSet.getLong("c.tournament_id"), resultSet.getString("c.tournament_name"),
-                            new Team(resultSet.getLong("c.team_organizer_id"), resultSet.getString("e.team_name")),
-                            resultSet.getDate("c.tournament_start_date"), resultSet.getInt("c.tournament_state_id"));
+                    tournament = createTournament(resultSet);
                     tournament.addUser(user);
                     user.addTournament(tournament);
-                    user.addForecast(new Forecast(resultSet.getLong("d.forecast_id"), resultSet.getInt("d.first_team_forecast"),
-                            resultSet.getInt("d.second_team_forecast"), user.getId(), resultSet.getLong("d.match_id")));
+//                    user.addForecast(new Forecast(resultSet.getLong("d.forecast_id"), resultSet.getInt("d.first_team_forecast"),
+//                            resultSet.getInt("d.second_team_forecast"), user.getId(), resultSet.getLong("d.match_id"), null));
                 }
             }
             resultSet.close();
@@ -95,6 +93,92 @@ public class UserDao {
             return null;
         }
         return user;
+    }
+
+    public User getUserWithStatistics(Long tournamentId, Long userId) {
+        User user = null;
+        try (Connection connection = ConnectionManager.getConnection()){
+            String sql = "SELECT * FROM users a " +
+                    "LEFT JOIN registration_desc b ON a.user_id = b.user_id " +
+                    "LEFT JOIN tournaments c ON b.tournament_id = c.tournament_id " +
+                    "LEFT JOIN matches e ON e.tournament_id = c.tournament_id  " +
+                    "LEFT JOIN forecasts d ON a.user_id = d.user_id and d.match_id = e.match_id " +
+                    "WHERE c.tournament_id = ? " +
+                    "AND a.user_id = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setLong(1, tournamentId);
+            statement.setLong(2, userId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                user = createUser(resultSet);
+                user.addTournament(createTournament(resultSet));
+                fillingUserWithData(user, resultSet);
+                while (resultSet.next()) {
+                    fillingUserWithData(user, resultSet);
+                }
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return user;
+    }
+
+    public List<User> getUsersOfTournament(Long tournamentId) {
+        List<User> users = new ArrayList<>();
+        try (Connection connection = ConnectionManager.getConnection()){
+            String sql = "SELECT * FROM users a " +
+                    "LEFT JOIN registration_desc b ON a.user_id = b.user_id " +
+                    "WHERE b.tournament_id = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setLong(1, tournamentId);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                users.add(new User(resultSet.getLong("user_id")));
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return users;
+    }
+
+    private void fillingUserWithData(User user, ResultSet rs) throws SQLException {
+        Long forecastId = rs.getLong("d.forecast_id");
+        if (forecastId == 0) {
+            return;
+        }
+        Match match = new Match(
+                rs.getLong("e.match_id"),
+                rs.getInt("e.first_team_result"),
+                rs.getInt("e.second_team_result"));
+        Forecast forecast = new Forecast(
+                forecastId,
+                rs.getInt("d.first_team_forecast"),
+                rs.getInt("d.second_team_forecast"),
+                user.getId(),
+                match);
+        user.addForecast(forecast);
+    }
+
+    private Tournament createTournament(ResultSet resultSet) throws SQLException {
+        return new Tournament(
+                resultSet.getLong("c.tournament_id"),
+                resultSet.getString("c.tournament_name"),
+                LocalDate.parse(resultSet.getString("c.tournament_start_date"), dateFormatter),
+                resultSet.getInt("c.tournament_state_id"));
+    }
+
+    private User createUser(ResultSet resultSet) throws SQLException {
+        return new User(resultSet.getLong("user_id"),
+                resultSet.getString("first_name"),
+                resultSet.getString("second_name"),
+                resultSet.getString("email"),
+                resultSet.getInt("user_state_id"));
     }
 
     public User updateUser(User user) {
@@ -124,11 +208,7 @@ public class UserDao {
             statement.setInt(1, state);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                users.add(new User(resultSet.getLong("user_id"),
-                        resultSet.getString("first_name"),
-                        resultSet.getString("second_name"),
-                        resultSet.getString("email"),
-                        resultSet.getInt("user_state_id")));
+                users.add(createUser(resultSet));
             }
             resultSet.close();
             statement.close();

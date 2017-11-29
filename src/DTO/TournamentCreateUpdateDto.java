@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -13,7 +14,7 @@ import java.sql.Date;
 public class TournamentCreateUpdateDto {
     private String name;
     private Long organizerId;
-    private Date startDate;
+    private LocalDate startDate;
     private int stateId;
 
     public TournamentCreateUpdateDto(Tournament tournament) {

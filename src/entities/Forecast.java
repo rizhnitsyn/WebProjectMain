@@ -14,12 +14,12 @@ public class Forecast {
     private int firstTeamForecast;
     private int secondTeamForecast;
     private Long userId;
-    private Long matchId;
+    private Match match;
 
-    public Forecast(int firstTeamForecast, int secondTeamForecast, Long userId, Long matchId) {
+    public Forecast(int firstTeamForecast, int secondTeamForecast, Long userId, Match match) {
         this.firstTeamForecast = firstTeamForecast;
         this.secondTeamForecast = secondTeamForecast;
         this.userId = userId;
-        this.matchId = matchId;
+        this.match = match;
     }
 }

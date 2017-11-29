@@ -24,9 +24,4 @@ public final class TeamService {
     public List<Team> getListOfTeams() {
         return TeamDao.getInstance().getListOfTeams();
     }
-
-    public Team getTeamById(Long teamId) {
-        return TeamDao.getInstance().getTeamById(teamId);
-    }
-
 }

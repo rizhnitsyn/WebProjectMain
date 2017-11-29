@@ -12,7 +12,7 @@
     <title>TournamentList Forecasts</title>
 </head>
 <body>
-    <p>Выберите турнир для просмотра итогов кункурса прогнозов:</p>
+    <p>Выберите турнир для просмотра итогов конкурса прогнозов:</p>
     <c:forEach var="tournament" items="${requestScope.tournaments}">
         <p><a href="${pageContext.request.contextPath}/resultTable?id=${tournament.id}">${tournament.name}</a>  Начало: ${tournament.startDate} Состояние: ${tournament.state}</p>
     </c:forEach>

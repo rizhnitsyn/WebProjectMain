@@ -5,6 +5,8 @@ import entities.Team;
 import entities.Tournament;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -14,10 +16,10 @@ public class MatchDaoTest {
     @Test
     public void testAddFootballMatch() {
         MatchDao footballMatchDao = MatchDao.getInstance();
-        java.sql.Date sqlDate = new java.sql.Date(new Date().getTime());
+//        java.sql.Date sqlDate = new java.sql.Date(new Date().getTime());
         Tournament tournament = new Tournament();
         tournament.setId(2L);
-        Match match = footballMatchDao.addMatch(new Match(sqlDate, 1, 1, new Team(1L),
+        Match match = footballMatchDao.addMatch(new Match(LocalDateTime.now(), 1, 1, new Team(1L),
                 new Team(3L), tournament));
         Assert.assertNotNull(match);
         Assert.assertTrue(match.getId() != 0);

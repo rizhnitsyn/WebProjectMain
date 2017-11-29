@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Getter
@@ -14,16 +16,15 @@ import java.util.Set;
 @AllArgsConstructor
 public class MatchViewDto {
     private Long id;
-    private Integer firstTeamResult = null;
-    private Integer secondTeamResult = null;
-    private Date matchDateTime;
+    private Integer firstTeamResult;
+    private Integer secondTeamResult;
+    private LocalDateTime matchDateTime;
     private String matchState;
     private String matchType;
     private String firstTeam;
     private String secondTeam;
     private String tournamentName;
     private int forecastsCount;
-//    private Set<Forecast> forecasts;
     private Forecast currentUserForecast;
     private int firstTeamWinCount;
     private int secondTeamWinCount;

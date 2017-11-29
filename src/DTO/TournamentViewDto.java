@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -13,11 +14,11 @@ public class TournamentViewDto {
     private Long id;
     private String name;
     private String teamName;
-    private Date startDate;
+    private LocalDate startDate;
     private String state;
     private Long userId;
 
-    public TournamentViewDto(Long id, String name, String teamName, Date startDate, String state) {
+    public TournamentViewDto(Long id, String name, String teamName, LocalDate startDate, String state) {
         this.id = id;
         this.name = name;
         this.teamName = teamName;

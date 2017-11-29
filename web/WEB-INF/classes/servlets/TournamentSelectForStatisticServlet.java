@@ -12,7 +12,7 @@ import java.io.IOException;
 import static utils.StaticContent.createViewPath;
 
 @WebServlet("/tournamentStatistic")
-public class TournamentStatistic extends HttpServlet {
+public class TournamentSelectForStatisticServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

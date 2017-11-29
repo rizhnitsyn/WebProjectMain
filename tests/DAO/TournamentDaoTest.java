@@ -9,6 +9,7 @@ import org.junit.Test;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -19,11 +20,11 @@ public class TournamentDaoTest {
     public void testAddTournament() throws ParseException, SQLException {
         TournamentDao tournamentDao = TournamentDao.getInstance();
         Random random = new Random();
-        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy", Locale.UK);
-        Date parsedDate = formatter.parse("10.06.2018");
-        java.sql.Date sqlDate = new java.sql.Date(parsedDate.getTime());
+//        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy", Locale.UK);
+//        Date parsedDate = formatter.parse("10.06.2018");
+//        java.sql.Date sqlDate = new java.sql.Date(parsedDate.getTime());
         Tournament savedTournament = tournamentDao.addTournament(new Tournament(String.valueOf(random.nextInt(1000000)),
-                 new Team(2L), sqlDate, 2));
+                 new Team(2L), LocalDate.now(), 2));
         Assert.assertNotNull(savedTournament);
         Assert.assertTrue(savedTournament.getId() != 0);
     }

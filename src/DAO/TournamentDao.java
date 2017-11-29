@@ -7,8 +7,13 @@ import connection.ConnectionManager;
 import entities.User;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static utils.StaticContent.dateFormatter;
+import static utils.StaticContent.dateTimeFormatter;
 
 public class TournamentDao {
     private static TournamentDao INSTANCE;
@@ -33,7 +38,7 @@ public class TournamentDao {
             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, tournament.getName());
             statement.setLong(2, tournament.getOrganizer().getId());
-            statement.setDate(3, tournament.getStartDate());
+            statement.setDate(3, Date.valueOf(tournament.getStartDate().toString()));
             statement.setLong(4,tournament.getStateId());
             statement.executeUpdate();
 
@@ -67,14 +72,14 @@ public class TournamentDao {
                         resultSet.getLong("a.tournament_id"),
                         resultSet.getString("a.tournament_name"),
                         new Team(resultSet.getLong("a.team_organizer_id"), resultSet.getString("e.team_name")),
-                        resultSet.getDate("a.tournament_start_date"),
+                        LocalDate.parse(resultSet.getString("a.tournament_start_date"), dateFormatter),
                         resultSet.getInt("a.tournament_state_id"));
-                tournament.addFootballMatch(createMatch(resultSet, tournament));
+                tournament.addFootballMatch(createMatch(resultSet));
                 user = createUser(resultSet);
                 user.addTournament(tournament);
                 tournament.addUser(user);
                 while (resultSet.next()) {
-                    tournament.addFootballMatch(createMatch(resultSet, tournament));
+                    tournament.addFootballMatch(createMatch(resultSet));
                     user = createUser(resultSet);
                     user.addTournament(tournament);
                     tournament.addUser(user);
@@ -89,13 +94,12 @@ public class TournamentDao {
         return null;
     }
 
-    private Match createMatch(ResultSet resultSet, Tournament tournament) throws SQLException {
+    private Match createMatch(ResultSet resultSet) throws SQLException {
         return new Match(
                 resultSet.getLong("b.match_id"),
-                resultSet.getDate("b.match_datetime"),
+                LocalDateTime.parse(resultSet.getString("b.match_datetime"), dateTimeFormatter),
                 resultSet.getInt("b.match_state_id"),
-                resultSet.getInt("b.match_type_id"),
-                tournament);
+                resultSet.getInt("b.match_type_id"));
     }
 
     private User createUser(ResultSet resultSet) throws SQLException {
@@ -112,7 +116,7 @@ public class TournamentDao {
             String sql = "UPDATE tournaments SET tournament_name =?, tournament_start_date =?, tournament_state_id =? WHERE tournament_id =?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, tournament.getName());
-            statement.setDate(2, tournament.getStartDate());
+            statement.setDate(2, Date.valueOf(tournament.getStartDate().toString()));
             statement.setLong(3,tournament.getStateId());
             statement.setLong(4,tournament.getId());
             statement.executeUpdate();
@@ -224,7 +228,7 @@ public class TournamentDao {
         return new Tournament(resultSet.getLong("a.tournament_id"),
                 resultSet.getString("a.tournament_name"),
                 new Team(resultSet.getLong("a.team_organizer_id"), resultSet.getString("b.team_name")),
-                resultSet.getDate("a.tournament_start_date"),
+                LocalDate.parse(resultSet.getString("a.tournament_start_date"), dateFormatter),
                 resultSet.getInt("a.tournament_state_id"));
     }
 

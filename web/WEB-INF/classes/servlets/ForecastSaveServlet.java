@@ -1,5 +1,6 @@
 package servlets;
 
+import DTO.ForecastAddDto;
 import DTO.MatchViewDto;
 import entities.Forecast;
 import services.ForecastService;
@@ -45,7 +46,7 @@ public class ForecastSaveServlet extends HttpServlet {
                     .getRequestDispatcher(createViewPath( "save-forecast"))
                     .forward(req, resp);
         } else {
-            ForecastService.getInstance().addForecast(new Forecast(firstTeamResult, secondTeamResult, userId, matchId));
+            ForecastService.getInstance().addForecast(new ForecastAddDto(firstTeamResult, secondTeamResult, userId, matchId));
             resp.sendRedirect("/match?id=" + matchId);
         }
     }

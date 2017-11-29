@@ -1,8 +1,8 @@
 <%--
   Created by IntelliJ IDEA.
   User: rizhnitsyn
-  Date: 23.11.2017
-  Time: 17:09
+  Date: 29.11.2017
+  Time: 11:58
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -19,9 +19,9 @@
         </c:forEach>
     </c:if>
 
-    <c:if test="${empty requestScope.matches}">
-        <p>Нет матчей для прогноза</p>
-    </c:if>
+    <%--<c:if test="${empty requestScope.matches}">--%>
+        <%--<p>Нет матчей для прогноза</p>--%>
+    <%--</c:if>--%>
     <form action="${pageContext.request.contextPath}/allMatches" method="post">
        <button type="submit" name="idTournament" value="${requestScope.tournamentId}">Добавить новый матч </button>
     </form>

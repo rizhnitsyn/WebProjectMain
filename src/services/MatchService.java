@@ -158,23 +158,8 @@ public final class MatchService {
         if (userForecast == null) {
             return null;
         }
-
-        if (foundMatch.getFirstTeamResult() == userForecast.getFirstTeamForecast() &&
-                foundMatch.getSecondTeamResult() == userForecast.getSecondTeamForecast()) {
-            return 6;
-        } else if (userForecast.getFirstTeamForecast() - userForecast.getSecondTeamForecast() ==
-                foundMatch.getFirstTeamResult() - foundMatch.getSecondTeamResult() &&
-                foundMatch.getFirstTeamResult() - foundMatch.getSecondTeamResult() != 0) {
-            return 4;
-        } else if(userForecast.getFirstTeamForecast() - userForecast.getSecondTeamForecast() ==
-                foundMatch.getFirstTeamResult() - foundMatch.getSecondTeamResult() &&
-                foundMatch.getFirstTeamResult() - foundMatch.getSecondTeamResult() == 0) {
-            return 3;
-        } else if (Integer.compare(userForecast.getFirstTeamForecast(), userForecast.getSecondTeamForecast()) ==
-                Integer.compare(foundMatch.getFirstTeamResult(), foundMatch.getSecondTeamResult())) {
-            return 1;
-        } else {
-            return 0;
-        }
+        return UserService.getInstance().calculateUserPointsPerMatch(foundMatch, userForecast);
     }
+
+
 }

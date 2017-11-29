@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.ParseException;
 import java.sql.Date;
+import java.time.LocalDate;
 
 import static utils.StaticContent.*;
 
@@ -34,17 +35,17 @@ public class TournamentSaveServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         String name = req.getParameter("name");
         Long organizer = 0L;         //страну тянем из справочника ! Сделать
-        Long startDateL = 0L;
+        LocalDate startDateLocal = null;
         try {
             organizer = Long.valueOf(req.getParameter("organizer"));
             String startDate = req.getParameter("startDate");
-            startDateL = dateFormat.parse(startDate).getTime();
-        } catch (ParseException | NumberFormatException e) {//при ошибках парсинга будем перекидывать на страницу и отображать текст ошибки!!! Сделать позже
+            startDateLocal = LocalDate.parse(startDate, dateFormatter);
+        } catch (NumberFormatException e) {//при ошибках парсинга будем перекидывать на страницу и отображать текст ошибки!!! Сделать позже
 //            e.printStackTrace();
         }
-        if (!name.isEmpty() && organizer != 0 && startDateL != 0L) {//статус вводить через справочник!!! позже исправить
+        if (!name.isEmpty() && organizer != 0 && startDateLocal != null ) {//статус вводить через справочник!!! позже исправить
             TournamentViewDto savedTournament = TournamentService.getInstance()
-                    .addTournament(new TournamentCreateUpdateDto(name, organizer, new Date(startDateL), 1));
+                    .addTournament(new TournamentCreateUpdateDto(name, organizer, startDateLocal, 1));
             resp.sendRedirect("/tournament?id=" + savedTournament.getId());
         } else {
             resp.sendRedirect("/saveTournament");

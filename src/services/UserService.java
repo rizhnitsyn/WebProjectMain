@@ -3,6 +3,9 @@ package services;
 import DAO.UserDao;
 import DTO.UserCreateDto;
 import DTO.UserViewDto;
+import DTO.UsersResultTableDto;
+import entities.Forecast;
+import entities.Match;
 import entities.User;
 
 import java.util.List;
@@ -41,17 +44,85 @@ public final class UserService {
         return new UserViewDto(foundedUser, state);
     }
 
+    public List<UsersResultTableDto> getUsersWithStatistic(Long tournamentId) {
+        List<User> usersOfTournament = UserDao.getInstance().getUsersOfTournament(tournamentId);
+        return usersOfTournament.stream()
+                .map(user -> UserDao.getInstance().getUserWithStatistics(tournamentId, user.getId()))
+                .map(user -> new UsersResultTableDto(user.getId(), user.getFirstName(), user.getSecondName(),
+                        calculateTotalPointsOfUser(user),
+                        guessedResultsCount(user),
+                        guessedWinnersCount(user),
+                        guessedDiffInResultsCount(user)))
+                .collect(Collectors.toList());
+    }
+
+    private int calculateTotalPointsOfUser(User user) {
+        return user.getForecasts().stream()
+                .map(forecast -> calculateUserPointsPerMatch(forecast.getMatch(), forecast))
+                .mapToInt(points -> points)
+                .sum();
+    }
+
+    public int calculateUserPointsPerMatch(Match foundMatch, Forecast userForecast) {
+        Integer secondTeamResult = foundMatch.getSecondTeamResult();
+        Integer firstTeamResult = foundMatch.getFirstTeamResult();
+        if (firstTeamResult == userForecast.getFirstTeamForecast() &&
+                secondTeamResult == userForecast.getSecondTeamForecast()) {
+            return 6;
+        } else if (userForecast.getFirstTeamForecast() - userForecast.getSecondTeamForecast() ==
+                firstTeamResult - secondTeamResult &&
+                firstTeamResult - secondTeamResult != 0) {
+            return 4;
+        } else if(userForecast.getFirstTeamForecast() - userForecast.getSecondTeamForecast() ==
+                firstTeamResult - secondTeamResult &&
+                firstTeamResult - secondTeamResult == 0) {
+            return 3;
+        } else if (Integer.compare(userForecast.getFirstTeamForecast(), userForecast.getSecondTeamForecast()) ==
+                Integer.compare(firstTeamResult, secondTeamResult)) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    private int guessedResultsCount(User user) {
+        return (int) user.getForecasts().stream()
+                .filter(forecast -> forecast.getFirstTeamForecast() == forecast.getMatch().getFirstTeamResult() &&
+                        forecast.getSecondTeamForecast() == forecast.getMatch().getSecondTeamResult())
+                .count();
+    }
+
+    private int guessedWinnersCount(User user) {
+        return (int) user.getForecasts().stream()
+                .filter(forecast -> {
+                    Match match = forecast.getMatch();
+                    return (Integer.compare(forecast.getFirstTeamForecast(), forecast.getSecondTeamForecast()) ==
+                            Integer.compare(match.getFirstTeamResult(), match.getSecondTeamResult())) &&
+                            (forecast.getFirstTeamForecast() != match.getFirstTeamResult() ||
+                                    forecast.getSecondTeamForecast() != match.getSecondTeamResult()) &&
+                            (forecast.getFirstTeamForecast() - forecast.getSecondTeamForecast()) != (match.getFirstTeamResult() - match.getSecondTeamResult());
+                })
+                .count();
+    }
+
+    private int guessedDiffInResultsCount(User user) {
+        return (int) user.getForecasts().stream()
+                .filter(forecast -> {
+                    Match match = forecast.getMatch();
+                    return (((forecast.getFirstTeamForecast() - forecast.getSecondTeamForecast()) ==
+                            (match.getFirstTeamResult() - match.getSecondTeamResult())) &&
+                            (match.getFirstTeamResult() - match.getSecondTeamResult()) != 0) &&
+                            (forecast.getFirstTeamForecast() != match.getFirstTeamResult() ||
+                                    forecast.getSecondTeamForecast() != match.getSecondTeamResult());
+                })
+                .count();
+    }
+
     public UserViewDto changeUserState(UserViewDto userViewDto, int userState) {
         User updatedUser = UserDao.getInstance().updateUser(new User(userViewDto, userState));
         String state = getState(updatedUser.getUserState());
         return new UserViewDto(updatedUser, state);
     }
-
-//    public UserViewDto blockUser(UserViewDto userViewDto) {
-//        User updatedUser = UserDao.getInstance().updateUser(new User(userViewDto, 3));
-//        String state = getState(updatedUser.getUserState());
-//        return new UserViewDto(updatedUser, state);
-//    }
 
     public List<UserViewDto> getUsersForRegistration() {
         List<User> userList = UserDao.getInstance().getListOfUsers(1);

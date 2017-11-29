@@ -1,7 +1,9 @@
 package services;
 
 import DAO.ForecastDao;
+import DTO.ForecastAddDto;
 import entities.Forecast;
+import entities.Match;
 
 public final class ForecastService {
     private static ForecastService INSTANCE;
@@ -19,7 +21,8 @@ public final class ForecastService {
         return INSTANCE;
     }
 
-    public void addForecast(Forecast forecast) {
-        ForecastDao.getInstance().addForecast(forecast);
+    public void addForecast(ForecastAddDto forecast) {
+        ForecastDao.getInstance().addForecast(new Forecast(forecast.getFirstTemResult(), forecast.getSecondTeamResult(), forecast.getUserId(),
+                new Match(forecast.getMatchId())));
     }
 }

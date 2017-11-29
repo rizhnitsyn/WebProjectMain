@@ -26,7 +26,7 @@ public class ForecastDao {
             String sql = "INSERT INTO forecasts (match_id, first_team_forecast, second_team_forecast, user_id) " +
                     "VALUES (?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            statement.setLong(1, forecast.getMatchId());
+            statement.setLong(1, forecast.getMatch().getId());
             statement.setInt(2, forecast.getFirstTeamForecast());
             statement.setInt(3, forecast.getSecondTeamForecast());
             statement.setLong(4,forecast.getUserId());

@@ -3,6 +3,7 @@ package entities;
 import lombok.*;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,9 +13,9 @@ import java.util.Set;
 @EqualsAndHashCode(exclude = {"tournament", "matchState", "matchType", "firstTeamResult", "secondTeamResult", "forecasts"})
 public class Match {
     private Long id;
-    private Integer firstTeamResult = null;
-    private Integer secondTeamResult = null;
-    private Date matchDateTime;
+    private Integer firstTeamResult;
+    private Integer secondTeamResult;
+    private LocalDateTime matchDateTime;
     private int matchState;
     private int matchType;
     private Team firstTeam;
@@ -22,14 +23,24 @@ public class Match {
     private Tournament tournament;
     private Set<Forecast> forecasts  = new HashSet<>();
 
-    public Match(Long id, Date matchDateTime, int matchState, int matchType, Tournament tournament) {
+    public Match(Long id) {
+        this.id = id;
+    }
+
+    public Match(Long id, Integer firstTeamResult, Integer secondTeamResult) {
+        this(id);
+        this.firstTeamResult = firstTeamResult;
+        this.secondTeamResult = secondTeamResult;
+    }
+
+    public Match(Long id, LocalDateTime matchDateTime, int matchState, int matchType) {
         this.id = id;
         this.matchDateTime = matchDateTime;
         this.matchState = matchState;
         this.matchType = matchType;
     }
 
-    public Match(Date matchDateTime, int matchState, int matchType, Team firstTeam, Team secondTeam, Tournament tournament) {
+    public Match(LocalDateTime matchDateTime, int matchState, int matchType, Team firstTeam, Team secondTeam, Tournament tournament) {
         this.matchDateTime = matchDateTime;
         this.matchState = matchState;
         this.matchType = matchType;
@@ -38,18 +49,7 @@ public class Match {
         this.tournament = tournament;
     }
 
-    public Match(Long id, Date matchDateTime, int matchState, int matchType, Team firstTeam, Team secondTeam, Tournament tournament) {
-        this(matchDateTime, matchState, matchType, firstTeam, secondTeam, tournament);
-        this.id = id;
-    }
-
-    public Match(Long id, Integer firstTeamResult, Integer secondTeamResult, Date matchDateTime, int matchState, int matchType, Team firstTeam, Team secondTeam, Tournament tournament) {
-        this(id, matchDateTime, matchState, matchType, firstTeam, secondTeam, tournament);
-        this.firstTeamResult = firstTeamResult;
-        this.secondTeamResult = secondTeamResult;
-    }
-
-    public Match(Long id, Integer firstTeamResult, Integer secondTeamResult, Date matchDateTime, int matchState, int matchType, Team firstTeam, Team secondTeam) {
+    public Match(Long id, Integer firstTeamResult, Integer secondTeamResult, LocalDateTime matchDateTime, int matchState, int matchType, Team firstTeam, Team secondTeam) {
         this.id = id;
         this.firstTeamResult = firstTeamResult;
         this.secondTeamResult = secondTeamResult;
