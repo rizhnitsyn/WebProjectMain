@@ -1,13 +1,12 @@
 package services;
 
 import DAO.UserDao;
-import DTO.UserCreateDto;
-import DTO.UserViewDto;
-import DTO.UsersResultTableDto;
+import DTO.*;
 import entities.Forecast;
 import entities.Match;
 import entities.User;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,11 +27,26 @@ public final class UserService {
         return INSTANCE;
     }
 
-    public UserViewDto addUser(UserCreateDto userDto) {
+    public UserViewDto addUser(UserCreateDto userDto) throws SQLException {
         User newUser = new User(userDto);
         User savedUser = UserDao.getInstance().addUser(newUser);
         String state = getState(savedUser.getUserState());
         return new UserViewDto(savedUser, state);
+    }
+
+    public String checkRegistration(UserCreateDto dto) {
+        if (dto.getFirstName().isEmpty() || dto.getSecondName().isEmpty() || dto.getEmail().isEmpty() || dto.getLogin().isEmpty() || dto.getPassword().isEmpty()) {
+            return "Заполните все поля";
+        }
+        return null;
+    }
+
+    public AnswerJsDto checkPassword(LoginDto dto) {
+        if (UserDao.getInstance().checkUser(dto.getLogin(), dto.getPassword())) {
+            return new AnswerJsDto("Все данные введены верно", "/homepage");
+        } else {
+            return new AnswerJsDto("Неверно введены логин или пароль");
+        }
     }
 
     public UserViewDto getUserById(Long id) {

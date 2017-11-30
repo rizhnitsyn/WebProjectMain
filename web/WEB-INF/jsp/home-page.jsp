@@ -14,7 +14,7 @@
 <div class="widget">
     <h3 class="widget-title">Категории</h3>
     <ul class="widget-list">
-        <li><a href="">Регистрация</a></li>
+        <li><a href="${pageContext.request.contextPath}/saveUser">Регистрация</a></li>
         <br>
         <li><a href="${pageContext.request.contextPath}/tournamentList">Заявиться на турнир</a></li>
         <br>
@@ -29,6 +29,8 @@
         <li><a href="">Правила игры</a></li>
         <br>
         <li><a href="">Личный кабинет</a></li>
+        <br>
+        <li><a href="${pageContext.request.contextPath}/login">Залогиниться</a></li>
     </ul>
 </div>
 </body>

@@ -17,6 +17,8 @@ public class User {
     private String secondName;
     private String email;
     private int userState;
+    private String login;
+    private String password;
     private Set<Tournament> tournaments = new HashSet<>();
     private Set<Forecast> forecasts = new HashSet<>();
 
@@ -33,6 +35,8 @@ public class User {
 
     public User(UserCreateDto dto) {
         this(dto.getFirstName(), dto.getSecondName(), dto.getEmail());
+        this.login = dto.getLogin();
+        this.password = dto.getPassword();
     }
 
     public User(Long id, String firstName, String secondName, String email, int userState) {

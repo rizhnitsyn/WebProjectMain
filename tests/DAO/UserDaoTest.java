@@ -4,6 +4,7 @@ import entities.User;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Random;
 
@@ -13,7 +14,12 @@ public class UserDaoTest {
     public void testAddUser() {
         UserDao userDao = UserDao.getInstance();
         Random random = new Random();
-        User savedUser = userDao.addUser(new User("Ivan", String.valueOf(random.nextInt(1000000)), "test" + String.valueOf(random.nextInt(100000)) + "@gmail.com"));
+        User savedUser = null;
+        try {
+            savedUser = userDao.addUser(new User("Ivan", String.valueOf(random.nextInt(1000000)), "test" + String.valueOf(random.nextInt(100000)) + "@gmail.com"));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         Assert.assertNotNull(savedUser);
         Assert.assertTrue(savedUser.getFirstName().equals("Ivan"));
         Assert.assertTrue(savedUser.getId() != 0);

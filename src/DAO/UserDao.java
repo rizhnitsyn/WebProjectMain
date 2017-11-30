@@ -1,5 +1,6 @@
 package DAO;
 
+import DTO.LoginDto;
 import connection.ConnectionManager;
 import entities.*;
 import utils.StaticContent;
@@ -32,14 +33,16 @@ public class UserDao {
         return INSTANCE;
     }
 
-    public User addUser(User user) {
+    public User addUser(User user) throws SQLException {
         try (Connection connection = ConnectionManager.getConnection()){
-            String sql = "INSERT INTO users (first_name, second_name, email, user_state_id) " +
-                    "VALUES (?, ?, ?, 1)";
+            String sql = "INSERT INTO users (first_name, second_name, email, user_state_id, login, password) " +
+                    "VALUES (?, ?, ?, 1, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, user.getFirstName());
             statement.setString(2, user.getSecondName());
             statement.setString(3, user.getEmail());
+            statement.setString(4, user.getLogin());
+            statement.setString(5, user.getPassword());
 
             statement.executeUpdate();
             ResultSet generatedKeys = statement.getGeneratedKeys();
@@ -50,9 +53,8 @@ public class UserDao {
             statement.close();
             return user;
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
+        } catch (SQLException ex) {
+            throw ex;
         }
     }
 
@@ -62,8 +64,6 @@ public class UserDao {
             String sql = "SELECT * FROM users a " +
                     "LEFT JOIN registration_desc b ON a.user_id = b.user_id " +
                     "LEFT JOIN tournaments c ON b.tournament_id = c.tournament_id " +
-//                    "LEFT JOIN forecasts d ON a.user_id = d.user_id " +
-//                    "LEFT JOIN teams e ON e.team_id = c.team_organizer_id " +
                     "WHERE a.user_id = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setLong(1, userId);
@@ -72,18 +72,12 @@ public class UserDao {
             if (resultSet.next()) {
                 user = createUser(resultSet);
                 tournament = createTournament(resultSet);
-                tournament.addUser(user);
+//                tournament.addUser(user);
                 user.addTournament(tournament);
-                //ДОСТАТЬ MATCH_ID
-//                user.addForecast(new Forecast(resultSet.getLong("d.forecast_id"), resultSet.getInt("d.first_team_forecast"),
-//                        resultSet.getInt("d.second_team_forecast"), user.getId(), resultSet.getLong("d.match_id"), null));
-
                 while (resultSet.next()) {
                     tournament = createTournament(resultSet);
-                    tournament.addUser(user);
+//                    tournament.addUser(user);
                     user.addTournament(tournament);
-//                    user.addForecast(new Forecast(resultSet.getLong("d.forecast_id"), resultSet.getInt("d.first_team_forecast"),
-//                            resultSet.getInt("d.second_team_forecast"), user.getId(), resultSet.getLong("d.match_id"), null));
                 }
             }
             resultSet.close();
@@ -93,6 +87,29 @@ public class UserDao {
             return null;
         }
         return user;
+    }
+
+    public boolean checkUser(String login, String password) {
+        boolean result;
+        try (Connection connection = ConnectionManager.getConnection()){
+            String sql = "SELECT * FROM users WHERE login = ? and password = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, login);
+            statement.setString(2, password);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                result =  true;
+            } else {
+                result = false;
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return result;
+
     }
 
     public User getUserWithStatistics(Long tournamentId, Long userId) {
@@ -166,10 +183,14 @@ public class UserDao {
     }
 
     private Tournament createTournament(ResultSet resultSet) throws SQLException {
+        Long tournamentId = resultSet.getLong("c.tournament_id");
+        if (tournamentId == 0) {
+            return null;
+        }
         return new Tournament(
-                resultSet.getLong("c.tournament_id"),
+                tournamentId,
                 resultSet.getString("c.tournament_name"),
-                LocalDate.parse(resultSet.getString("c.tournament_start_date"), dateFormatter),
+                resultSet.getDate("c.tournament_start_date").toLocalDate(),
                 resultSet.getInt("c.tournament_state_id"));
     }
 

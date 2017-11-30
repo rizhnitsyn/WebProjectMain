@@ -10,10 +10,14 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+
+import static utils.StaticContent.dateFormatter;
+import static utils.StaticContent.dateTimeFormatter;
 
 public class TournamentDaoTest {
     @Test
@@ -30,6 +34,8 @@ public class TournamentDaoTest {
     public void testGetTournamentById() {
         TournamentDao tournamentDao = TournamentDao.getInstance();
         Tournament tournament = tournamentDao.getTournamentById(1L);
+//        System.out.println(LocalDate.parse("2016-12-10", dateFormatter));
+//        System.out.println(LocalDateTime.parse("2016-12-10 11:00", dateTimeFormatter));
         Assert.assertNotNull(tournament);
         Assert.assertEquals("Чемпионат Европы 2016", tournament.getName());
 //        tournament.getMatches().forEach(match -> System.out.println(match.getId()));
@@ -60,7 +66,7 @@ public class TournamentDaoTest {
     public void registerOnTournament() {
         TournamentDao tournamentDao = TournamentDao.getInstance();
         Tournament tournament = tournamentDao.getTournamentById(4L);
-        User user = UserDao.getInstance().getUserById(11L);
+        User user = UserDao.getInstance().getUserById(3L);
         Tournament registered = tournamentDao.registerOnTournament(tournament, user);
         Assert.assertNotNull(registered);
         Assert.assertTrue(registered.getUsers().contains(user));

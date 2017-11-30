@@ -1,8 +1,9 @@
 package servlets;
 
+import DTO.AnswerJsDto;
 import DTO.UserCreateDto;
 import DTO.UserViewDto;
-import entities.User;
+import com.google.gson.Gson;
 import services.UserService;
 
 import javax.servlet.ServletException;
@@ -11,6 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.stream.Collectors;
 
 import static utils.StaticContent.*;
 
@@ -25,16 +28,28 @@ public class UserSaveServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setCharacterEncoding("UTF-8");
         req.setCharacterEncoding("UTF-8");
-        String firstName = req.getParameter("firstName");
-        String secondName = req.getParameter("secondName");
-        String email = req.getParameter("email");
+        resp.setContentType("application/json");
 
-        if (firstName.isEmpty() || secondName.isEmpty() || email.isEmpty()) {
-            resp.sendRedirect("/saveUser");
+        Gson gson = new Gson();
+        String jsonString = req.getReader().lines()
+                .collect(Collectors.joining("\n"));
+        UserCreateDto userCreateDto = gson.fromJson(jsonString, UserCreateDto.class);
+        String answerRegistration = UserService.getInstance().checkRegistration(userCreateDto);
+        String outputJsonString;
+
+        if (answerRegistration == null) {
+            UserViewDto savedUser;
+            try {
+                savedUser = UserService.getInstance().addUser(userCreateDto);
+                outputJsonString = gson.toJson(new AnswerJsDto("Успешно", "/user?id=" + savedUser.getId()));
+            } catch (SQLException e) {
+                outputJsonString = gson.toJson(new AnswerJsDto("Ошибка при создании пользователя: " + e.toString()));
+            }
         } else {
-            UserViewDto savedUser = UserService.getInstance().addUser(new UserCreateDto(firstName, secondName, email));
-            resp.sendRedirect("/user?id=" + savedUser.getId());
+            outputJsonString = gson.toJson(new AnswerJsDto(answerRegistration));
         }
+        resp.getWriter().write(outputJsonString);
     }
 }

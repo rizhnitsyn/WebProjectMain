@@ -39,7 +39,7 @@ public class MatchDao {
             String sql = "INSERT INTO matches (match_datetime, match_state_id, match_type_id, first_team_id, second_team_id, tournament_id) " +
                     "VALUES (?, ?, ?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            statement.setDate(1, Date.valueOf(match.getMatchDateTime().toString()));
+            statement.setTimestamp(1, Timestamp.valueOf(match.getMatchDateTime()));
             statement.setInt(2, match.getMatchState());
             statement.setInt(3, match.getMatchType());
             statement.setLong(4, match.getFirstTeam().getId());
@@ -66,7 +66,7 @@ public class MatchDao {
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, match.getFirstTeamResult());
             statement.setInt(2, match.getSecondTeamResult());
-            statement.setDate(3, Date.valueOf(match.getMatchDateTime().toString()));
+            statement.setTimestamp(3, Timestamp.valueOf(match.getMatchDateTime()));
             statement.setInt(4, match.getMatchState());
             statement.setInt(5, match.getMatchType());
             statement.setLong(6, match.getFirstTeam().getId());
@@ -200,7 +200,7 @@ public class MatchDao {
                 resultSet.getLong("a.match_id"),
                 firstResult,
                 secondResult,
-                LocalDateTime.parse(resultSet.getString("a.match_datetime"), dateTimeFormatter),
+                resultSet.getTimestamp("a.match_datetime").toLocalDateTime(),
                 resultSet.getInt("a.match_state_id"),
                 resultSet.getInt("a.match_type_id"),
                 new Team(resultSet.getLong("a.first_team_id"), resultSet.getString("f.team_name")),

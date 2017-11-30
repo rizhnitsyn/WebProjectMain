@@ -95,9 +95,13 @@ public class TournamentDao {
     }
 
     private Match createMatch(ResultSet resultSet) throws SQLException {
+        String stringDate = resultSet.getString("b.match_datetime");
+        if (stringDate == null) {
+            return null;
+        }
         return new Match(
                 resultSet.getLong("b.match_id"),
-                LocalDateTime.parse(resultSet.getString("b.match_datetime"), dateTimeFormatter),
+                LocalDateTime.parse(stringDate, dateTimeFormatter),
                 resultSet.getInt("b.match_state_id"),
                 resultSet.getInt("b.match_type_id"));
     }
@@ -228,9 +232,7 @@ public class TournamentDao {
         return new Tournament(resultSet.getLong("a.tournament_id"),
                 resultSet.getString("a.tournament_name"),
                 new Team(resultSet.getLong("a.team_organizer_id"), resultSet.getString("b.team_name")),
-                LocalDate.parse(resultSet.getString("a.tournament_start_date"), dateFormatter),
+                resultSet.getDate("a.tournament_start_date").toLocalDate(),
                 resultSet.getInt("a.tournament_state_id"));
     }
-
-
 }
