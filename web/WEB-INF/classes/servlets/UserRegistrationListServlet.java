@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/userList")
+@WebServlet(urlPatterns = "/userList", name = "UsersForRegistration")
 public class UserRegistrationListServlet extends HttpServlet {
 
     @Override

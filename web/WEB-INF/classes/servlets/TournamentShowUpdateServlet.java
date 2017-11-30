@@ -12,7 +12,7 @@ import java.io.IOException;
 
 import static utils.StaticContent.*;
 
-@WebServlet("/tournament")
+@WebServlet(urlPatterns = "/tournament", name = "ShowTournament")
 public class TournamentShowUpdateServlet extends HttpServlet {
 
     @Override

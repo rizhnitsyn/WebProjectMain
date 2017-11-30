@@ -1,6 +1,6 @@
 package servlets;
 
-import DTO.AnswerJsDto;
+import DTO.UserLoggedDto;
 import DTO.LoginDto;
 import com.google.gson.Gson;
 import services.UserService;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 import static utils.StaticContent.*;
 
-@WebServlet("/login")
+@WebServlet(urlPatterns = "/login", name = "login")
 public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -26,14 +26,17 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setCharacterEncoding("UTF-8");
+//        resp.setCharacterEncoding("UTF-8");
         resp.setContentType("application/json");
         Gson gson = new Gson();
-        String jsonString = req.getReader().lines()
-                .collect(Collectors.joining("\n"));
+        String jsonString = req.getReader().lines().collect(Collectors.joining("\n"));
         LoginDto loginDto = gson.fromJson(jsonString, LoginDto.class);
-        AnswerJsDto loginAnswer = UserService.getInstance().checkPassword(loginDto);
-        String outputJsonString = gson.toJson(loginAnswer);
+        UserLoggedDto loggedUser = UserService.getInstance().checkPassword(loginDto);
+        String outputJsonString = gson.toJson(loggedUser);
+        if (loggedUser.isAuthorized()) {
+            req.getSession().removeAttribute("loggedUser");
+            req.getSession().setAttribute("loggedUser", loggedUser);
+        }
         resp.getWriter().write(outputJsonString);
     }
 

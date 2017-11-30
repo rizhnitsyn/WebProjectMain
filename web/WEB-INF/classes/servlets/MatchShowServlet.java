@@ -12,7 +12,7 @@ import java.io.IOException;
 
 import static utils.StaticContent.*;
 
-@WebServlet("/match")
+@WebServlet(urlPatterns = "/match", name = "ShowMatch")
 public class MatchShowServlet extends HttpServlet {
 
     @Override

@@ -17,7 +17,7 @@ import java.util.List;
 import static utils.StaticContent.createViewPath;
 
 
-@WebServlet("/resultTable")
+@WebServlet(urlPatterns = "/resultTable", name = "TournamentResultTable")
 public class TournamentResultTableServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

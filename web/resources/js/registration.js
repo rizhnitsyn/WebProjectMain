@@ -20,11 +20,15 @@ function regUser() {
         $("#displayed-data").text(data.message);
         let path = data.redirect
         if (path.length > 0) {
-            sleep(3000);
+            sleep(1500);
+            redirect(path);
             // setTimeout("window.location.href = path;",3000)
-            window.location.href = path;
         }
     });
+}
+
+function redirect(path) {
+    window.location.href = path;
 }
 
 function sleep (milliSeconds) {

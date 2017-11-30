@@ -19,7 +19,7 @@ import java.time.LocalDate;
 import static utils.StaticContent.*;
 
 
-@WebServlet("/saveTournament")
+@WebServlet(urlPatterns = "/saveTournament", name = "SaveTournament")
 public class TournamentSaveServlet extends HttpServlet {
 
     @Override

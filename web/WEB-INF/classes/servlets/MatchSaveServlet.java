@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 import static utils.StaticContent.*;
 
 
-@WebServlet("/saveMatch")
+@WebServlet(urlPatterns = "/saveMatch", name = "SaveNewMatch")
 public class MatchSaveServlet extends HttpServlet {
 
     @Override

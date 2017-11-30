@@ -89,8 +89,8 @@ public class UserDao {
         return user;
     }
 
-    public boolean checkUser(String login, String password) {
-        boolean result;
+    public User checkUser(String login, String password) {
+        User user = null;
         try (Connection connection = ConnectionManager.getConnection()){
             String sql = "SELECT * FROM users WHERE login = ? and password = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
@@ -98,17 +98,15 @@ public class UserDao {
             statement.setString(2, password);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                result =  true;
-            } else {
-                result = false;
+                user = createUser(resultSet);
             }
             resultSet.close();
             statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            return null;
         }
-        return result;
+        return user;
 
     }
 

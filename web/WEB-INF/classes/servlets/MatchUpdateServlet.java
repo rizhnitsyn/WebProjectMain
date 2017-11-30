@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/updateMatch")
+@WebServlet(urlPatterns = "/updateMatch", name = "UpdateMatch")
 public class MatchUpdateServlet extends HttpServlet {
 
     @Override

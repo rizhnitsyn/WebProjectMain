@@ -41,11 +41,13 @@ public final class UserService {
         return null;
     }
 
-    public AnswerJsDto checkPassword(LoginDto dto) {
-        if (UserDao.getInstance().checkUser(dto.getLogin(), dto.getPassword())) {
-            return new AnswerJsDto("Все данные введены верно", "/homepage");
+    public UserLoggedDto checkPassword(LoginDto dto) {
+        User loggedUser = UserDao.getInstance().checkUser(dto.getLogin(), dto.getPassword());
+        if (loggedUser != null) {
+            return new UserLoggedDto("Все данные введены верно", "/homepage", true, loggedUser.getId(), loggedUser.getFirstName(),
+                    loggedUser.getSecondName(), loggedUser.getUserState());
         } else {
-            return new AnswerJsDto("Неверно введены логин или пароль");
+            return new UserLoggedDto("Неверно введены логин или пароль", false);
         }
     }
 

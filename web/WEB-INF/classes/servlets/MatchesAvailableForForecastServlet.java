@@ -12,7 +12,7 @@ import java.io.IOException;
 import static utils.StaticContent.createViewPath;
 
 
-@WebServlet("/forecastMatches")
+@WebServlet(urlPatterns =  "/forecastMatches", name = "MatchesForForecast")
 public class MatchesAvailableForForecastServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

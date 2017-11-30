@@ -11,7 +11,7 @@ import java.io.IOException;
 
 import static utils.StaticContent.createViewPath;
 
-@WebServlet("/forecastTournaments")
+@WebServlet(urlPatterns = "/forecastTournaments", name = "TournamentsForecasts")
 public class TournamentListForecastServlet extends HttpServlet {
 
     @Override

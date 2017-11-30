@@ -1,6 +1,6 @@
 package servlets;
 
-import DTO.AnswerJsDto;
+import DTO.UserLoggedDto;
 import DTO.UserCreateDto;
 import DTO.UserViewDto;
 import com.google.gson.Gson;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 import static utils.StaticContent.*;
 
-@WebServlet("/saveUser")
+@WebServlet(urlPatterns = "/saveUser", name = "SaveUser")
 public class UserSaveServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -40,15 +40,15 @@ public class UserSaveServlet extends HttpServlet {
         String outputJsonString;
 
         if (answerRegistration == null) {
-            UserViewDto savedUser;
+//            UserViewDto savedUser;
             try {
-                savedUser = UserService.getInstance().addUser(userCreateDto);
-                outputJsonString = gson.toJson(new AnswerJsDto("Успешно", "/user?id=" + savedUser.getId()));
+                UserService.getInstance().addUser(userCreateDto);
+                outputJsonString = gson.toJson(new UserLoggedDto("Успешно", "/login"));
             } catch (SQLException e) {
-                outputJsonString = gson.toJson(new AnswerJsDto("Ошибка при создании пользователя: " + e.toString()));
+                outputJsonString = gson.toJson(new UserLoggedDto("Ошибка при создании пользователя: " + e.toString()));
             }
         } else {
-            outputJsonString = gson.toJson(new AnswerJsDto(answerRegistration));
+            outputJsonString = gson.toJson(new UserLoggedDto(answerRegistration));
         }
         resp.getWriter().write(outputJsonString);
     }

@@ -15,7 +15,7 @@ import java.io.IOException;
 
 import static utils.StaticContent.*;
 
-@WebServlet("/saveForecast")
+@WebServlet(urlPatterns = "/saveForecast", name = "SaveForecast")
 public class ForecastSaveServlet extends HttpServlet {
 
     @Override

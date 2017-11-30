@@ -11,7 +11,7 @@ import java.io.IOException;
 
 import static utils.StaticContent.*;
 
-@WebServlet("/tournamentList")
+@WebServlet(urlPatterns = "/tournamentList", name = "TournamentsRegistration")
 public class TournamentListRegistrationServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

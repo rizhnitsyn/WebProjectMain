@@ -13,11 +13,13 @@ function sendToServer() {
         $("#displayed-data").text(data.message);
         let path = data.redirect
         if (path.length > 0) {
-            // sleep(3000);
-            setTimeout("sleep(3000);",3000)
-            // window.location.href = path;
+            sleep(1500);
+            redirect(path);
         }
     });
+}
+function redirect(path) {
+    window.location.href = path;
 }
 
 function sleep (milliSeconds) {
