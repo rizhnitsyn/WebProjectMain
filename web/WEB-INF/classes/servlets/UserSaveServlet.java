@@ -28,19 +28,14 @@ public class UserSaveServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setCharacterEncoding("UTF-8");
-        req.setCharacterEncoding("UTF-8");
         resp.setContentType("application/json");
-
         Gson gson = new Gson();
-        String jsonString = req.getReader().lines()
-                .collect(Collectors.joining("\n"));
+        String jsonString = req.getReader().lines().collect(Collectors.joining("\n"));
         UserCreateDto userCreateDto = gson.fromJson(jsonString, UserCreateDto.class);
         String answerRegistration = UserService.getInstance().checkRegistration(userCreateDto);
         String outputJsonString;
 
         if (answerRegistration == null) {
-//            UserViewDto savedUser;
             try {
                 UserService.getInstance().addUser(userCreateDto);
                 outputJsonString = gson.toJson(new UserLoggedDto("Успешно", "/login"));

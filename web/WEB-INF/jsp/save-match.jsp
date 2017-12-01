@@ -10,32 +10,35 @@
 <html>
 <head>
     <title>Save Match</title>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/saveMatch.js"></script>
 </head>
 <body>
-<form action="${pageContext.request.contextPath}/saveMatch" method="post">
+<%--<form action="${pageContext.request.contextPath}/saveMatch" method="post">--%>
     <p>Добавляем матч в турнир</p>
     <p>Дата и время начала матча</p>
     <input id="matchDateTime" name="matchDateTime">
     <p>Тип матча</p>
-    <select name="matchType">
+    <select id="matchType" name="matchType">
         <c:forEach var="type" items="${requestScope.matchTypes}">
             <option value="${type.key}">${type.value}</option>
         </c:forEach>
     </select>
     <p>Первая команда участник</p>
-    <select name="firstTeamId">
+    <select id="firstTeamId" name="firstTeamId">
         <c:forEach var="country" items="${requestScope.countries}">
             <option value="${country.id}">${country.teamName}</option>
         </c:forEach>
     </select>
     <p>Вторая команда участник</p>
-    <select name="secondTeamId">
+    <select id="secondTeamId" name="secondTeamId">
         <c:forEach var="country" items="${requestScope.countries}">
             <option value="${country.id}">${country.teamName}</option>
         </c:forEach>
     </select>
-    <button type="submit" name="tournamentId" value="${requestScope.tournamentId}">Сохранить матч</button>
-</form>
+    <button type="submit" name="tournamentId" value="${requestScope.tournamentId}" onclick="sendToServer()">Сохранить матч</button>
+    <p id="displayed-data"></p>
+<%--</form>--%>
 
 </body>
 </html>

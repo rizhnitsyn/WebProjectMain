@@ -1,6 +1,7 @@
 package servlets;
 
 import DTO.TournamentViewDto;
+import DTO.UserLoggedDto;
 import services.TournamentService;
 
 import javax.servlet.ServletException;
@@ -18,7 +19,8 @@ public class TournamentShowUpdateServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long id = Long.valueOf(req.getParameter("id"));
-        TournamentViewDto foundTournament = TournamentService.getInstance().getTournamentById(id);
+        Long userId = ((UserLoggedDto) req.getSession().getAttribute("loggedUser")).getUserId();
+        TournamentViewDto foundTournament = TournamentService.getInstance().getTournamentById(id, userId);
         req.setAttribute("tournament", foundTournament);
         getServletContext()
                 .getRequestDispatcher(createViewPath( "show-tournament"))
@@ -27,19 +29,14 @@ public class TournamentShowUpdateServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setCharacterEncoding("UTF-8");
         if (req.getParameter("idClose") != null) {
             Long id = Long.valueOf(req.getParameter("idClose"));
-//            TournamentViewDto foundTournament = TournamentService.getInstance().getTournamentById(id);
-            TournamentViewDto updatedTournament = TournamentService.getInstance().closeTournament(id);
-            resp.sendRedirect("/tournament?id=" + updatedTournament.getId());
+            TournamentService.getInstance().closeTournament(id);
+            resp.sendRedirect("/tournamentList");
         }
-        //для пользователя
         if (req.getParameter("idReg") != null) {
             Long tournamentId = Long.valueOf(req.getParameter("idReg"));
-            //получить id пользователя, передать в функцию и сделать insert в БД
-            //не давать региться на уже оконченные турниры, убрать кнопку
-            Long userId = 1L;
+            Long userId = ((UserLoggedDto) req.getSession().getAttribute("loggedUser")).getUserId();
             TournamentViewDto updatedTournament = TournamentService.getInstance().registerUserOnTournament(tournamentId, userId);
             resp.sendRedirect("/tournament?id=" + updatedTournament.getId());
         }

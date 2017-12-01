@@ -1,8 +1,8 @@
 package servlets;
 
-
 import DTO.TournamentCreateUpdateDto;
 import DTO.TournamentViewDto;
+import com.google.gson.Gson;
 import services.TeamService;
 import services.TournamentService;
 
@@ -12,9 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.ParseException;
-import java.sql.Date;
-import java.time.LocalDate;
+import java.util.stream.Collectors;
 
 import static utils.StaticContent.*;
 
@@ -32,23 +30,12 @@ public class TournamentSaveServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setCharacterEncoding("UTF-8");
-        String name = req.getParameter("name");
-        Long organizer = 0L;         //страну тянем из справочника ! Сделать
-        LocalDate startDateLocal = null;
-        try {
-            organizer = Long.valueOf(req.getParameter("organizer"));
-            String startDate = req.getParameter("startDate");
-            startDateLocal = LocalDate.parse(startDate, dateFormatter);
-        } catch (NumberFormatException e) {//при ошибках парсинга будем перекидывать на страницу и отображать текст ошибки!!! Сделать позже
-//            e.printStackTrace();
-        }
-        if (!name.isEmpty() && organizer != 0 && startDateLocal != null ) {//статус вводить через справочник!!! позже исправить
-            TournamentViewDto savedTournament = TournamentService.getInstance()
-                    .addTournament(new TournamentCreateUpdateDto(name, organizer, startDateLocal, 1));
-            resp.sendRedirect("/tournament?id=" + savedTournament.getId());
-        } else {
-            resp.sendRedirect("/saveTournament");
-        }
+        resp.setContentType("application/json");
+        Gson gson = new Gson();
+        String jsonString = req.getReader().lines().collect(Collectors.joining("\n"));
+        TournamentCreateUpdateDto createDto = gson.fromJson(jsonString, TournamentCreateUpdateDto.class);
+        TournamentViewDto tournamentView = TournamentService.getInstance().addTournament(createDto);
+        String outputJsonString = gson.toJson(tournamentView);
+        resp.getWriter().write(outputJsonString);
     }
 }

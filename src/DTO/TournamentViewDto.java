@@ -17,6 +17,12 @@ public class TournamentViewDto {
     private LocalDate startDate;
     private String state;
     private Long userId;
+    private String message;
+    private String redirect;
+
+    public TournamentViewDto(String message) {
+        this.message = message;
+    }
 
     public TournamentViewDto(Long id, String name, String teamName, LocalDate startDate, String state) {
         this.id = id;
@@ -25,4 +31,23 @@ public class TournamentViewDto {
         this.startDate = startDate;
         this.state = state;
     }
+
+    public TournamentViewDto(Long id, String name, String teamName, LocalDate startDate, String state, String redirect) {
+        this.id = id;
+        this.name = name;
+        this.teamName = teamName;
+        this.startDate = startDate;
+        this.state = state;
+        this.redirect = redirect;
+    }
+
+    public TournamentViewDto(Long id, String name, String teamName, LocalDate startDate, String state, Long userId) {
+        this.id = id;
+        this.name = name;
+        this.teamName = teamName;
+        this.startDate = startDate;
+        this.state = state;
+        this.userId = userId;
+    }
+
 }

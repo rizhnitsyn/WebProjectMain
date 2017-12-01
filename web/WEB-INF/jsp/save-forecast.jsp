@@ -16,7 +16,6 @@
     <p>Начало матча: ${requestScope.match.matchDateTime}</p>
     <p>Состояние матча: ${requestScope.match.matchState}</p>
     <p>Тип матча: ${requestScope.match.matchType}</p>
-    <p>ID пользователя(брать из сессии) <input id="userId" name="userId"></p>
     <p>Команды: ${requestScope.match.firstTeam}  <input id="firstTeamResult" name="firstTeamResult"> - <input id="secondTeamResult" name="secondTeamResult"> ${requestScope.match.secondTeam}</p>
     <button type="submit" name="id" value="${requestScope.match.id}">Сохранить прогноз</button>
 </form>

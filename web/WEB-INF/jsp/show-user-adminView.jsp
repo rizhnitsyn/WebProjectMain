@@ -7,6 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <html>
 <head>
     <title>Show User</title>
@@ -19,11 +20,14 @@
     <p>Состояние пользователя: ${requestScope.user.userState}</p>
 
     <p>
-    <select name="userState">
-        <c:forEach var="userState" items="${requestScope.userStates}">
-            <option value="${userState.key}">${userState.value}</option>
-        </c:forEach>
-    </select> <button type="submit" name="id" value="${requestScope.user.id}">Сменить статус пользователя</button></p>
+    <c:if test="${sessionScope.loggedUser.userStateId == 4}">
+        <select name="userState">
+            <c:forEach var="userState" items="${requestScope.userStates}">
+                <option value="${userState.key}">${userState.value}</option>
+            </c:forEach>
+        </select> <button type="submit" name="id" value="${requestScope.user.id}">Сменить статус пользователя</button></p>
+    </c:if>
+
 
 </form>
 </body>

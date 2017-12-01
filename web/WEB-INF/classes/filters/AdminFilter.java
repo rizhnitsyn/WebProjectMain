@@ -8,10 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebFilter(servletNames = {"SaveForecast", "MatchesForForecast", "MatchesOfTournament", "SaveNewMatch", "ShowMatch",
-"UpdateMatch", "TournamentsAllMatches", "TournamentsForecasts", "TournamentsRegistration", "TournamentResultTable",
-"SaveTournament", "TournamentsForStatistic", "ShowTournament", "UsersForRegistration"})
-public class AuthenticationFilter implements Filter {
+@WebFilter(servletNames = {"UsersForRegistration", "SaveNewMatch", "SaveTournament", "UpdateMatch"})
+public class AdminFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
 
@@ -23,17 +21,20 @@ public class AuthenticationFilter implements Filter {
             HttpServletRequest req = (HttpServletRequest) servletRequest;
             if (req.getSession().getAttribute("loggedUser") != null) {
                 UserLoggedDto loggedUser = (UserLoggedDto) req.getSession().getAttribute("loggedUser");
-                if (loggedUser.getUserStateId() == 1 || loggedUser.getUserStateId() == 3) {
-                    ((HttpServletResponse) servletResponse).sendRedirect("/user?id=" + loggedUser.getUserId());
+                if (loggedUser.getUserStateId() != 4) {
+                    //переадресация на прошлую страницу!!!
+                    ((HttpServletResponse) servletResponse).sendRedirect("/homepage");
                 } else {
                     filterChain.doFilter(servletRequest, servletResponse);
                 }
             } else {
-                ((HttpServletResponse) servletResponse).sendRedirect("/login");
+                //переадресация на прошлую страницу!!!
+                ((HttpServletResponse) servletResponse).sendRedirect("/homepage");
             }
         } else {
             filterChain.doFilter(servletRequest, servletResponse);
         }
+
     }
 
     @Override

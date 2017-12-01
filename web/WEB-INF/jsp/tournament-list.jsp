@@ -12,9 +12,12 @@
     <title>Tournament List</title>
 </head>
 <body>
-<form action="${pageContext.request.contextPath}/tournamentList" method="post">
-    <button type="submit">Добавить новый турнир</button>
-</form>
+  список всех активных турниров на текущий момент
+<c:if test="${sessionScope.loggedUser.userStateId == 4}">
+    <form action="${pageContext.request.contextPath}/tournamentList" method="post">
+       <button type="submit">Добавить новый турнир</button>
+    </form>
+</c:if>
     <c:forEach var="tournament" items="${requestScope.tournaments}">
         <p><a href="${pageContext.request.contextPath}/tournament?id=${tournament.id}">${tournament.name}</a>  Начало: ${tournament.startDate} Состояние: ${tournament.state}</p>
     </c:forEach>

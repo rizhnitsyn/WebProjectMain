@@ -2,6 +2,7 @@ package servlets;
 
 import DTO.ForecastAddDto;
 import DTO.MatchViewDto;
+import DTO.UserLoggedDto;
 import entities.Forecast;
 import services.ForecastService;
 import services.MatchService;
@@ -27,27 +28,19 @@ public class ForecastSaveServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setCharacterEncoding("UTF-8");
-        Integer firstTeamResult = null;
-        Integer secondTeamResult = null;
-        Long userId = 0L;
-        Long matchId = 0L;
+        Long matchId = Long.valueOf(req.getParameter("id"));
+        Long userId = ((UserLoggedDto) req.getSession().getAttribute("loggedUser")).getUserId();
         try {
-            matchId = Long.valueOf(req.getParameter("id"));
-            userId = Long.valueOf(req.getParameter("userId"));
-            firstTeamResult = Integer.valueOf(req.getParameter("firstTeamResult"));
-            secondTeamResult = Integer.valueOf(req.getParameter("secondTeamResult"));
-        } catch (NumberFormatException e) {}
-
-        if (firstTeamResult == null || secondTeamResult == null || userId == 0L || matchId == 0L) {
-            MatchViewDto foundMatch = MatchService.getInstance().getMatchById(matchId);
+            Integer firstTeamResult = Integer.valueOf(req.getParameter("firstTeamResult"));
+            Integer secondTeamResult = Integer.valueOf(req.getParameter("secondTeamResult"));
+            ForecastService.getInstance().addForecast(new ForecastAddDto(firstTeamResult, secondTeamResult, userId, matchId));
+            resp.sendRedirect("/match?id=" + matchId);
+        } catch (Exception e) {
+            MatchViewDto foundMatch = MatchService.getInstance().getMatchById(matchId, userId);
             req.setAttribute("match", foundMatch);
             getServletContext()
                     .getRequestDispatcher(createViewPath( "save-forecast"))
                     .forward(req, resp);
-        } else {
-            ForecastService.getInstance().addForecast(new ForecastAddDto(firstTeamResult, secondTeamResult, userId, matchId));
-            resp.sendRedirect("/match?id=" + matchId);
         }
     }
 }

@@ -15,7 +15,7 @@ public class MatchUpdateServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Long id = Long.valueOf(req.getParameter("id")); //сделать проверку!!!!
+        Long id = Long.valueOf(req.getParameter("id"));
         int firstTeamResult = Integer.parseInt(req.getParameter("firstTeamResult"));
         int secondTeamResult = Integer.parseInt(req.getParameter("secondTeamResult"));
         MatchViewDto updatedMatch = MatchService.getInstance().updateMatch(id, firstTeamResult, secondTeamResult);

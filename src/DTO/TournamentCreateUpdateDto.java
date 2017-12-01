@@ -14,13 +14,7 @@ import java.time.LocalDate;
 public class TournamentCreateUpdateDto {
     private String name;
     private Long organizerId;
-    private LocalDate startDate;
+    private String startDate;
     private int stateId;
 
-    public TournamentCreateUpdateDto(Tournament tournament) {
-        this.name = tournament.getName();
-        this.organizerId = tournament.getOrganizer().getId();
-        this.startDate = tournament.getStartDate();
-        this.stateId = tournament.getStateId();
-    }
 }

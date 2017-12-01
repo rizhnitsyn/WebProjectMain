@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<!--[if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script><![endif]-->
+	<title></title>
+	<meta name="keywords" content="" />
+	<meta name="description" content="" />
+	<link href="style.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="wrapper">
+     
+
+	<header class="header">
+	<img src="header_new.jpg" alt="" class="headjpg"/>
+	</header><!-- .header-->
+
+	<div class="middle">
+
+		<div class="container">
+			<main class="content">
+				<table class="simple-little-table">
+					<caption>Общий итог</caption>
+            		<tr>
+                		<th>ID</th>
+                		<th>ФИО</th>
+						<th>6</th>
+						<th>4</th>
+						<th>3</th>
+						<th>1</th>
+						<th>Баллы</th>
+						<th>Коэфф</th>
+            		</tr>
+            		<tr>
+                		<td>1</td>
+                		<td>Рижницын Андрей</td>
+						<td>23</td>
+						<td>41</td>
+						<td>23</td>
+						<td>12</td>
+						<td>134</td>
+						<td>1</td>
+           			</tr>
+            		<tr>
+                		<td>2</td>
+                		<td>Щербич Никита</td>
+						<td>23</td>
+						<td>41</td>
+						<td>23</td>
+						<td>12</td>
+						<td>111</td>
+						<td>1</td>
+           			</tr>
+           			<tr>
+                		<td>3</td>
+                		<td>Бегларян Гайк</td>
+						<td>23</td>
+						<td>41</td>
+						<td>23</td>
+						<td>12</td>
+						<td>128</td>
+						<td>1</td>
+            		</tr>
+					<tr>
+                		<td>3</td>
+                		<td>Бегларян Гайк</td>
+						<td>23</td>
+						<td>41</td>
+						<td>23</td>
+						<td>12</td>
+						<td>128</td>
+						<td>1</td>
+            		</tr>
+					<tr>
+                		<td>3</td>
+                		<td>Бегларян Гайк</td>
+						<td>23</td>
+						<td>41</td>
+						<td>23</td>
+						<td>12</td>
+						<td>128</td>
+						<td>1</td>
+            		</tr>
+       			</table>
+				<select class="select" name="year">
+					<option value="2018">ЧМ 2018</option>
+                	<option value="2016">Евро 2016</option>
+                	<option value="2014">ЧМ 2014</option>
+					<option value="2012">Евро 2012</option>
+            	</select>
+				<a href='#' class='btn-class'>Зарегистрироваться</a>
+				
+			<form action="https://echo.htmlacademy.ru" method="post">
+            <table class="simple-little-table">
+				<caption>Прогнозы</caption>
+            	<tr>
+                	<th>ID</th>
+                	<th>Команда 1</th>
+					<th>Прогноз 1</th>
+					<th>Прогноз 2</th>
+					<th>Команда 2</th>
+            	</tr>
+                <tr>
+					<td><label for="match_id">1</label></td>
+                    <td><label for="first-team">Бразилия</label></td>
+                    <td><input type="text" id="forecast1" name="forecast1"></td>
+					<td><input type="text" id="forecast2" name="forecast2"></td>
+					<td><label for="second-team">Германия</label></td>
+                </tr>
+                <tr>
+					<td><label for="match_id">2</label></td>
+                    <td><label for="first-team">Италия</label></td>
+                    <td><input type="text" id="forecast1" name="forecast1"></td>
+					<td><input type="text" id="forecast2" name="forecast2"></td>
+					<td><label for="second-team">Польша</label></td>
+                </tr>
+                <tr>
+					<td><label for="match_id">3</label></td>
+                    <td><label for="first-team">Египет</label></td>
+                    <td><input type="text" id="forecast1" name="forecast1"></td>
+					<td><input type="text" id="forecast2" name="forecast2"></td>
+					<td><label for="second-team">Австралия</label></td>
+                </tr>
+            </table>
+				<input class="btn-class" type="submit" value="Подтвердить">
+            </form>
+			
+			<form action="https://echo.htmlacademy.ru" method="post">
+			 <div class="comment1">
+         	 	 <p>10.11.2017 Андрей: </p>
+				 <p>    Приветули) </p>				 
+			 </div>	
+			 <div class="comment2">
+         	 	 <p>10.11.2017 Вася: </p>
+				 <p>    ДИНАМО!!! </p>				 
+			 </div>		 
+				 
+     <!--      		 <textarea name="comment" id="comment-field" rows="10">Текст комментария</textarea> 
+             	 <input class="btn-class" type="submit" value="Отправить">-->
+      	  </form>
+		  <br>
+		  
+		  <form action="#" method="POST" enctype="multipart/form-data" name="addcom" id="addcom" onSubmit="return false"> 
+				Ваше имя:<br>
+				<input name="author" type="text" size="30" class="pole" id="author"><br><br>
+				Текст комментария:<br>
+				<textarea name="text" rows="5" cols="50" class="text"></textarea><br> 
+				<br>
+				<input name="id" type="hidden" value="<?php echo $id; ?>">
+				<input class="btn-class" name="button" type="button" value="Добавить комментарий" onclick="doLoad(document.getElementById('addcom'))">
+		</form>
+				
+			</main><!-- .content -->
+		</div><!-- .container-->
+
+		<aside class="left-sidebar">
+<!-- 			<ul class="menu">
+            	<li><a href="#company">Зарегистироваться на турнир</a></li>
+            	<li><a href="#company">Текущие матчи для прогноза</a></li>
+            	<li><a href="#company">Прогноз победителя турнира</a></li>
+				<li><a href="#company">Список сделанных прогнозов</a></li>
+				<li><a href="#company">Результаты турнира:</a>
+					<ul class="submenu">
+						<li><a href="#services">Групповой раунд</a></li>
+						<li><a href="#services">Райнд плей-офф</a></li>
+						<li><a href="#services">Общие итоги</a></li>
+					</ul>
+				</li>	
+				<li><a href="#company">Результаты матчей</a></li>
+				<li><a href="#company">Личный кабинет</a></li>
+				<li><a href="#company">Правила игры</a></li>
+				<li><a href="#company">Контакты</a></li>
+            </ul>-->
+			<div class="widget">
+ 				 <h3 class="widget-title">Категории</h3>
+ 				 <ul class="widget-list">
+   				 <li><a href="">Зарегистироваться на турнир</a></li>
+   				 <li><a href="">Текущие матчи для прогноза</a></li>
+   				 <li><a href="">Прогноз победителя турнира</a></li>
+   				 <li><a href="">Список сделанных прогнозов</a></li>
+   				 <li><a href="#company">Результаты турнира:</a>
+					<ul class="submenu">
+						<li><a href="#services">Групповой раунд</a></li>
+						<li><a href="#services">Раунд плей-офф</a></li>
+						<li><a href="#services">Общие итоги</a></li>
+					</ul>
+				</li>	
+				<li><a href="#company">Результаты матчей</a></li>
+				<li><a href="#company">Личный кабинет</a></li>
+				<li><a href="#company">Правила игры</a></li>
+				<li><a href="#company">Контакты</a></li>
+  				</ul>
+			</div>
+		</aside><!-- .left-sidebar -->
+
+	</div><!-- .middle-->
+
+</div><!-- .wrapper -->
+
+<footer class="footer">
+</footer><!-- .footer -->
+
+</body>
+</html>

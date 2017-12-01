@@ -23,7 +23,9 @@
                <p><button type="submit" name="idReg" value="${requestScope.tournament.id}">Зарегистрироваться на турнир</button> </p>
             </c:if>
         </p>
-        <button type="submit" name="idClose" value="${requestScope.tournament.id}">Завершить турнир</button>
+        <c:if test="${sessionScope.loggedUser.userStateId == 4}">
+            <button type="submit" name="idClose" value="${requestScope.tournament.id}">Завершить турнир</button>
+        </c:if>
 
    </form>
 </body>

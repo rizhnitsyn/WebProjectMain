@@ -2,17 +2,20 @@ package entities;
 
 import DTO.TournamentCreateUpdateDto;
 import lombok.*;
+import utils.StaticContent;
 
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+import static utils.StaticContent.*;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(exclude = {"matches", "users", "stateId"})
+@EqualsAndHashCode(exclude = {"matches", "users", "stateId", "organizer", "startDate"})
 public class Tournament {
     private Long id;
     private String name;
@@ -45,10 +48,10 @@ public class Tournament {
         this.id = id;
     }
 
-    public Tournament(TournamentCreateUpdateDto dto, Team team) {
-        this(dto.getName(), team, dto.getStartDate(), dto.getStateId());
-    }
-
+//    public Tournament(TournamentCreateUpdateDto dto, Team team) {
+//        this(dto.getName(), team, LocalDate.parse(dto.getStartDate(), dateFormatterInput), dto.getStateId());
+//    }
+//
     public void addFootballMatch(Match match) {
         matches.add(match);
     }

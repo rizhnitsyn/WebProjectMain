@@ -5,6 +5,7 @@ import entities.Team;
 import entities.Tournament;
 import connection.ConnectionManager;
 import entities.User;
+import servlets.TournamentResultTableServlet;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -31,7 +32,7 @@ public class TournamentDao {
         return INSTANCE;
     }
 
-    public Tournament addTournament(Tournament tournament) {
+    public Tournament addTournament(Tournament tournament) throws SQLException {
         try (Connection connection = ConnectionManager.getConnection()){
             String sql = "INSERT INTO tournaments (tournament_name, team_organizer_id, tournament_start_date, tournament_state_id) " +
                     "VALUES (?, ?, ?, ?)";
@@ -49,8 +50,7 @@ public class TournamentDao {
             statement.close();
             return tournament;
         } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
+            throw e;
         }
     }
 
@@ -132,7 +132,7 @@ public class TournamentDao {
         }
     }
 
-    public String getTournamentState(int stateId) {
+    public String getTournamentStateName(int stateId) {
         String tournamentState = null;
         try (Connection connection = ConnectionManager.getConnection()){
             String sql = "SELECT * FROM tournament_states where tournament_state_id = ?";
@@ -148,6 +148,25 @@ public class TournamentDao {
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
+        }
+        return tournamentState;
+    }
+
+    public int getTournamentState(Long tournamentId) {
+        int tournamentState = 0;
+        try (Connection connection = ConnectionManager.getConnection()){
+            String sql = "SELECT * FROM tournaments where tournament_id = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setLong(1, tournamentId);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                tournamentState = resultSet.getInt("tournament_state_id");
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
         }
         return tournamentState;
     }

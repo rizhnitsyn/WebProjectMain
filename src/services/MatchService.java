@@ -46,7 +46,7 @@ public final class MatchService {
         return MatchDao.getInstance().getListOfMatchTypes();
     }
 
-    public MatchViewDto getMatchById(Long id) {
+    public MatchViewDto getMatchById(Long id, Long userId) {
         Match foundMatch = MatchDao.getInstance().getMatchById(id);
         if (foundMatch == null) {
             return null;
@@ -62,10 +62,10 @@ public final class MatchService {
         matchViewDto.setGuessedResultsCount(guessedResultsCount(foundMatch));
         matchViewDto.setGuessedWinnersCount(guessedWinnersCount(foundMatch));
         matchViewDto.setGuessedDiffInResultsCount(guessedDiffInResultsCount(foundMatch));
-        matchViewDto.setCurrentUserPoints(calculateUserPoints(foundMatch));
+        matchViewDto.setCurrentUserPoints(calculateUserPoints(foundMatch, userId));
 
         foundMatch.getForecasts().stream()
-                .filter(forecast -> forecast.getUserId() == 1)
+                .filter(forecast -> forecast.getUserId().equals(userId))
                 .findFirst()
                 .ifPresent(matchViewDto::setCurrentUserForecast);
         return matchViewDto;
@@ -80,7 +80,7 @@ public final class MatchService {
     }
 
     public List<MatchShortViewDto> matchesForForecast(Long tournamentId, Long userId) {
-        List<Match> matches = MatchDao.getInstance().getMatchesForForecast(tournamentId,userId);
+        List<Match> matches = MatchDao.getInstance().getMatchesForForecast(tournamentId, userId);
         if (matches == null) {
             return null;
         }
@@ -151,9 +151,9 @@ public final class MatchService {
                 .count();
     }
 
-    private Integer calculateUserPoints(Match foundMatch) {
+    private Integer calculateUserPoints(Match foundMatch, Long userId) {
         Forecast userForecast = foundMatch.getForecasts().stream()
-                .filter(forecast -> forecast.getUserId() == 1)
+                .filter(forecast -> forecast.getUserId().equals(userId))
                 .findFirst().orElse(null);
         if (userForecast == null) {
             return null;

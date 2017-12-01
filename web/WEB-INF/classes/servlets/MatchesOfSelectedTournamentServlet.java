@@ -2,6 +2,7 @@ package servlets;
 
 import services.MatchService;
 import services.TeamService;
+import services.TournamentService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,6 +21,7 @@ public class MatchesOfSelectedTournamentServlet extends HttpServlet {
         Long tournamentId = Long.valueOf(req.getParameter("id"));
         req.setAttribute("matches", MatchService.getInstance().getAllMatchesOfSelectedTournament(tournamentId));
         req.setAttribute("tournamentId", tournamentId);
+        req.setAttribute("tournamentState", TournamentService.getInstance().getTournamentState(tournamentId));
         req.getServletContext()
                 .getRequestDispatcher(createViewPath("show-all-matches"))
                 .forward(req, resp);

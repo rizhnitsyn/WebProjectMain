@@ -16,11 +16,11 @@
     <ul class="widget-list">
         <li><a href="${pageContext.request.contextPath}/saveUser">Регистрация</a></li>
         <br>
-        <li><a href="${pageContext.request.contextPath}/tournamentList">Заявиться на турнир</a></li>
+        <li><a href="${pageContext.request.contextPath}/tournamentList">Активные турниры</a></li>
         <br>
-        <li><a href="${pageContext.request.contextPath}/userList">Подтвердить регистрацию</a></li>
+        <li><a href="${pageContext.request.contextPath}/userList">Авторизовать новых пользователей</a></li>
         <br>
-        <li><a href="${pageContext.request.contextPath}/forecastTournaments">Список матчей для прогнозов</a></li>
+        <li><a href="${pageContext.request.contextPath}/forecastTournaments">Новые матчи для прогнозов</a></li>
         <br>
         <li><a href="${pageContext.request.contextPath}/tournamentAllMatches">Календарь матчей</a></li>
         <br>
@@ -28,7 +28,7 @@
         <br>
         <li><a href="">Правила игры</a></li>
         <br>
-        <li><a href="">Личный кабинет</a></li>
+        <li><a href="${pageContext.request.contextPath}/user?id=${sessionScope.loggedUser.userId}">Личный кабинет</a></li>
         <br>
         <li><a href="${pageContext.request.contextPath}/login">Залогиниться</a></li>
     </ul>
