@@ -1,34 +1,31 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: admin
-  Date: 20.11.2017
-  Time: 0:16
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <html>
 <head>
     <title>Show User</title>
+    <link href="${pageContext.request.contextPath}/resources/css/style.css" rel="stylesheet">
 </head>
 <body>
+<%@include file="header.jsp"%>
+
 <form action="${pageContext.request.contextPath}/user" method="post">
-    <p>Имя: ${requestScope.user.firstName}</p>
-    <p>Фамилия: ${requestScope.user.secondName}</p>
-    <p>Email: ${requestScope.user.email}</p>
-    <p>Состояние пользователя: ${requestScope.user.userState}</p>
+    <h2 class="form-title">Данные пользователя</h2>
+    <p>Имя: <span class="span-class">${requestScope.user.firstName}</span></p>
+    <p>Фамилия: <span class="span-class">${requestScope.user.secondName}</span></p>
+    <p>Email: <span class="span-class">${requestScope.user.email}</span></p>
+    <p>Состояние пользователя: <span class="span-class">${requestScope.user.userState}</span></p>
 
     <p>
     <c:if test="${sessionScope.loggedUser.userStateId == 4}">
-        <select name="userState">
+        <select class="form-field" name="userState">
             <c:forEach var="userState" items="${requestScope.userStates}">
-                <option value="${userState.key}">${userState.value}</option>
+                <option c value="${userState.key}">${userState.value}</option>
             </c:forEach>
-        </select> <button type="submit" name="id" value="${requestScope.user.id}">Сменить статус пользователя</button></p>
+        </select> <button class="btn-class" type="submit" name="id" value="${requestScope.user.id}">Сменить статус пользователя</button></p>
     </c:if>
 
-
+    <%@include file="footer.jsp"%>
 </form>
 </body>
 </html>

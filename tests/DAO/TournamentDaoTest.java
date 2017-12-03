@@ -21,7 +21,7 @@ import static utils.StaticContent.dateTimeFormatter;
 
 public class TournamentDaoTest {
     @Test
-    public void testAddTournament() throws ParseException, SQLException {
+    public void testAddTournament() throws Exception {
         TournamentDao tournamentDao = TournamentDao.getInstance();
         Random random = new Random();
         Tournament savedTournament = tournamentDao.addTournament(new Tournament(String.valueOf(random.nextInt(1000000)),

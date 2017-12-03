@@ -119,7 +119,7 @@ public class UserDao {
                     "LEFT JOIN matches e ON e.tournament_id = c.tournament_id  " +
                     "LEFT JOIN forecasts d ON a.user_id = d.user_id and d.match_id = e.match_id " +
                     "WHERE c.tournament_id = ? " +
-                    "AND a.user_id = ?";
+                    "AND a.user_id = ? ";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setLong(1, tournamentId);
             statement.setLong(2, userId);

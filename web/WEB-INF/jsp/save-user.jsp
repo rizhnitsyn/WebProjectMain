@@ -12,21 +12,25 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/registration.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/md5.js"></script>
+    <link href="${pageContext.request.contextPath}/resources/css/style.css" rel="stylesheet">
 </head>
 <body>
-    <%--<form action="${pageContext.request.contextPath}/saveUser" method="post">--%>
-        <p>Имя</p>
-        <input id="firstName" name="firstName">
-        <p>Фамилия</p>
-        <input id="secondName" name="secondName">
-        <p>Логин для входа</p>
-        <input id="login" name="login">
-        <p>Пароль для входа</p>
-        <input id="pass" type="password" name="pass">
-        <p>E-mail</p>
-        <input id="email" name="email">
-        <button type="submit" onclick="regUser()">Зарегистрироваться</button>
-        <p id="displayed-data"></p>
-    <%--</form>--%>
+<%@include file="header.jsp"%>
+
+    <h2 class="form-title">Регистрация</h2>
+    <p>Имя</p>
+    <input class="form-field" id="firstName" name="firstName">
+    <p>Фамилия</p>
+    <input class="form-field" id="secondName" name="secondName">
+    <p>Логин для входа</p>
+    <input class="form-field" id="login" name="login">
+    <p>Пароль для входа</p>
+    <input class="form-field" id="pass" type="password" name="pass">
+    <p>E-mail</p>
+    <input class="form-field" id="email" name="email">
+    <button class="btn-class" type="submit" onclick="regUser()">Зарегистрироваться</button>
+    <p id="displayed-data"></p>
+
+<%@include file="footer.jsp"%>
 </body>
 </html>

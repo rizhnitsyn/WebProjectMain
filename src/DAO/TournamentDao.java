@@ -32,7 +32,7 @@ public class TournamentDao {
         return INSTANCE;
     }
 
-    public Tournament addTournament(Tournament tournament) throws SQLException {
+    public Tournament addTournament(Tournament tournament) throws Exception {
         try (Connection connection = ConnectionManager.getConnection()){
             String sql = "INSERT INTO tournaments (tournament_name, team_organizer_id, tournament_start_date, tournament_state_id) " +
                     "VALUES (?, ?, ?, ?)";
@@ -49,7 +49,7 @@ public class TournamentDao {
             }
             statement.close();
             return tournament;
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw e;
         }
     }

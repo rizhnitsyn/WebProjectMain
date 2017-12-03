@@ -27,18 +27,15 @@ public final class UserService {
         return INSTANCE;
     }
 
-    public UserViewDto addUser(UserCreateDto userDto) throws SQLException {
-        User newUser = new User(userDto);
-        User savedUser = UserDao.getInstance().addUser(newUser);
-        String state = getState(savedUser.getUserState());
-        return new UserViewDto(savedUser, state);
-    }
+    public void addUser(UserCreateDto userDto) throws SQLException {
+        UserDao.getInstance().addUser(new User(userDto));
+}
 
-    public String checkRegistration(UserCreateDto dto) {
+    public UserLoggedDto checkRegistration(UserCreateDto dto) {
         if (dto.getFirstName().isEmpty() || dto.getSecondName().isEmpty() || dto.getEmail().isEmpty() || dto.getLogin().isEmpty() || dto.getPassword().isEmpty()) {
-            return "Заполните все поля";
+            return new UserLoggedDto(true,"Заполните все поля");
         }
-        return null;
+        return new UserLoggedDto(false, "Успешно");
     }
 
     public UserLoggedDto checkPassword(LoginDto dto) {
@@ -80,6 +77,9 @@ public final class UserService {
     }
 
     public int calculateUserPointsPerMatch(Match foundMatch, Forecast userForecast) {
+        if (foundMatch.getFirstTeamResult() == null || foundMatch.getSecondTeamResult() == null) {
+            return 0;
+        }
         Integer secondTeamResult = foundMatch.getSecondTeamResult();
         Integer firstTeamResult = foundMatch.getFirstTeamResult();
         if (firstTeamResult == userForecast.getFirstTeamForecast() &&

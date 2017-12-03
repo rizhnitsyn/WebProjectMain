@@ -12,9 +12,8 @@ function sendToServer() {
         })
     }).done(function(data) {
         $("#displayed-data").text(data.message);
-        let path = data.redirect
-        if (path.length > 0) {
-            redirect(path);
+        if (!data.error) {
+            redirect(data.redirectPath);
         }
     });
 }

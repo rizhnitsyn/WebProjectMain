@@ -17,11 +17,13 @@ public class TournamentViewDto {
     private LocalDate startDate;
     private String state;
     private Long userId;
+    private boolean error;
     private String message;
-    private String redirect;
+    private String redirectPath;
 
-    public TournamentViewDto(String message) {
+    public TournamentViewDto(boolean error, String message) {
         this.message = message;
+        this.error = error;
     }
 
     public TournamentViewDto(Long id, String name, String teamName, LocalDate startDate, String state) {
@@ -32,13 +34,13 @@ public class TournamentViewDto {
         this.state = state;
     }
 
-    public TournamentViewDto(Long id, String name, String teamName, LocalDate startDate, String state, String redirect) {
+    public TournamentViewDto(boolean error, Long id, String name, String teamName, LocalDate startDate, String state) {
         this.id = id;
         this.name = name;
         this.teamName = teamName;
         this.startDate = startDate;
         this.state = state;
-        this.redirect = redirect;
+        this.error = error;
     }
 
     public TournamentViewDto(Long id, String name, String teamName, LocalDate startDate, String state, Long userId) {

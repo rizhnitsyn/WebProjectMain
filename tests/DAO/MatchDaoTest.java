@@ -20,30 +20,23 @@ import static utils.StaticContent.dateTimeFormatter;
 public class MatchDaoTest {
 
     @Test
-    public void testAddFootballMatch() throws ParseException {
+    public void testAddFootballMatch() throws Exception {
         MatchDao footballMatchDao = MatchDao.getInstance();
         Tournament tournament = new Tournament();
         tournament.setId(2L);
-//        LocalDateTime dd = LocalDateTime.parse("2018-08-12 10:20:00.0", dateTimeFormatter);
         LocalDateTime dd = LocalDateTime.now();
-//        System.out.println(dd);
-        Match match2 = new Match(dd, 1, 1, new Team(1L), new Team(3L), tournament);
-//        System.out.println(Timestamp.valueOf(java.time.LocalDateTime.now()));
-//        System.out.println(match2.getMatchDateTime().toString());
-//        java.sql.Date.valueOf(match2.getMatchDateTime().toString());
-//        System.out.println(dateTimeFormat.parse(match2.getMatchDateTime().toString()));
-        Match match = footballMatchDao.addMatch(match2);
+        Match match2 = new Match(dd, 1, 1, new Team(1L), new Team(3L));
+        Match match = footballMatchDao.addMatch(match2, 6L);
         Assert.assertNotNull(match);
         Assert.assertTrue(match.getId() != 0);
     }
 
     @Test
     public void testGetFootballMatchById() {
-        MatchDao footballMatchDao = MatchDao.getInstance();
-        Match match = footballMatchDao.getMatchById(48L);
+        Match match = MatchDao.getInstance().getMatchById(41L);
         System.out.println(match);
         Assert.assertNotNull(match);
-        Assert.assertEquals(3L, (long)match.getSecondTeam().getId());
+        Assert.assertEquals(4L, (long)match.getSecondTeam().getId());
         System.out.println(match.getTournament().getName());
         match.getForecasts().forEach(forecast -> System.out.println(forecast.getId()));
     }

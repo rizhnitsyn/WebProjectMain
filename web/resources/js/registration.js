@@ -18,11 +18,9 @@ function regUser() {
         })
     }).done(function(data) {
         $("#displayed-data").text(data.message);
-        let path = data.redirect
-        if (path.length > 0) {
-            sleep(1500);
-            redirect(path);
-            // setTimeout("window.location.href = path;",3000)
+        if (!data.error) {
+            sleep(500);
+            redirect(data.redirectPath);
         }
     });
 }

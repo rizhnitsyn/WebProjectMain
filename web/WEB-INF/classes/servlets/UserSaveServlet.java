@@ -2,7 +2,6 @@ package servlets;
 
 import DTO.UserLoggedDto;
 import DTO.UserCreateDto;
-import DTO.UserViewDto;
 import com.google.gson.Gson;
 import services.UserService;
 
@@ -12,7 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.stream.Collectors;
 
 import static utils.StaticContent.*;
@@ -32,18 +30,21 @@ public class UserSaveServlet extends HttpServlet {
         Gson gson = new Gson();
         String jsonString = req.getReader().lines().collect(Collectors.joining("\n"));
         UserCreateDto userCreateDto = gson.fromJson(jsonString, UserCreateDto.class);
-        String answerRegistration = UserService.getInstance().checkRegistration(userCreateDto);
+        UserLoggedDto checkedUser = UserService.getInstance().checkRegistration(userCreateDto);
         String outputJsonString;
 
-        if (answerRegistration == null) {
+        if (!checkedUser.isError()) {
             try {
                 UserService.getInstance().addUser(userCreateDto);
-                outputJsonString = gson.toJson(new UserLoggedDto("Успешно", "/login"));
-            } catch (SQLException e) {
-                outputJsonString = gson.toJson(new UserLoggedDto("Ошибка при создании пользователя: " + e.toString()));
+                checkedUser.setRedirectPath("/login");
+                outputJsonString = gson.toJson(checkedUser);
+            } catch (Exception e) {
+                checkedUser.setError(true);
+                checkedUser.setMessage("Есть ошибки при регистрации: " + e.toString());
+                outputJsonString = gson.toJson(checkedUser);
             }
         } else {
-            outputJsonString = gson.toJson(new UserLoggedDto(answerRegistration));
+            outputJsonString = gson.toJson(checkedUser);
         }
         resp.getWriter().write(outputJsonString);
     }

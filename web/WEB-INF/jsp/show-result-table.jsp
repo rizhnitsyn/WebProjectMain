@@ -10,13 +10,34 @@
 <html>
 <head>
     <title>All Matches of Tournament</title>
+    <link href="${pageContext.request.contextPath}/resources/css/style.css" rel="stylesheet">
 </head>
 <body>
-    ВЫВЕСТИ РЕЗУЛЬТАТЫ МАТЧЕЙ СЮДА В КРАСИВОЙ ТАБЛИЦЕ
+<%@include file="header.jsp"%>
+
+    <h2 class="form-title">Результаты турнира</h2>
     <c:if test="${not empty requestScope.users}">
+        <table class="simple-little-table">
+        <caption>Общий итог</caption>
+            <tr>
+                <th>ФИО</th>
+                <th>6 очков</th>
+                <th>4 очка</th>
+                <th>1 очко</th>
+                <th>БАЛЛЫ</th>
+            </tr>
         <c:forEach var="user" items="${requestScope.users}">
-            <p><a href="${pageContext.request.contextPath}/user?id=${user.userId}">${user.firstName} ${user.secondName}</a> ${user.guessedResultCount} ${user.guessedDiffInResultsCount} ${user.guessedWinnersCount} ${user.totalPoints}</p>
+            <tr class="widget-list3">
+                <td><a href="${pageContext.request.contextPath}/user?id=${user.userId}">${user.firstName} ${user.secondName}</a></td>
+                <td>${user.guessedResultCount}</td>
+                <td>${user.guessedDiffInResultsCount}</td>
+                <td>${user.guessedWinnersCount}</td>
+                <td>${user.totalPoints}</td>
+            </tr>
         </c:forEach>
+        </table>
     </c:if>
+<%@include file="footer.jsp"%>
+
 </body>
 </html>

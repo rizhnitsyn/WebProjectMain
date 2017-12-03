@@ -17,6 +17,7 @@ import static utils.StaticContent.*;
 
 @WebServlet(urlPatterns = "/login", name = "login")
 public class LoginServlet extends HttpServlet {
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         getServletContext()
@@ -26,7 +27,6 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        resp.setCharacterEncoding("UTF-8");
         resp.setContentType("application/json");
         Gson gson = new Gson();
         String jsonString = req.getReader().lines().collect(Collectors.joining("\n"));

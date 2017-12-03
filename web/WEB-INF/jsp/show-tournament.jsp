@@ -10,23 +10,32 @@
 <html>
 <head>
     <title>Show tournament</title>
+    <link href="${pageContext.request.contextPath}/resources/css/style.css" rel="stylesheet">
 </head>
 <body>
-    <form action="${pageContext.request.contextPath}/tournament" method="post">
-        <h2>Турнир: ${requestScope.tournament.name}</h2>
-        <p>Дата начала игр турнира: ${requestScope.tournament.startDate}</p>
-        <p>Страна организатор турнира: ${requestScope.tournament.teamName}</p>
-        <p>Состояние турнира: ${requestScope.tournament.state}</p>
-        <p>Статус регистрации на турнир:
-            <c:if test="${not empty requestScope.tournament.userId}"> Зарегистрирован на турнир </c:if>
-            <c:if test="${empty requestScope.tournament.userId}"> Нет регистрации на турнир
-               <p><button type="submit" name="idReg" value="${requestScope.tournament.id}">Зарегистрироваться на турнир</button> </p>
-            </c:if>
-        </p>
-        <c:if test="${sessionScope.loggedUser.userStateId == 4}">
-            <button type="submit" name="idClose" value="${requestScope.tournament.id}">Завершить турнир</button>
-        </c:if>
+<%@include file="header.jsp"%>
 
-   </form>
+    <form action="${pageContext.request.contextPath}/tournament" method="post">
+        <h2 class="form-title">Турнир: ${requestScope.tournament.name}</h2>
+        <p>Дата начала игр турнира: <span class="span-class"> ${requestScope.tournament.startDate}</span></p>
+        <p>Страна организатор турнира: <span class="span-class"> ${requestScope.tournament.teamName} </span></p>
+        <p>Состояние турнира: <span class="span-class"> ${requestScope.tournament.state}</span></p>
+        <p>Статус регистрации на турнир:
+            <span class="span-class">
+               <c:if test="${not empty requestScope.tournament.userId}"> зарегистрирован на турнир </c:if>
+               <c:if test="${empty requestScope.tournament.userId}"> нет регистрации на турнир</c:if>
+            </span>
+        </p>
+        <p>
+        <c:if test="${empty requestScope.tournament.userId}">
+            <button class="btn-class" type="submit" name="idReg" value="${requestScope.tournament.id}">Зарегистрироваться на турнир</button>
+        </c:if>
+        <c:if test="${sessionScope.loggedUser.userStateId == 4}">
+            <button class="btn-class" type="submit" name="idClose" value="${requestScope.tournament.id}">Завершить турнир</button>
+        </c:if>
+        </p>
+    </form>
+
+    <%@include file="footer.jsp"%>
 </body>
 </html>

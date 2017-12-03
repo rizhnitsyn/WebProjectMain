@@ -34,7 +34,7 @@ public class MatchDao {
         return INSTANCE;
     }
 
-    public Match addMatch(Match match) {
+    public Match addMatch(Match match, Long TournamentId) throws Exception {
         try (Connection connection = ConnectionManager.getConnection()){
             String sql = "INSERT INTO matches (match_datetime, match_state_id, match_type_id, first_team_id, second_team_id, tournament_id) " +
                     "VALUES (?, ?, ?, ?, ?, ?)";
@@ -44,7 +44,7 @@ public class MatchDao {
             statement.setInt(3, match.getMatchType());
             statement.setLong(4, match.getFirstTeam().getId());
             statement.setLong(5, match.getSecondTeam().getId());
-            statement.setLong(6, match.getTournament().getId());
+            statement.setLong(6, TournamentId);
             statement.executeUpdate();
 
             ResultSet generatedKeys = statement.getGeneratedKeys();
@@ -53,16 +53,15 @@ public class MatchDao {
             }
             statement.close();
             return match;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
+        } catch (Exception e) {
+            throw e;
         }
     }
 
     public Match updateMatch(Match match) {
         try (Connection connection = ConnectionManager.getConnection()){
             String sql = "UPDATE matches SET first_team_result = ?, second_team_result = ?, match_datetime = ?, match_state_id = ? , match_type_id = ?," +
-                    " first_team_id = ?, second_team_id= ?  WHERE tournament_id = ?";
+                    " first_team_id = ?, second_team_id= ?  WHERE match_id = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, match.getFirstTeamResult());
             statement.setInt(2, match.getSecondTeamResult());
@@ -71,7 +70,7 @@ public class MatchDao {
             statement.setInt(5, match.getMatchType());
             statement.setLong(6, match.getFirstTeam().getId());
             statement.setLong(7, match.getSecondTeam().getId());
-            statement.setLong(8, match.getTournament().getId());
+            statement.setLong(8, match.getId());
             statement.executeUpdate();
             statement.close();
             return match;

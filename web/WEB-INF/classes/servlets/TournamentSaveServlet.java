@@ -33,9 +33,15 @@ public class TournamentSaveServlet extends HttpServlet {
         resp.setContentType("application/json");
         Gson gson = new Gson();
         String jsonString = req.getReader().lines().collect(Collectors.joining("\n"));
-        TournamentCreateUpdateDto createDto = gson.fromJson(jsonString, TournamentCreateUpdateDto.class);
-        TournamentViewDto tournamentView = TournamentService.getInstance().addTournament(createDto);
-        String outputJsonString = gson.toJson(tournamentView);
+        TournamentViewDto savedTournament;
+        try {
+            TournamentCreateUpdateDto createDto = gson.fromJson(jsonString, TournamentCreateUpdateDto.class);
+            savedTournament = TournamentService.getInstance().addTournament(createDto);
+        } catch (Exception ex) {
+            savedTournament = new TournamentViewDto(true,"Есть ошибки при сохранении турнира: " + ex.toString());
+        }
+        savedTournament.setRedirectPath("/tournament?id=" + savedTournament.getId());
+        String outputJsonString = gson.toJson(savedTournament);
         resp.getWriter().write(outputJsonString);
     }
 }

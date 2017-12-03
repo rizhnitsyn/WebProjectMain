@@ -2,18 +2,22 @@ package services;
 
 import DAO.MatchDao;
 import DAO.TeamDao;
-import DAO.TournamentDao;
 import DTO.MatchCreateDto;
 import DTO.MatchShortViewDto;
 import DTO.MatchViewDto;
 import entities.Forecast;
 import entities.Match;
 import entities.Team;
-import entities.Tournament;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static utils.StaticContent.*;
 
 public final class MatchService {
     private static MatchService INSTANCE;
@@ -31,15 +35,16 @@ public final class MatchService {
         return INSTANCE;
     }
 
-    public MatchViewDto addMatch(MatchCreateDto dto) {
-        Team firstTeam = TeamDao.getInstance().getTeamById(dto.getFirstTeam());
-        Team secondTeam = TeamDao.getInstance().getTeamById(dto.getSecondTeam());
-        Tournament tournament = TournamentDao.getInstance().getTournamentById(dto.getTournamentId());
-        Match match = new Match(dto.getMatchDateTime(), dto.getMatchState(), dto.getMatchType(),
-                firstTeam, secondTeam, tournament);
-
-        Match savedMatch = MatchDao.getInstance().addMatch(match);
-        return new MatchViewDto(savedMatch);
+    public MatchShortViewDto addMatch(MatchCreateDto dto) {
+        try {
+            Team firstTeam = TeamDao.getInstance().getTeamById(dto.getFirstTeamId());
+            Team secondTeam = TeamDao.getInstance().getTeamById(dto.getSecondTeamId());
+            Match match = new Match(LocalDateTime.parse(dto.getMatchDateTime(), dateTimeFormatterInput ), 1, dto.getMatchType(), firstTeam, secondTeam);
+            Match savedMatch = MatchDao.getInstance().addMatch(match, dto.getTournamentId());
+            return new MatchShortViewDto(false, savedMatch.getId());
+        } catch (Exception e) {
+            return new MatchShortViewDto(true,"Есть ошибки при сохранении матча: " + e.toString());
+        }
     }
 
     public Map<Integer, String> getMatchTypes() {
@@ -71,8 +76,8 @@ public final class MatchService {
         return matchViewDto;
     }
 
-    public MatchViewDto updateMatch(Long id, int firstTeamResult, int secondTeamResult) {
-        Match foundMatch = MatchDao.getInstance().getMatchById(id);
+    public MatchViewDto updateMatch(Long matchId, int firstTeamResult, int secondTeamResult) {
+        Match foundMatch = MatchDao.getInstance().getMatchById(matchId);
         foundMatch.setFirstTeamResult(firstTeamResult);
         foundMatch.setSecondTeamResult(secondTeamResult);
         Match updatedMatch = MatchDao.getInstance().updateMatch(foundMatch);
@@ -85,7 +90,8 @@ public final class MatchService {
             return null;
         }
         return matches.stream()
-                .map(match -> new MatchShortViewDto(match.getId(), match.getMatchDateTime(), match.getFirstTeam().getTeamName(), match.getSecondTeam().getTeamName(),tournamentId))
+                .map(match -> new MatchShortViewDto(match.getId(), match.getMatchDateTime(), match.getFirstTeam().getTeamName(),
+                        match.getSecondTeam().getTeamName(),tournamentId))
                 .collect(Collectors.toList());
     }
 
@@ -95,7 +101,9 @@ public final class MatchService {
             return null;
         }
         return matches.stream()
-                .map(match -> new MatchShortViewDto(match.getId(), match.getMatchDateTime(), match.getFirstTeam().getTeamName(), match.getSecondTeam().getTeamName(), tournamentId))
+                .map(match -> new MatchShortViewDto(match.getId(), match.getMatchDateTime(), match.getFirstTeam().getTeamName(),
+                        match.getSecondTeam().getTeamName(), tournamentId, match.getFirstTeamResult(), match.getSecondTeamResult()))
+                .sorted(Comparator.comparing(MatchShortViewDto::getMatchDateTime))
                 .collect(Collectors.toList());
     }
 
@@ -108,6 +116,9 @@ public final class MatchService {
     }
 
     private int guessedDiffInResultsCount(Match foundMatch) {
+        if (foundMatch.getFirstTeamResult() == null || foundMatch.getSecondTeamResult() == null) {
+            return 0;
+        }
         return (int) foundMatch.getForecasts().stream()
                 .filter(forecast -> (((forecast.getFirstTeamForecast() - forecast.getSecondTeamForecast()) ==
                                      (foundMatch.getFirstTeamResult() - foundMatch.getSecondTeamResult())) &&
@@ -118,7 +129,10 @@ public final class MatchService {
     }
 
     private int guessedWinnersCount(Match foundMatch) {
-        return (int) foundMatch.getForecasts().stream()
+        if (foundMatch.getFirstTeamResult() == null || foundMatch.getSecondTeamResult() == null) {
+            return 0;
+        }
+        return  (int)foundMatch.getForecasts().stream()
                 .filter(forecast -> (Integer.compare(forecast.getFirstTeamForecast(), forecast.getSecondTeamForecast()) ==
                                     Integer.compare(foundMatch.getFirstTeamResult(), foundMatch.getSecondTeamResult())) &&
                                    (forecast.getFirstTeamForecast() != foundMatch.getFirstTeamResult() ||
@@ -145,18 +159,24 @@ public final class MatchService {
     }
 
     private int guessedResultsCount(Match foundMatch) {
-        return (int) foundMatch.getForecasts().stream()
+        if (foundMatch.getFirstTeamResult() == null || foundMatch.getSecondTeamResult() == null) {
+            return 0;
+        }
+        return  (int)foundMatch.getForecasts().stream()
                 .filter(forecast -> forecast.getFirstTeamForecast() == foundMatch.getFirstTeamResult() &&
                         forecast.getSecondTeamForecast() == foundMatch.getSecondTeamResult())
                 .count();
     }
 
-    private Integer calculateUserPoints(Match foundMatch, Long userId) {
+    private int calculateUserPoints(Match foundMatch, Long userId) {
+        if (foundMatch.getFirstTeamResult() == null || foundMatch.getSecondTeamResult() == null) {
+            return 0;
+        }
         Forecast userForecast = foundMatch.getForecasts().stream()
                 .filter(forecast -> forecast.getUserId().equals(userId))
                 .findFirst().orElse(null);
         if (userForecast == null) {
-            return null;
+            return 0;
         }
         return UserService.getInstance().calculateUserPointsPerMatch(foundMatch, userForecast);
     }

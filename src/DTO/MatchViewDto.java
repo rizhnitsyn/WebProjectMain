@@ -32,7 +32,7 @@ public class MatchViewDto {
     private int guessedWinnersCount;
     private int guessedDiffInResultsCount;
     private int guessedResultsCount;
-    private Integer currentUserPoints;
+    private int currentUserPoints;
 
     public MatchViewDto(Match match) {
         this.id = match.getId();

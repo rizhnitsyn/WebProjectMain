@@ -10,10 +10,9 @@ function sendToServer() {
         })
     }).done(function(data) {
         $("#displayed-data").text(data.message);
-        let path = data.redirect
-        if (path.length > 0) {
+        if (data.authorized) {
             sleep(1000);
-            redirect(path);
+            redirect(data.redirectPath);
         }
     });
 }

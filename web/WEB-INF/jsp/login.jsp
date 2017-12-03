@@ -12,14 +12,20 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/login.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/md5.js"></script>
+    <link href="${pageContext.request.contextPath}/resources/css/style.css" rel="stylesheet">
 </head>
 <body>
-    <p>Login</p><br>
-    <input type="text" id="name" name="name">
-    <p>Password</p><br>
-    <input type="password" id="pass" name="pass">
-    <button type="button" onclick="sendToServer()">Login</button>
-    <%--<button type="button" >Login</button>--%>
-    <p id="displayed-data"></p>
+<%@include file="header.jsp"%>
+
+    <div class="form-title"><h2>Вход</h2></div>
+    <div class="form-title">Логин</div>
+    <input class="form-field" type="text" id="name" name="name"/><br />
+    <div class="form-title">Пароль</div>
+    <input class="form-field" type="password" id="pass" name="pass" /><br/>
+    <button class="btn-class" type="button" onclick="sendToServer()">Войти</button>
+    <div class="form-title" id="displayed-data"></div>
+
+<%@include file="footer.jsp"%>
 </body>
 </html>
+

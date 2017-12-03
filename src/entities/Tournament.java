@@ -48,10 +48,6 @@ public class Tournament {
         this.id = id;
     }
 
-//    public Tournament(TournamentCreateUpdateDto dto, Team team) {
-//        this(dto.getName(), team, LocalDate.parse(dto.getStartDate(), dateFormatterInput), dto.getStateId());
-//    }
-//
     public void addFootballMatch(Match match) {
         matches.add(match);
     }

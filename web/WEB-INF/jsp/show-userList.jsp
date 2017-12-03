@@ -1,19 +1,21 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: rizhnitsyn
-  Date: 23.11.2017
-  Time: 14:44
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <title>Show user list</title>
+    <link href="${pageContext.request.contextPath}/resources/css/style.css" rel="stylesheet">
 </head>
 <body>
-    <c:forEach var="user" items="${requestScope.users}">
-        <p><a href="${pageContext.request.contextPath}/user?id=${user.id}">${user.firstName} ${user.secondName}</a></p>
-    </c:forEach>
+<%@include file="header.jsp"%>
+
+    <h2 class="form-title">Список пользователей для регистрации</h2>
+    <ul class="widget-list2">
+        <c:forEach var="user" items="${requestScope.users}">
+            <li><a href="${pageContext.request.contextPath}/user?id=${user.id}">${user.firstName} ${user.secondName}</a><li>
+        </c:forEach>
+    </ul>
+
+<%@include file="footer.jsp"%>
+
 </body>
 </html>

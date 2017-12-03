@@ -16,7 +16,7 @@ public class Forecast {
     private Long userId;
     private Match match;
 
-    public Forecast(int firstTeamForecast, int secondTeamForecast, Long userId, Match match) {
+    public Forecast(Integer firstTeamForecast, Integer secondTeamForecast, Long userId, Match match) {
         this.firstTeamForecast = firstTeamForecast;
         this.secondTeamForecast = secondTeamForecast;
         this.userId = userId;

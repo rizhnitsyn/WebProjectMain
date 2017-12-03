@@ -13,10 +13,9 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 public class MatchCreateDto {
-    private LocalDateTime matchDateTime;
-    private int matchState;
+    private String matchDateTime;
     private int matchType;
-    private Long firstTeam;
-    private Long secondTeam;
+    private Long firstTeamId;
+    private Long secondTeamId;
     private Long tournamentId;
 }

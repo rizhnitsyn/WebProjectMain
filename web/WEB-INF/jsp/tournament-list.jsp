@@ -10,16 +10,23 @@
 <html>
 <head>
     <title>Tournament List</title>
+    <link href="${pageContext.request.contextPath}/resources/css/style.css" rel="stylesheet">
 </head>
 <body>
-  список всех активных турниров на текущий момент
-<c:if test="${sessionScope.loggedUser.userStateId == 4}">
-    <form action="${pageContext.request.contextPath}/tournamentList" method="post">
-       <button type="submit">Добавить новый турнир</button>
-    </form>
-</c:if>
-    <c:forEach var="tournament" items="${requestScope.tournaments}">
-        <p><a href="${pageContext.request.contextPath}/tournament?id=${tournament.id}">${tournament.name}</a>  Начало: ${tournament.startDate} Состояние: ${tournament.state}</p>
-    </c:forEach>
+<%@include file="header.jsp"%>
+
+    <h2 class="form-title">Выберите турнир для регистрации</h2>
+    <ul class="widget-list2">
+        <c:forEach var="tournament" items="${requestScope.tournaments}">
+            <li><a href="${pageContext.request.contextPath}/tournament?id=${tournament.id}">${tournament.name}</a><p>  Начало турнира: ${tournament.startDate}</p></li>
+        </c:forEach>
+    </ul>
+    <c:if test="${sessionScope.loggedUser.userStateId == 4}">
+        <form action="${pageContext.request.contextPath}/tournamentList" method="post">
+            <button class="btn-class" type="submit">Добавить новый турнир</button>
+        </form>
+    </c:if>
+
+<%@include file="footer.jsp"%>
 </body>
 </html>

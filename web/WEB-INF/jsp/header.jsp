@@ -1,16 +1,12 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: admin
-  Date: 18.11.2017
-  Time: 17:19
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-    <title>Title</title>
-</head>
-<body>
 
-</body>
-</html>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<div class="wrapper">
+    <header class="header">
+        <img src="${pageContext.request.contextPath}/resources/jpg/Header_new.jpg" alt="" class="headjpg"/>
+    </header><!-- .header-->
+
+    <div class="middle">
+        <div class="container">
+            <main class="content">
+
+

@@ -9,20 +9,18 @@ import java.io.IOException;
 
 import static utils.StaticContent.createViewPath;
 
-@WebServlet(urlPatterns = "/homepage", name = "Homepage")
-public class HomePageServlet extends HttpServlet{
+@WebServlet(urlPatterns = "/logout", name = "logout")
+public class LogoutServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        getServletContext()
-                .getRequestDispatcher(createViewPath("home-page"))
-                .forward(req, resp);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-
-
+        try {
+            req.getSession().removeAttribute("loggedUser");
+        }
+        finally {
+            getServletContext()
+                    .getRequestDispatcher(createViewPath("home-page"))
+                    .forward(req, resp);
+        }
     }
 }

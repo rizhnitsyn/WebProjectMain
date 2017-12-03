@@ -10,11 +10,18 @@
 <html>
 <head>
     <title>TournamentList Forecasts</title>
+    <link href="${pageContext.request.contextPath}/resources/css/style.css" rel="stylesheet">
 </head>
 <body>
-    <p>Выберите турнир для просмотра календаря турнира и результатов матча:</p>
+<%@include file="header.jsp"%>
+
+    <h2 class="form-title">Выберите турнир для просмотра результатов матчей:</h2>
+    <ul class="widget-list2">
     <c:forEach var="tournament" items="${requestScope.tournaments}">
-        <p><a href="${pageContext.request.contextPath}/allMatches?id=${tournament.id}">${tournament.name}</a>  Начало: ${tournament.startDate} Состояние: ${tournament.state}</p>
+        <li><a href="${pageContext.request.contextPath}/allMatches?id=${tournament.id}">${tournament.name}</a><p> Старт турнира: ${tournament.startDate},  ${tournament.state}</p></li>
     </c:forEach>
+    </ul>
+
+<%@include file="footer.jsp"%>
 </body>
 </html>

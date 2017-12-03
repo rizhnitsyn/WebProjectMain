@@ -1,8 +1,9 @@
 function sendToServer() {
     let matchDateTime = $("#matchDateTime").val();
     let matchType = $("#matchType").val();
-    let firstTeamId = $("#firstTeamId").val();
-    let secondTeamId = $("#secondTeamId").val();
+    let firstTeamId = $("#firstTeam").val();
+    let secondTeamId = $("#secondTeam").val();
+    let tournamentId = $("#tournamentId").val();
     $.ajax({
         url: '/saveMatch',
         method: 'POST',
@@ -10,13 +11,13 @@ function sendToServer() {
             matchDateTime: matchDateTime,
             matchType: matchType,
             firstTeamId: firstTeamId,
-            secondTeamId: secondTeamId
+            secondTeamId: secondTeamId,
+            tournamentId: tournamentId
         })
     }).done(function(data) {
         $("#displayed-data").text(data.message);
-        let path = data.redirect
-        if (path.length > 0) {
-            redirect(path);
+        if (!data.error) {
+            redirect(data.redirectPath);
         }
     });
 }

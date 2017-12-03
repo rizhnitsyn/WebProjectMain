@@ -1,37 +1,28 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: rizhnitsyn
-  Date: 24.11.2017
-  Time: 11:09
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
 <html>
 <head>
     <title>Home Page</title>
+    <link href="${pageContext.request.contextPath}/resources/css/style.css" rel="stylesheet">
 </head>
 <body>
-<div class="widget">
-    <h3 class="widget-title">Категории</h3>
-    <ul class="widget-list">
-        <li><a href="${pageContext.request.contextPath}/saveUser">Регистрация</a></li>
-        <br>
-        <li><a href="${pageContext.request.contextPath}/tournamentList">Активные турниры</a></li>
-        <br>
-        <li><a href="${pageContext.request.contextPath}/userList">Авторизовать новых пользователей</a></li>
-        <br>
-        <li><a href="${pageContext.request.contextPath}/forecastTournaments">Новые матчи для прогнозов</a></li>
-        <br>
-        <li><a href="${pageContext.request.contextPath}/tournamentAllMatches">Календарь матчей</a></li>
-        <br>
-        <li><a href="${pageContext.request.contextPath}/tournamentStatistic">Результаты турниров</a></li>
-        <br>
-        <li><a href="">Правила игры</a></li>
-        <br>
-        <li><a href="${pageContext.request.contextPath}/user?id=${sessionScope.loggedUser.userId}">Личный кабинет</a></li>
-        <br>
-        <li><a href="${pageContext.request.contextPath}/login">Залогиниться</a></li>
-    </ul>
-</div>
+<%@include file="header.jsp"%>
+
+    <h3>Общие правила</h3>
+    <p> 1.) По окончании конкурса определяется основной победитель - победитель конкурса прогнозов </p>
+    <p> 2.) Прогнозы на все матчи группового турнира предоставляются до начала матча открытия Турнира</p>
+    <p> 3.) Прогноз на каждый конкретный матч стадии плей-офф предоставляется после того, как становятся
+        известны команды-участницы данного матча и до начала данного матча</p>
+    <h3>Начисление очков</h3>
+    <p>6 - полностью угаданный счет</p>
+    <p>4 - угаданная разница мячей (кроме ничьих)</p>
+    <p>3 - угаданная ничья</p>
+    <p>1 - угаданный исход матча (кроме ничьих)</p>
+    <h3>Преимущество при равенстве очков</h3>
+    <p>При равенстве очков преимущество имеет участник с наибольшим значением в графе "6", далее - "4", "3", "1"</p>
+    <p>При полном равенстве значений преимущество имеет участник, прогноз на групповой турнир от
+        которого получен раньше</p>
+
+<%@include file="footer.jsp"%>
 </body>
 </html>

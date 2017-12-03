@@ -15,7 +15,7 @@ public class UserViewDto {
     private String email;
     private String userState;
 
-    public UserViewDto(User user, String userState) {
+    public UserViewDto( User user, String userState) {
         this.id = user.getId();
         this.firstName = user.getFirstName();
         this.secondName = user.getSecondName();

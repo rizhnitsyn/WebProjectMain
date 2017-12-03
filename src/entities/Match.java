@@ -41,13 +41,12 @@ public class Match {
         this.matchType = matchType;
     }
 
-    public Match(LocalDateTime matchDateTime, int matchState, int matchType, Team firstTeam, Team secondTeam, Tournament tournament) {
+    public Match(LocalDateTime matchDateTime, int matchState, int matchType, Team firstTeam, Team secondTeam) {
         this.matchDateTime = matchDateTime;
         this.matchState = matchState;
         this.matchType = matchType;
         this.firstTeam = firstTeam;
         this.secondTeam = secondTeam;
-        this.tournament = tournament;
     }
 
     public Match(Long id, Integer firstTeamResult, Integer secondTeamResult, LocalDateTime matchDateTime, int matchState, int matchType, Team firstTeam, Team secondTeam) {

@@ -30,11 +30,6 @@ public class MatchesOfSelectedTournamentServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long tournamentId = Long.valueOf(req.getParameter("idTournament"));
-        req.setAttribute("matchTypes", MatchService.getInstance().getMatchTypes());
-        req.setAttribute("countries", TeamService.getInstance().getListOfTeams());
-        req.setAttribute("tournamentId", tournamentId);
-        getServletContext()
-                .getRequestDispatcher(createViewPath("save-match"))
-                .forward(req, resp);
+        resp.sendRedirect("/saveMatch?id=" + tournamentId);
     }
 }

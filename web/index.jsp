@@ -5,6 +5,6 @@
     <title></title>
   </head>
   <body>
-  <p>Привет</p>
+   <%@include file="/WEB-INF/jsp/home-page.jsp"%>
   </body>
 </html>

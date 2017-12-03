@@ -10,32 +10,36 @@
 <html>
 <head>
     <title>Show Match</title>
+    <link href="${pageContext.request.contextPath}/resources/css/style.css" rel="stylesheet">
 </head>
 <body>
+<%@include file="header.jsp"%>
+
 <form action="${pageContext.request.contextPath}/match" method="post">
-    <h2>Турнир: ${requestScope.match.tournamentName}</h2>
-    <p>Начало матча: ${requestScope.match.matchDateTime}</p>
-    <p>Состояние матча: ${requestScope.match.matchState}</p>
-    <p>Тип матча: ${requestScope.match.matchType}</p>
-    <p>Команды: ${requestScope.match.firstTeam} - ${requestScope.match.secondTeam}</p>
-    <p>Счет матча: ${requestScope.match.firstTeamResult} - ${requestScope.match.secondTeamResult}</p>
-    <p>Мой прогноз: ${requestScope.match.currentUserForecast.firstTeamForecast} - ${requestScope.match.currentUserForecast.secondTeamForecast}</p>
-    <p>Всего прогнозов на матч: ${requestScope.match.forecastsCount}</p>
-    <p>Предматчевая статистика</p>
-    <p>Прогнозов на победу первой команды: ${requestScope.match.firstTeamWinCount}</p>
-    <p>Прогнозов на победу второй команды: ${requestScope.match.secondTeamWinCount}</p>
-    <p>Прогнозов на ничью: ${requestScope.match.drawCount}</p>
-    <p>Статистика по результатам матча</p>
-    <p>Угаданн счет в матче, количество: ${requestScope.match.guessedResultsCount}</p>
-    <p>Угадан исход матча, количество: ${requestScope.match.guessedWinnersCount}</p>
-    <p>Угадана разница счета, количество: ${requestScope.match.guessedDiffInResultsCount}</p>
-    <p>Получено очков в этом матче: ${requestScope.match.currentUserPoints} </p>
+    <h3 class="form-title">Турнир: ${requestScope.match.tournamentName}</h3>
+    <p>Начало матча: <span class="span-class">${requestScope.match.matchDateTime}, ${requestScope.match.matchState}</span></p>
+    <%--<p>Состояние матча: <span class="span-class">${requestScope.match.matchState}</span></p>--%>
+    <p>Тип матча: <span class="span-class">${requestScope.match.matchType}</span></p>
+    <p>Команды: <span class="span-class">${requestScope.match.firstTeam} - ${requestScope.match.secondTeam}</span></p>
+    <p>Счет матча: <span class="span-class">${requestScope.match.firstTeamResult} - ${requestScope.match.secondTeamResult}</span></p>
+    <p>Мой прогноз: <span class="span-class">${requestScope.match.currentUserForecast.firstTeamForecast} - ${requestScope.match.currentUserForecast.secondTeamForecast}</span></p>
+    <p>Всего прогнозов на матч: <span class="span-class">${requestScope.match.forecastsCount}</span></p>
+    <h3 class="form-title">Предматчевая статистика</h3>
+    <p>Прогнозов на победу первой команды: <span class="span-class">${requestScope.match.firstTeamWinCount}</span></p>
+    <p>Прогнозов на победу второй команды: <span class="span-class">${requestScope.match.secondTeamWinCount}</span></p>
+    <p>Прогнозов на ничью:<span class="span-class"> ${requestScope.match.drawCount}</span></p>
+    <h3 class="form-title">Статистика по результатам матча</h3>
+    <p>Угаданн счет в матче, количество: <span class="span-class">${requestScope.match.guessedResultsCount}</span></p>
+    <p>Угадан исход матча, количество: <span class="span-class">${requestScope.match.guessedWinnersCount}</span></p>
+    <p>Угадана разница счета, количество: <span class="span-class">${requestScope.match.guessedDiffInResultsCount}</span></p>
+    <p>Получено очков в этом матче: <span class="span-class">${requestScope.match.currentUserPoints} </span></p>
     <c:if test="${requestScope.isActive}">
-        <button type="submit" name="idForecast" value="${requestScope.match.id}">Сделать прогноз на матч</button>
+        <button class="btn-class" type="submit" name="idForecast" value="${requestScope.match.id}">Сделать прогноз на матч</button>
     </c:if>
     <c:if test="${sessionScope.loggedUser.userStateId == 4}">
-         <button type="submit" name="idMatch" value="${requestScope.match.id}">Внести счет матча</button>
+         <button class="btn-class" type="submit" name="idMatch" value="${requestScope.match.id}">Внести счет матча</button>
     </c:if>
+<%@include file="footer.jsp"%>
 </form>
 </body>
 </html>

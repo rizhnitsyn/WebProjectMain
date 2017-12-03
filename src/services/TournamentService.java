@@ -13,7 +13,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static utils.StaticContent.dateFormatterInput;
+import static utils.StaticContent.*;
 
 public final class TournamentService {
     private static TournamentService INSTANCE;
@@ -35,12 +35,12 @@ public final class TournamentService {
         try {
             Team team = TeamDao.getInstance().getTeamById(addDto.getOrganizerId());
             Tournament addTournament = new Tournament(
-                    addDto.getName(), team, LocalDate.parse(addDto.getStartDate(), dateFormatterInput), 1);
+                    addDto.getName(), team, LocalDate.parse(addDto.getStartDate(), dateFormatter), 1);
             Tournament savedTournament = TournamentDao.getInstance().addTournament(addTournament);
-            return new TournamentViewDto(savedTournament.getId(), savedTournament.getName(), savedTournament.getOrganizer().getTeamName(),
-                    savedTournament.getStartDate(), getTournamentStateName(savedTournament.getStateId()), "/tournament?id=" + savedTournament.getId());
+            return new TournamentViewDto(false, savedTournament.getId(), savedTournament.getName(), savedTournament.getOrganizer().getTeamName(),
+                    savedTournament.getStartDate(), getTournamentStateName(savedTournament.getStateId()));
         } catch (Exception e) {
-            return new TournamentViewDto("Введены некорректные данные: " + e.toString());
+            return new TournamentViewDto(true,"Есть ошибки при сохранении турнира: " + e.toString());
         }
     }
 
