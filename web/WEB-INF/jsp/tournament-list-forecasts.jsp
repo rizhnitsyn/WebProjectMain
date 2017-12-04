@@ -1,11 +1,4 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: rizhnitsyn
-  Date: 22.11.2017
-  Time: 14:55
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
@@ -18,7 +11,9 @@
     <h2 class="form-title">Выберите турнир для прогноза:</h2>
     <ul class="widget-list2">
     <c:forEach var="tournament" items="${requestScope.tournaments}">
-        <li><a href="${pageContext.request.contextPath}/forecastMatches?id=${tournament.id}">${tournament.name}</a><p>  Начало: ${tournament.startDate}, ${tournament.state}</p></li>
+        <li><a href="${pageContext.request.contextPath}/forecastMatches?id=${tournament.id}">${tournament.name}</a><p>  Старт турнира: ${tournament.startDate}
+            <span class="span-class_green">матчей доступно для прогнозов: ${tournament.matchesCount}</span>
+        </p></li>
     </c:forEach>
     </ul>
 

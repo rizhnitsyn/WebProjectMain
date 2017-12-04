@@ -12,7 +12,14 @@
     <h2 class="form-title">Выберите турнир для просмотра итогов конкурса прогнозов:</h2>
     <ul class="widget-list2">
         <c:forEach var="tournament" items="${requestScope.tournaments}">
-            <li><a href="${pageContext.request.contextPath}/resultTable?id=${tournament.id}">${tournament.name}</a><p> Старт турнира: ${tournament.startDate}, ${tournament.state}</p></li>
+            <li><a href="${pageContext.request.contextPath}/resultTable?id=${tournament.id}">${tournament.name}</a><p> Старт турнира: ${tournament.startDate},
+                <c:if test="${tournament.stateId == 1}">
+                    <span class="span-class_green">${tournament.state}</span>
+                </c:if>
+                <c:if test="${tournament.stateId == 2}">
+                    <span class="span-class_red">${tournament.state}</span>
+                </c:if>
+            </p></li>
         </c:forEach>
     </ul>
 

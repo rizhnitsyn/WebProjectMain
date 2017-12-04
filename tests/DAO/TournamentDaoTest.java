@@ -57,7 +57,7 @@ public class TournamentDaoTest {
 
     @Test
     public void getListOfTournaments() {
-        List<Tournament> tournaments = TournamentDao.getInstance().getTournamentsFilterByState(1);
+        List<Tournament> tournaments = TournamentDao.getInstance().getTournamentsFilterByState(1,1L);
         Assert.assertNotNull(tournaments);
         Assert.assertTrue(tournaments.size() > 0);
     }

@@ -84,6 +84,10 @@ public final class MatchService {
         return new MatchViewDto(updatedMatch);
     }
 
+    public int matchesForForecastCount(Long tournamentId, Long userId) {
+        return MatchDao.getInstance().getMatchesForForecastCount(tournamentId, userId);
+    }
+
     public List<MatchShortViewDto> matchesForForecast(Long tournamentId, Long userId) {
         List<Match> matches = MatchDao.getInstance().getMatchesForForecast(tournamentId, userId);
         if (matches == null) {
@@ -92,6 +96,7 @@ public final class MatchService {
         return matches.stream()
                 .map(match -> new MatchShortViewDto(match.getId(), match.getMatchDateTime(), match.getFirstTeam().getTeamName(),
                         match.getSecondTeam().getTeamName(),tournamentId))
+                .sorted(Comparator.comparing(MatchShortViewDto::getMatchDateTime).reversed())
                 .collect(Collectors.toList());
     }
 
@@ -103,7 +108,7 @@ public final class MatchService {
         return matches.stream()
                 .map(match -> new MatchShortViewDto(match.getId(), match.getMatchDateTime(), match.getFirstTeam().getTeamName(),
                         match.getSecondTeam().getTeamName(), tournamentId, match.getFirstTeamResult(), match.getSecondTeamResult()))
-                .sorted(Comparator.comparing(MatchShortViewDto::getMatchDateTime))
+                .sorted(Comparator.comparing(MatchShortViewDto::getMatchDateTime).reversed())
                 .collect(Collectors.toList());
     }
 

@@ -20,6 +20,8 @@ public class TournamentViewDto {
     private boolean error;
     private String message;
     private String redirectPath;
+    private int stateId;
+    private int matchesCount;
 
     public TournamentViewDto(boolean error, String message) {
         this.message = message;
@@ -32,6 +34,16 @@ public class TournamentViewDto {
         this.teamName = teamName;
         this.startDate = startDate;
         this.state = state;
+    }
+
+    public TournamentViewDto(Long id, String name, String teamName, LocalDate startDate, String state, int stateId) {
+        this(id, name, teamName, startDate, state);
+        this.stateId = stateId;
+    }
+
+    public TournamentViewDto(Long id, String name, String teamName, LocalDate startDate, String state, int stateId, int matchesCount) {
+        this(id, name, teamName, startDate, state, stateId);
+        this.matchesCount = matchesCount;
     }
 
     public TournamentViewDto(boolean error, Long id, String name, String teamName, LocalDate startDate, String state) {
@@ -51,5 +63,6 @@ public class TournamentViewDto {
         this.state = state;
         this.userId = userId;
     }
+
 
 }

@@ -7,6 +7,7 @@ import entities.Match;
 import entities.User;
 
 import java.sql.SQLException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -65,7 +66,9 @@ public final class UserService {
                         calculateTotalPointsOfUser(user),
                         guessedResultsCount(user),
                         guessedWinnersCount(user),
-                        guessedDiffInResultsCount(user)))
+                        guessedDiffInResultsCount(user),
+                        guessedDrawCount(user)))
+                .sorted(Comparator.comparing(UsersResultTableDto::getTotalPoints).reversed())
                 .collect(Collectors.toList());
     }
 
@@ -105,6 +108,14 @@ public final class UserService {
         return (int) user.getForecasts().stream()
                 .filter(forecast -> forecast.getFirstTeamForecast() == forecast.getMatch().getFirstTeamResult() &&
                         forecast.getSecondTeamForecast() == forecast.getMatch().getSecondTeamResult())
+                .count();
+    }
+
+    private int guessedDrawCount(User user) {
+        return (int) user.getForecasts().stream()
+                .filter(forecast -> forecast.getFirstTeamForecast() == forecast.getSecondTeamForecast() &&
+                        forecast.getMatch().getFirstTeamResult().equals(forecast.getMatch().getSecondTeamResult()) &&
+                        forecast.getFirstTeamForecast() != forecast.getMatch().getFirstTeamResult())
                 .count();
     }
 

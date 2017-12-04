@@ -206,6 +206,29 @@ public class MatchDao {
                 new Team(resultSet.getLong("a.second_team_id"), resultSet.getString("m.team_name")));
     }
 
+    public int getMatchesForForecastCount(Long tournamentId, Long userId) {
+        int matchesCount = 0;
+        try (Connection connection = ConnectionManager.getConnection()){
+            String sql = "SELECT count(*) matchCount FROM matches a " +
+                         "LEFT JOIN (SELECT * FROM forecasts WHERE user_id = ?) b ON a.match_id = b.match_id " +
+                         "WHERE a.tournament_id = ? " +
+                         "AND b.user_id IS NULL";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setLong(1, userId);
+            statement.setLong(2, tournamentId);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                matchesCount = resultSet.getInt("matchCount");
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        }
+        return matchesCount;
+    }
+
     public String getMatchState(int stateId) {
         String matchState = null;
         try (Connection connection = ConnectionManager.getConnection()){

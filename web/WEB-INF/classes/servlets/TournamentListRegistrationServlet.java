@@ -1,5 +1,7 @@
 package servlets;
 
+import DTO.TournamentViewDto;
+import DTO.UserLoggedDto;
 import services.TournamentService;
 
 import javax.servlet.ServletException;
@@ -8,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 import static utils.StaticContent.*;
 
@@ -15,7 +18,9 @@ import static utils.StaticContent.*;
 public class TournamentListRegistrationServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("tournaments", TournamentService.getInstance().getAlLActiveTournaments());
+        Long userId = ((UserLoggedDto) req.getSession().getAttribute("loggedUser")).getUserId();
+        List<TournamentViewDto> alLActiveTournaments = TournamentService.getInstance().getAlLActiveTournaments(userId);
+        req.setAttribute("tournaments", alLActiveTournaments);
         getServletContext()
                 .getRequestDispatcher(createViewPath("tournament-list"))
                 .forward(req, resp);

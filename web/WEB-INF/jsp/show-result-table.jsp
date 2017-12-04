@@ -23,6 +23,7 @@
                 <th>ФИО</th>
                 <th>6 очков</th>
                 <th>4 очка</th>
+                <th>3 очка</th>
                 <th>1 очко</th>
                 <th>БАЛЛЫ</th>
             </tr>
@@ -31,6 +32,7 @@
                 <td><a href="${pageContext.request.contextPath}/user?id=${user.userId}">${user.firstName} ${user.secondName}</a></td>
                 <td>${user.guessedResultCount}</td>
                 <td>${user.guessedDiffInResultsCount}</td>
+                <td>${user.guessedDrawCount}</td>
                 <td>${user.guessedWinnersCount}</td>
                 <td>${user.totalPoints}</td>
             </tr>

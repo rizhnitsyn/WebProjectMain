@@ -17,4 +17,5 @@ public class UsersResultTableDto {
     private int guessedResultCount;
     private int guessedWinnersCount;
     private int guessedDiffInResultsCount;
+    private int guessedDrawCount;
 }

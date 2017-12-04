@@ -15,10 +15,17 @@
 <body>
 <%@include file="header.jsp"%>
 
-    <h2 class="form-title">Выберите турнир для регистрации</h2>
+    <h2 class="form-title">Список проводящихся турниров</h2>
     <ul class="widget-list2">
         <c:forEach var="tournament" items="${requestScope.tournaments}">
-            <li><a href="${pageContext.request.contextPath}/tournament?id=${tournament.id}">${tournament.name}</a><p>  Начало турнира: ${tournament.startDate}</p></li>
+            <li><a href="${pageContext.request.contextPath}/tournament?id=${tournament.id}">${tournament.name}</a><p>  Старт турнира: ${tournament.startDate},
+                <c:if test="${tournament.userId == 0}">
+                    <span class="span-class_red">нет регистрации</span>
+                </c:if>
+                <c:if test="${tournament.userId != 0}">
+                    <span class="span-class_green">зарегистрирован</span>
+                </c:if>
+            </p></li>
         </c:forEach>
     </ul>
     <c:if test="${sessionScope.loggedUser.userStateId == 4}">
