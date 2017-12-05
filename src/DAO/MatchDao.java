@@ -5,18 +5,15 @@ import connection.ConnectionManager;
 import entities.Forecast;
 import entities.Team;
 import entities.Tournament;
-import utils.StaticContent;
 
 import java.sql.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static utils.StaticContent.*;
-import static utils.StaticContent.dateTimeFormatter;
 
 public class MatchDao {
     private static MatchDao INSTANCE;
@@ -100,20 +97,16 @@ public class MatchDao {
                         resultSet.getLong("b.tournament_id"),
                         resultSet.getString("b.tournament_name"),
                         new Team(resultSet.getLong("b.team_organizer_id"), resultSet.getString("e.team_name")),
-                        LocalDate.parse(resultSet.getString("b.tournament_start_date"), dateFormatter),
+                        LocalDate.parse(resultSet.getString("b.tournament_start_date"), dateSaveFormat),
                         resultSet.getInt("b.tournament_state_id"));
                 match = createMatch(resultSet);
                 match.setTournament(tournament);
                 Forecast forecast = createForecast(resultSet, match);
-                if (forecast.getId() != 0) {
-                    match.addForecast(forecast);
-                }
+                match.addForecast(forecast);
                 tournament.addFootballMatch(match);
                 while (resultSet.next()) {
                     forecast = createForecast(resultSet, match);
-                    if (forecast.getId() != 0) {
-                        match.addForecast(forecast);
-                    }
+                    match.addForecast(forecast);
                 }
             }
             resultSet.close();
@@ -153,18 +146,23 @@ public class MatchDao {
         return matches;
     }
 
-    public List<Match> getMatchesOfSelectedTournament(Long tournamentId) {
+    public List<Match> getMatchesOfSelectedTournament(Long tournamentId, Long userId) {
         List<Match> matches = new ArrayList<>();
         try (Connection connection = ConnectionManager.getConnection()){
             String sql = "SELECT * FROM matches a " +
                     "LEFT JOIN teams f ON a.first_team_id = f.team_id " +
                     "LEFT JOIN teams m ON a.second_team_id = m.team_id " +
+                    "LEFT JOIN forecasts c on a.match_id = c.match_id AND c.user_id = ? " +
                     "WHERE a.tournament_id = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setLong(1, tournamentId);
+            statement.setLong(1, userId);
+            statement.setLong(2, tournamentId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                matches.add(createMatch(resultSet));
+                Match match = createMatch(resultSet);
+                Forecast forecast = createForecast(resultSet, match);
+                match.addForecast(forecast);
+                matches.add(match);
             }
             resultSet.close();
             statement.close();
@@ -176,6 +174,10 @@ public class MatchDao {
     }
 
     private Forecast createForecast(ResultSet resultSet, Match match) throws SQLException {
+        Long forecastId = resultSet.getLong("c.forecast_id");
+        if (forecastId == 0) {
+            return null;
+        }
         return new Forecast(
                 resultSet.getLong("c.forecast_id"),
                 resultSet.getInt("c.first_team_forecast"),

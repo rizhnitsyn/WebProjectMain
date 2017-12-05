@@ -14,10 +14,10 @@
     <p>Имя: <span class="span-class">${requestScope.user.firstName}</span></p>
     <p>Фамилия: <span class="span-class">${requestScope.user.secondName}</span></p>
     <p>Email: <span class="span-class">${requestScope.user.email}</span></p>
-    <p>Состояние пользователя: <span class="span-class">${requestScope.user.userState}</span></p>
+    <p>Пользователь: <span class="span-class">${requestScope.user.userState}</span></p>
 
     <p>
-    <c:if test="${sessionScope.loggedUser.userStateId == 4}">
+    <c:if test="${sessionScope.loggedUser.userStateId == 4 and sessionScope.loggedUser.userId != requestScope.user.id}">
         <select class="form-field" name="userState">
             <c:forEach var="userState" items="${requestScope.userStates}">
                 <option c value="${userState.key}">${userState.value}</option>

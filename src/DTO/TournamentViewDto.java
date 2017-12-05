@@ -22,6 +22,7 @@ public class TournamentViewDto {
     private String redirectPath;
     private int stateId;
     private int matchesCount;
+    private String strStartDate;
 
     public TournamentViewDto(boolean error, String message) {
         this.message = message;
@@ -36,13 +37,14 @@ public class TournamentViewDto {
         this.state = state;
     }
 
-    public TournamentViewDto(Long id, String name, String teamName, LocalDate startDate, String state, int stateId) {
+    public TournamentViewDto(Long id, String name, String teamName, LocalDate startDate, String state, int stateId, String strStartDate ) {
         this(id, name, teamName, startDate, state);
         this.stateId = stateId;
+        this.strStartDate = strStartDate;
     }
 
-    public TournamentViewDto(Long id, String name, String teamName, LocalDate startDate, String state, int stateId, int matchesCount) {
-        this(id, name, teamName, startDate, state, stateId);
+    public TournamentViewDto(Long id, String name, String teamName, LocalDate startDate, String state, int stateId, int matchesCount, String strStartDate) {
+        this(id, name, teamName, startDate, state, stateId, strStartDate);
         this.matchesCount = matchesCount;
     }
 
@@ -55,13 +57,14 @@ public class TournamentViewDto {
         this.error = error;
     }
 
-    public TournamentViewDto(Long id, String name, String teamName, LocalDate startDate, String state, Long userId) {
+    public TournamentViewDto(Long id, String name, String teamName, LocalDate startDate, String state, Long userId, String strStartDate) {
         this.id = id;
         this.name = name;
         this.teamName = teamName;
         this.startDate = startDate;
         this.state = state;
         this.userId = userId;
+        this.strStartDate = strStartDate;
     }
 
 

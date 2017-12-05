@@ -1,5 +1,6 @@
 package servlets;
 
+import DTO.UserLoggedDto;
 import services.MatchService;
 import services.TeamService;
 import services.TournamentService;
@@ -19,7 +20,8 @@ public class MatchesOfSelectedTournamentServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long tournamentId = Long.valueOf(req.getParameter("id"));
-        req.setAttribute("matches", MatchService.getInstance().getAllMatchesOfSelectedTournament(tournamentId));
+        Long userId = ((UserLoggedDto)req.getSession().getAttribute("loggedUser")).getUserId();
+        req.setAttribute("matches", MatchService.getInstance().getAllMatchesOfSelectedTournament(tournamentId, userId));
         req.setAttribute("tournamentId", tournamentId);
         req.setAttribute("tournamentState", TournamentService.getInstance().getTournamentState(tournamentId));
         req.getServletContext()

@@ -11,7 +11,7 @@
     <h2 class="form-title">Выберите турнир для прогноза:</h2>
     <ul class="widget-list2">
     <c:forEach var="tournament" items="${requestScope.tournaments}">
-        <li><a href="${pageContext.request.contextPath}/forecastMatches?id=${tournament.id}">${tournament.name}</a><p>  Старт турнира: ${tournament.startDate}
+        <li><a href="${pageContext.request.contextPath}/forecastMatches?id=${tournament.id}">${tournament.name}</a><p>  Старт турнира: ${tournament.strStartDate}
             <span class="span-class_green">матчей доступно для прогнозов: ${tournament.matchesCount}</span>
         </p></li>
     </c:forEach>

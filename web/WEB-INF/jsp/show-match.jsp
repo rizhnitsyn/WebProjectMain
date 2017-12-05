@@ -17,7 +17,7 @@
 
 <form action="${pageContext.request.contextPath}/match" method="post">
     <h3 class="form-title">Турнир: ${requestScope.match.tournamentName}</h3>
-    <p>Начало матча: <span class="span-class">${requestScope.match.matchDateTime}, ${requestScope.match.matchState}</span></p>
+    <p>Начало матча: <span class="span-class">${requestScope.match.strMatchDateTime}, ${requestScope.match.matchState}</span></p>
     <%--<p>Состояние матча: <span class="span-class">${requestScope.match.matchState}</span></p>--%>
     <p>Тип матча: <span class="span-class">${requestScope.match.matchType}</span></p>
     <p>Команды: <span class="span-class">${requestScope.match.firstTeam} - ${requestScope.match.secondTeam}</span></p>

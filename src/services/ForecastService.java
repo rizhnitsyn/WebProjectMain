@@ -22,7 +22,12 @@ public final class ForecastService {
     }
 
     public void addForecast(ForecastAddDto forecast) {
-        ForecastDao.getInstance().addForecast(new Forecast(forecast.getFirstTemResult(), forecast.getSecondTeamResult(), forecast.getUserId(),
-                new Match(forecast.getMatchId())));
+        Forecast newForecast = new Forecast(forecast.getFirstTemResult(), forecast.getSecondTeamResult(), forecast.getUserId(), new Match(forecast.getMatchId()));
+        ForecastDao forecastDao = ForecastDao.getInstance();
+        if (forecastDao.isExist(newForecast)) {
+            forecastDao.updateForecast(newForecast);
+        } else {
+            forecastDao.addForecast(newForecast);
+        }
     }
 }

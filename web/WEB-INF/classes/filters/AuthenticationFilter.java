@@ -19,17 +19,22 @@ public class AuthenticationFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        if (servletRequest instanceof HttpServletRequest) {
+        if (servletRequest instanceof HttpServletRequest && servletResponse instanceof HttpServletResponse) {
             HttpServletRequest req = (HttpServletRequest) servletRequest;
+            HttpServletResponse resp = (HttpServletResponse) servletResponse;
+            String previousUrl = req.getHeader("Referer");
+
             if (req.getSession().getAttribute("loggedUser") != null) {
                 UserLoggedDto loggedUser = (UserLoggedDto) req.getSession().getAttribute("loggedUser");
                 if (loggedUser.getUserStateId() == 1 || loggedUser.getUserStateId() == 3) {
-                    ((HttpServletResponse) servletResponse).sendRedirect("/user?id=" + loggedUser.getUserId());
+                    resp.sendRedirect("/user?id=" + loggedUser.getUserId());
                 } else {
-                    filterChain.doFilter(servletRequest, servletResponse);
+                    resp.sendRedirect(previousUrl);
+//                    filterChain.doFilter(servletRequest, servletResponse);
                 }
             } else {
-                ((HttpServletResponse) servletResponse).sendRedirect("/login");
+                resp.sendRedirect("/login");
+                resp.sendRedirect(previousUrl);
             }
         } else {
             filterChain.doFilter(servletRequest, servletResponse);

@@ -38,7 +38,7 @@ public class MatchSaveServlet extends HttpServlet {
         try {
             MatchCreateDto createDto = gson.fromJson(jsonString, MatchCreateDto.class);
             savedMatch = MatchService.getInstance().addMatch(createDto);
-            savedMatch.setRedirectPath("/match?id=" + savedMatch.getId());
+            savedMatch.setRedirectPath("/allMatches?id=" + createDto.getTournamentId());
         } catch (Exception ex) {
             savedMatch = new MatchShortViewDto(true,"Есть ошибки при сохранении матча: " + ex.toString());
         }

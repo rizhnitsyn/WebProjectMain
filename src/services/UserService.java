@@ -152,7 +152,7 @@ public final class UserService {
     }
 
     public List<UserViewDto> getUsersForRegistration() {
-        List<User> userList = UserDao.getInstance().getListOfUsers(1);
+        List<User> userList = UserDao.getInstance().getListOfUsers();
         return userList.stream()
                 .map(user -> new UserViewDto(user, getState(user.getUserState())))
                 .collect(Collectors.toList());

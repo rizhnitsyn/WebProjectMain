@@ -17,7 +17,7 @@
 
     <form action="${pageContext.request.contextPath}/tournament" method="post">
         <h2 class="form-title">Турнир: ${requestScope.tournament.name}</h2>
-        <p>Дата начала игр турнира: <span class="span-class"> ${requestScope.tournament.startDate}</span></p>
+        <p>Дата начала игр турнира: <span class="span-class"> ${requestScope.tournament.strStartDate}</span></p>
         <p>Страна организатор турнира: <span class="span-class"> ${requestScope.tournament.teamName} </span></p>
         <p>Состояние турнира: <span class="span-class"> ${requestScope.tournament.state}</span></p>
         <p>Статус регистрации на турнир:

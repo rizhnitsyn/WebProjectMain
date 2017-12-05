@@ -17,11 +17,38 @@
 
     <h3 class="form-title">Результаты матчей</h3>
     <c:if test="${not empty requestScope.matches}">
-        <div class="widget-list2">
+    <table class="simple-little-table">
+        <tr>
+            <th>Матч</th>
+            <th>Счет</th>
+            <th>Прогноз</th>
+            <th>Очки за матч</th>
+            <th>Дата матча</th>
+        </tr>
         <c:forEach var="match" items="${requestScope.matches}">
-            <p><a href="${pageContext.request.contextPath}/match?id=${match.id}">${match.firstTeam} ${match.firstTeamResult} - ${match.secondTeamResult} ${match.secondTeam}</a><span class="span-class-list"> ${match.matchDateTime}</span></p>
+            <tr class="widget-list3">
+                <td><a href="${pageContext.request.contextPath}/match?id=${match.id}">${match.firstTeam} - ${match.secondTeam}</a></td>
+                <td>
+                    <c:if test="${not empty match.firstTeamResult}">
+                        <span>${match.firstTeamResult} - ${match.secondTeamResult}</span>
+                    </c:if>
+                    <c:if test="${empty match.firstTeamResult}">
+                        <span class="span-class_green">ожидается</span>
+                    </c:if>
+                </td>
+                <td>
+                    <c:if test="${not empty match.currentUserForecast.firstTeamForecast}">
+                        <span>${match.currentUserForecast.firstTeamForecast} - ${match.currentUserForecast.secondTeamForecast}</span>
+                    </c:if>
+                    <c:if test="${empty match.currentUserForecast.firstTeamForecast}">
+                        <span class="span-class_red">нет прогноза</span>
+                    </c:if>
+                </td>
+                <td>${match.userPoints}</td>
+                <td>${match.strMatchDateTime}</td>
+            </tr>
         </c:forEach>
-        </div>
+    </table>
     </c:if>
 
     <form action="${pageContext.request.contextPath}/allMatches" method="post">

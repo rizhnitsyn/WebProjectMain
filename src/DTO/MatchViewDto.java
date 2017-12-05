@@ -33,6 +33,8 @@ public class MatchViewDto {
     private int guessedDiffInResultsCount;
     private int guessedResultsCount;
     private int currentUserPoints;
+    private String strMatchDateTime;
+    private Long tournamentId;
 
     public MatchViewDto(Match match) {
         this.id = match.getId();
@@ -42,5 +44,6 @@ public class MatchViewDto {
         this.firstTeam = match.getFirstTeam().getTeamName();
         this.secondTeam = match.getSecondTeam().getTeamName();
         this.tournamentName = match.getTournament().getName();
+        this.tournamentId = match.getTournament().getId();
     }
 }

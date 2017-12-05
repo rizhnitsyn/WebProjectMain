@@ -1,5 +1,6 @@
 package DTO;
 
+import entities.Forecast;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -21,20 +22,26 @@ public class MatchShortViewDto {
     private boolean error;
     private String message;
     private String redirectPath;
+    private String strMatchDateTime;
+    private Forecast currentUserForecast;
+    private int userPoints;
 
-    public MatchShortViewDto(Long id, LocalDateTime matchDateTime, String firstTeam, String secondTeam, Long tournamentId) {
+    public MatchShortViewDto(Long id, LocalDateTime matchDateTime, String firstTeam, String secondTeam, Long tournamentId, String strMatchDateTime) {
         this.id = id;
         this.matchDateTime = matchDateTime;
         this.firstTeam = firstTeam;
         this.secondTeam = secondTeam;
         this.tournamentId = tournamentId;
+        this.strMatchDateTime = strMatchDateTime;
     }
 
     public MatchShortViewDto(Long id, LocalDateTime matchDateTime, String firstTeam, String secondTeam, Long tournamentId,
-                             Integer firstTeamResult, Integer secondTeamResult) {
-        this(id, matchDateTime, firstTeam, secondTeam, tournamentId);
+                             Integer firstTeamResult, Integer secondTeamResult, String strMatchDateTime, Forecast currentUserForecast, int userPoints) {
+        this(id, matchDateTime, firstTeam, secondTeam, tournamentId, strMatchDateTime);
         this.firstTeamResult = firstTeamResult;
         this.secondTeamResult = secondTeamResult;
+        this.currentUserForecast = currentUserForecast;
+        this.userPoints = userPoints;
     }
 
     public MatchShortViewDto(boolean error, String message) {

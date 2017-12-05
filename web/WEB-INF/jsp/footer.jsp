@@ -10,10 +10,10 @@
         <ul class="widget-list">
             <li><a href="${pageContext.request.contextPath}/tournamentList">Регистрация на турнир</a></li>
             <c:if test="${sessionScope.loggedUser != null && sessionScope.loggedUser.userStateId == 4}">
-                <li><a href="${pageContext.request.contextPath}/userList">Авторизовать пользователей</a></li>
+                <li><a href="${pageContext.request.contextPath}/userList">Список пользователей</a></li>
             </c:if>
             <li><a href="${pageContext.request.contextPath}/forecastTournaments">Сделать прогноз</a></li>
-            <li><a href="${pageContext.request.contextPath}/tournamentAllMatches">Результаты матчей</a></li>
+            <li><a href="${pageContext.request.contextPath}/tournamentAllMatches">Все мои прогнозы</a></li>
             <li><a href="${pageContext.request.contextPath}/tournamentStatistic">Результаты турниров</a></li>
             <li><a href="${pageContext.request.contextPath}/homepage">Правила игры</a></li>
             <li><a href="${pageContext.request.contextPath}/user?id=${sessionScope.loggedUser.userId}">Личный кабинет</a></li>

@@ -50,7 +50,7 @@ public class UserDaoTest {
     @Test
     public void getListOfUsers() {
         UserDao userDao = UserDao.getInstance();
-        List<User> users = userDao.getListOfUsers(2);
+        List<User> users = userDao.getListOfUsers();
         Assert.assertNotNull(users);
         Assert.assertTrue(users.size() > 0);
     }

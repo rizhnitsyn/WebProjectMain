@@ -5,17 +5,10 @@ import entities.Team;
 import entities.Tournament;
 import org.junit.Assert;
 import org.junit.Test;
-import utils.StaticContent;
 
-import java.sql.Timestamp;
-import java.text.ParseException;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
-
-import static utils.StaticContent.*;
-import static utils.StaticContent.dateTimeFormatter;
 
 public class MatchDaoTest {
 
@@ -56,7 +49,7 @@ public class MatchDaoTest {
 
     @Test
     public void getListOfFootballMatches() {
-        List<Match> matches = MatchDao.getInstance().getMatchesOfSelectedTournament(1L);
+        List<Match> matches = MatchDao.getInstance().getMatchesOfSelectedTournament(1L,1L);
         Assert.assertNotNull(matches);
         Assert.assertTrue(matches.size() > 0);
     }

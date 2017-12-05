@@ -9,9 +9,7 @@ import entities.Forecast;
 import entities.Match;
 import entities.Team;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +37,7 @@ public final class MatchService {
         try {
             Team firstTeam = TeamDao.getInstance().getTeamById(dto.getFirstTeamId());
             Team secondTeam = TeamDao.getInstance().getTeamById(dto.getSecondTeamId());
-            Match match = new Match(LocalDateTime.parse(dto.getMatchDateTime(), dateTimeFormatterInput ), 1, dto.getMatchType(), firstTeam, secondTeam);
+            Match match = new Match(LocalDateTime.parse(dto.getMatchDateTime(), dateTimeInputFormat), 1, dto.getMatchType(), firstTeam, secondTeam);
             Match savedMatch = MatchDao.getInstance().addMatch(match, dto.getTournamentId());
             return new MatchShortViewDto(false, savedMatch.getId());
         } catch (Exception e) {
@@ -68,6 +66,7 @@ public final class MatchService {
         matchViewDto.setGuessedWinnersCount(guessedWinnersCount(foundMatch));
         matchViewDto.setGuessedDiffInResultsCount(guessedDiffInResultsCount(foundMatch));
         matchViewDto.setCurrentUserPoints(calculateUserPoints(foundMatch, userId));
+        matchViewDto.setStrMatchDateTime(foundMatch.getMatchDateTime().format(dateTimeDisplayFormat));
 
         foundMatch.getForecasts().stream()
                 .filter(forecast -> forecast.getUserId().equals(userId))
@@ -84,30 +83,31 @@ public final class MatchService {
         return new MatchViewDto(updatedMatch);
     }
 
-    public int matchesForForecastCount(Long tournamentId, Long userId) {
-        return MatchDao.getInstance().getMatchesForForecastCount(tournamentId, userId);
-    }
-
     public List<MatchShortViewDto> matchesForForecast(Long tournamentId, Long userId) {
         List<Match> matches = MatchDao.getInstance().getMatchesForForecast(tournamentId, userId);
         if (matches == null) {
             return null;
         }
-        return matches.stream()
+
+        return  matches.stream()
                 .map(match -> new MatchShortViewDto(match.getId(), match.getMatchDateTime(), match.getFirstTeam().getTeamName(),
-                        match.getSecondTeam().getTeamName(),tournamentId))
+                        match.getSecondTeam().getTeamName(),tournamentId, match.getMatchDateTime().format(dateTimeDisplayFormat)))
                 .sorted(Comparator.comparing(MatchShortViewDto::getMatchDateTime).reversed())
                 .collect(Collectors.toList());
+
     }
 
-    public List<MatchShortViewDto> getAllMatchesOfSelectedTournament(Long tournamentId) {
-        List<Match> matches = MatchDao.getInstance().getMatchesOfSelectedTournament(tournamentId);
+    public List<MatchShortViewDto> getAllMatchesOfSelectedTournament(Long tournamentId, Long userId) {
+        List<Match> matches = MatchDao.getInstance().getMatchesOfSelectedTournament(tournamentId, userId);
         if (matches == null) {
             return null;
         }
-        return matches.stream()
+        return  matches.stream()
                 .map(match -> new MatchShortViewDto(match.getId(), match.getMatchDateTime(), match.getFirstTeam().getTeamName(),
-                        match.getSecondTeam().getTeamName(), tournamentId, match.getFirstTeamResult(), match.getSecondTeamResult()))
+                        match.getSecondTeam().getTeamName(), tournamentId, match.getFirstTeamResult(), match.getSecondTeamResult(), match.getMatchDateTime().format(dateTimeDisplayFormat),
+                        match.getForecasts().stream()
+                            .findFirst().orElse(null),
+                        calculateUserPoints(match, userId)))
                 .sorted(Comparator.comparing(MatchShortViewDto::getMatchDateTime).reversed())
                 .collect(Collectors.toList());
     }

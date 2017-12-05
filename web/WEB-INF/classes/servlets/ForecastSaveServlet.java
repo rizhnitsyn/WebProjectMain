@@ -30,12 +30,15 @@ public class ForecastSaveServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long matchId = Long.valueOf(req.getParameter("id"));
         Long userId = ((UserLoggedDto) req.getSession().getAttribute("loggedUser")).getUserId();
+
         try {
             Integer firstTeamResult = Integer.valueOf(req.getParameter("firstTeamResult"));
             Integer secondTeamResult = Integer.valueOf(req.getParameter("secondTeamResult"));
             ForecastService.getInstance().addForecast(new ForecastAddDto(firstTeamResult, secondTeamResult, userId, matchId));
-            resp.sendRedirect("/match?id=" + matchId);
-        } catch (Exception e) {
+            MatchViewDto foundMatch = MatchService.getInstance().getMatchById(matchId, userId);
+            resp.sendRedirect("/allMatches?id=" + foundMatch.getTournamentId());
+//            resp.sendRedirect("/match?id=" + matchId);
+        } catch (NumberFormatException e) {
             MatchViewDto foundMatch = MatchService.getInstance().getMatchById(matchId, userId);
             req.setAttribute("match", foundMatch);
             getServletContext()

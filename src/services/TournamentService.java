@@ -37,7 +37,7 @@ public final class TournamentService {
         try {
             Team team = TeamDao.getInstance().getTeamById(addDto.getOrganizerId());
             Tournament addTournament = new Tournament(
-                    addDto.getName(), team, LocalDate.parse(addDto.getStartDate(), dateFormatter), 1);
+                    addDto.getName(), team, LocalDate.parse(addDto.getStartDate(), dateSaveFormat), 1);
             Tournament savedTournament = TournamentDao.getInstance().addTournament(addTournament);
             return new TournamentViewDto(false, savedTournament.getId(), savedTournament.getName(), savedTournament.getOrganizer().getTeamName(),
                     savedTournament.getStartDate(), getTournamentStateName(savedTournament.getStateId()));
@@ -56,7 +56,7 @@ public final class TournamentService {
                 .filter(user -> user.getId().equals(userId))
                 .findFirst().orElse(null);
         return new TournamentViewDto(foundTournament.getId(), foundTournament.getName(), foundTournament.getOrganizer().getTeamName(),
-                foundTournament.getStartDate(), tournamentState, currentUser == null ? null : currentUser.getId());
+                foundTournament.getStartDate(), tournamentState, currentUser == null ? null : currentUser.getId(), foundTournament.getStartDate().format(dateDisplayFormat));
     }
 
     public TournamentViewDto closeTournament(Long id) {
@@ -86,7 +86,7 @@ public final class TournamentService {
                           .filter(user -> user.getId().equals(userId))
                           .mapToLong(User::getId)
                           .findFirst().orElse(0)
-                ))
+                ,tr.getStartDate().format(dateDisplayFormat)))
                 .sorted(Comparator.comparing(TournamentViewDto::getStartDate).reversed())
                 .collect(Collectors.toList());
     }
@@ -94,14 +94,15 @@ public final class TournamentService {
     public List<TournamentViewDto> getTournamentsForForecasts(Long userId) {
         return TournamentDao.getInstance().getTournamentsFilterByUser(userId, 1L).stream()
                 .map(tr -> new TournamentViewDto(tr.getId(), tr.getName(), tr.getOrganizer().getTeamName(), tr.getStartDate(), getTournamentStateName(tr.getStateId()), tr.getStateId(),
-                        MatchDao.getInstance().getMatchesForForecastCount(tr.getId(), userId)))
+                        MatchDao.getInstance().getMatchesForForecastCount(tr.getId(), userId), tr.getStartDate().format(dateDisplayFormat)))
                 .sorted(Comparator.comparing(TournamentViewDto::getStartDate).reversed())
                 .collect(Collectors.toList());
     }
 
     public List<TournamentViewDto> getAllUserTournaments(Long userId) {
         return TournamentDao.getInstance().getTournamentsFilterByUser(userId, null).stream()
-                .map(tr -> new TournamentViewDto(tr.getId(), tr.getName(), tr.getOrganizer().getTeamName(), tr.getStartDate(), getTournamentStateName(tr.getStateId()), tr.getStateId()))
+                .map(tr -> new TournamentViewDto(tr.getId(), tr.getName(), tr.getOrganizer().getTeamName(), tr.getStartDate(), getTournamentStateName(tr.getStateId()),
+                        tr.getStateId(),tr.getStartDate().format(dateDisplayFormat)))
                 .sorted(Comparator.comparing(TournamentViewDto::getStartDate).reversed())
                 .collect(Collectors.toList());
     }

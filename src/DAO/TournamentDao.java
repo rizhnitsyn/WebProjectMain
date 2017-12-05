@@ -5,7 +5,6 @@ import entities.Team;
 import entities.Tournament;
 import connection.ConnectionManager;
 import entities.User;
-import servlets.TournamentResultTableServlet;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -13,8 +12,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static utils.StaticContent.dateFormatter;
-import static utils.StaticContent.dateTimeFormatter;
+import static utils.StaticContent.dateSaveFormat;
+import static utils.StaticContent.dateTimeSaveFormat;
 
 public class TournamentDao {
     private static TournamentDao INSTANCE;
@@ -47,6 +46,7 @@ public class TournamentDao {
             if (generatedKeys.next()) {
                 tournament.setId(generatedKeys.getLong(1));
             }
+            generatedKeys.close();
             statement.close();
             return tournament;
         } catch (Exception e) {
@@ -72,7 +72,7 @@ public class TournamentDao {
                         resultSet.getLong("a.tournament_id"),
                         resultSet.getString("a.tournament_name"),
                         new Team(resultSet.getLong("a.team_organizer_id"), resultSet.getString("e.team_name")),
-                        LocalDate.parse(resultSet.getString("a.tournament_start_date"), dateFormatter),
+                        LocalDate.parse(resultSet.getString("a.tournament_start_date"), dateSaveFormat),
                         resultSet.getInt("a.tournament_state_id"));
                 tournament.addFootballMatch(createMatch(resultSet));
                 user = createUser(resultSet);
@@ -101,7 +101,7 @@ public class TournamentDao {
         }
         return new Match(
                 resultSet.getLong("b.match_id"),
-                LocalDateTime.parse(stringDate, dateTimeFormatter),
+                LocalDateTime.parse(stringDate, dateTimeSaveFormat),
                 resultSet.getInt("b.match_state_id"),
                 resultSet.getInt("b.match_type_id"));
     }

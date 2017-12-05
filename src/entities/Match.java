@@ -61,6 +61,8 @@ public class Match {
     }
 
     public void addForecast(Forecast forecast) {
-        forecasts.add(forecast);
+        if (forecast != null) {
+            forecasts.add(forecast);
+        }
     }
 }

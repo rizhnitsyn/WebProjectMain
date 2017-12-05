@@ -18,7 +18,7 @@
     <h2 class="form-title">Список проводящихся турниров</h2>
     <ul class="widget-list2">
         <c:forEach var="tournament" items="${requestScope.tournaments}">
-            <li><a href="${pageContext.request.contextPath}/tournament?id=${tournament.id}">${tournament.name}</a><p>  Старт турнира: ${tournament.startDate},
+            <li><a href="${pageContext.request.contextPath}/tournament?id=${tournament.id}">${tournament.name}</a><p>  Старт турнира: ${tournament.strStartDate},
                 <c:if test="${tournament.userId == 0}">
                     <span class="span-class_red">нет регистрации</span>
                 </c:if>

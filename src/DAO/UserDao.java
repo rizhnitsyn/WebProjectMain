@@ -1,20 +1,13 @@
 package DAO;
 
-import DTO.LoginDto;
 import connection.ConnectionManager;
 import entities.*;
-import utils.StaticContent;
 
 import java.sql.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static utils.StaticContent.*;
-import static utils.StaticContent.dateTimeFormatter;
 
 public class UserDao {
 
@@ -219,12 +212,12 @@ public class UserDao {
         }
     }
 
-    public List<User> getListOfUsers(int state) {
+    public List<User> getListOfUsers() {
         List<User> users = new ArrayList<>();
         try (Connection connection = ConnectionManager.getConnection()){
-            String sql = "SELECT * FROM users WHERE user_state_id = ?";
+            String sql = "SELECT * FROM users ORDER BY user_state_id";
             PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setInt(1, state);
+//            statement.setInt(1, state);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 users.add(createUser(resultSet));
@@ -239,7 +232,7 @@ public class UserDao {
     }
 
     public String getUserState(int stateId) {
-        String matchState = null;
+        String userState = null;
         try (Connection connection = ConnectionManager.getConnection()){
             String sql = "SELECT * FROM user_states WHERE user_state_id = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
@@ -247,7 +240,7 @@ public class UserDao {
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                matchState = resultSet.getString("user_state");
+                userState = resultSet.getString("user_state");
             }
             resultSet.close();
             statement.close();
@@ -255,7 +248,7 @@ public class UserDao {
             e.printStackTrace();
             return null;
         }
-        return matchState;
+        return userState;
     }
 
     public Map<Integer, String> getUserStates() {

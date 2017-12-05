@@ -17,24 +17,23 @@ public class AdminFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        if (servletRequest instanceof HttpServletRequest) {
+        if (servletRequest instanceof HttpServletRequest && servletResponse instanceof HttpServletResponse) {
             HttpServletRequest req = (HttpServletRequest) servletRequest;
+            HttpServletResponse resp = (HttpServletResponse) servletResponse;
+
             if (req.getSession().getAttribute("loggedUser") != null) {
                 UserLoggedDto loggedUser = (UserLoggedDto) req.getSession().getAttribute("loggedUser");
                 if (loggedUser.getUserStateId() != 4) {
-                    //переадресация на прошлую страницу!!!
-                    ((HttpServletResponse) servletResponse).sendRedirect("/homepage");
+                    resp.sendRedirect("/homepage");
                 } else {
                     filterChain.doFilter(servletRequest, servletResponse);
                 }
             } else {
-                //переадресация на прошлую страницу!!!
-                ((HttpServletResponse) servletResponse).sendRedirect("/homepage");
+                resp.sendRedirect("/homepage");
             }
         } else {
             filterChain.doFilter(servletRequest, servletResponse);
         }
-
     }
 
     @Override
