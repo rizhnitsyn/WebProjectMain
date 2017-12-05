@@ -19,10 +19,10 @@ public class ShowUserFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         if (servletRequest instanceof HttpServletRequest) {
             HttpServletRequest req = (HttpServletRequest) servletRequest;
-            if (req.getSession().getAttribute("loggedUser") != null) {
+            if (isUserLogged(req)) {
                 filterChain.doFilter(servletRequest, servletResponse);
             } else {
-                ((HttpServletResponse) servletResponse).sendRedirect("/login");
+                sendToLogin(servletResponse);
             }
         } else {
             filterChain.doFilter(servletRequest, servletResponse);
@@ -32,5 +32,13 @@ public class ShowUserFilter implements Filter {
     @Override
     public void destroy() {
 
+    }
+
+    private boolean isUserLogged(HttpServletRequest req) {
+        return  req.getSession().getAttribute("loggedUser") != null;
+    }
+
+    private void sendToLogin(ServletResponse resp) throws IOException {
+        ((HttpServletResponse) resp).sendRedirect("/login");
     }
 }

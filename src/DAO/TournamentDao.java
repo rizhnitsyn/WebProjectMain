@@ -38,7 +38,7 @@ public class TournamentDao {
             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, tournament.getName());
             statement.setLong(2, tournament.getOrganizer().getId());
-            statement.setDate(3, Date.valueOf(tournament.getStartDate().toString()));
+            statement.setDate(3, Date.valueOf(tournament.getStartDate()));
             statement.setLong(4,tournament.getStateId());
             statement.executeUpdate();
 
@@ -52,6 +52,27 @@ public class TournamentDao {
         } catch (Exception e) {
             throw e;
         }
+    }
+
+    public Tournament getShortTournamentById(Long tournamentId) {
+        Tournament tournament = null;
+        try (Connection connection = ConnectionManager.getConnection()){
+            String sql = "SELECT * FROM tournaments where tournament_id = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setLong(1, tournamentId);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                tournament = new Tournament(resultSet.getLong("tournament_id"),
+                        resultSet.getString("tournament_name"),
+                        resultSet.getInt("tournament_state_id"));
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            return null;
+        }
+        return tournament;
     }
 
     public Tournament getTournamentById(Long tournamentId) {

@@ -1,9 +1,9 @@
 package servlets;
 
-import DTO.UserLoggedDto;
+
 import services.MatchService;
-import services.TeamService;
 import services.TournamentService;
+import services.UserService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,16 +15,17 @@ import java.io.IOException;
 import static utils.StaticContent.createViewPath;
 
 
-@WebServlet(urlPatterns = "/allMatches", name = "MatchesOfTournament")
-public class MatchesOfSelectedTournamentServlet extends HttpServlet {
+@WebServlet(urlPatterns = "/allUserForecasts", name = "ForecastsOfAnotherUser")
+public class ForecastsOfSelectedUser extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Long tournamentId = Long.valueOf(req.getParameter("id"));
-        Long userId = ((UserLoggedDto)req.getSession().getAttribute("loggedUser")).getUserId();
+        Long userId = Long.valueOf(req.getParameter("userId"));
+        Long tournamentId = Long.valueOf(req.getParameter("tournamentId"));
         req.setAttribute("matches", MatchService.getInstance().getAllMatchesOfSelectedTournament(tournamentId, userId));
         req.setAttribute("tournament", TournamentService.getInstance().getTournamentName(tournamentId));
+        req.setAttribute("user", UserService.getInstance().getShortUserById(userId));
         req.getServletContext()
-                .getRequestDispatcher(createViewPath("show-all-matches"))
+                .getRequestDispatcher(createViewPath("show-user-matches"))
                 .forward(req, resp);
     }
 

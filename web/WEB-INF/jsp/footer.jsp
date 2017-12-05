@@ -8,7 +8,7 @@
     <div class="widget">
         <h3 class="widget-title">Категории</h3>
         <ul class="widget-list">
-            <li><a href="${pageContext.request.contextPath}/tournamentList">Регистрация на турнир</a></li>
+            <li><a href="${pageContext.request.contextPath}/tournamentList">Подписаться на турнир</a></li>
             <c:if test="${sessionScope.loggedUser != null && sessionScope.loggedUser.userStateId == 4}">
                 <li><a href="${pageContext.request.contextPath}/userList">Список пользователей</a></li>
             </c:if>

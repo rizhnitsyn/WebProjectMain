@@ -18,4 +18,5 @@ public class UsersResultTableDto {
     private int guessedWinnersCount;
     private int guessedDiffInResultsCount;
     private int guessedDrawCount;
+    private Long tournamentId;
 }

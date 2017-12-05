@@ -21,7 +21,7 @@ public class AdminFilter implements Filter {
             HttpServletRequest req = (HttpServletRequest) servletRequest;
             HttpServletResponse resp = (HttpServletResponse) servletResponse;
 
-            if (req.getSession().getAttribute("loggedUser") != null) {
+            if (isUserLogged(req)) {
                 UserLoggedDto loggedUser = (UserLoggedDto) req.getSession().getAttribute("loggedUser");
                 if (loggedUser.getUserStateId() != 4) {
                     resp.sendRedirect("/homepage");
@@ -39,5 +39,9 @@ public class AdminFilter implements Filter {
     @Override
     public void destroy() {
 
+    }
+
+    private boolean isUserLogged(HttpServletRequest req) {
+        return  req.getSession().getAttribute("loggedUser") != null;
     }
 }

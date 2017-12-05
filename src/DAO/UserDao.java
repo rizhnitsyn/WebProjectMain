@@ -51,6 +51,20 @@ public class UserDao {
         }
     }
 
+    public User changePassword(User user) {
+        try (Connection connection = ConnectionManager.getConnection()){
+            String sql = "UPDATE users SET password =? WHERE user_id =?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, user.getPassword());
+            statement.setLong(2,user.getId());
+            statement.executeUpdate();
+            statement.close();
+            return user;
+        } catch (SQLException e) {
+            return null;
+        }
+    }
+
     public User getUserById(Long userId) {
         User user = null;
         try (Connection connection = ConnectionManager.getConnection()){
@@ -65,13 +79,30 @@ public class UserDao {
             if (resultSet.next()) {
                 user = createUser(resultSet);
                 tournament = createTournament(resultSet);
-//                tournament.addUser(user);
                 user.addTournament(tournament);
                 while (resultSet.next()) {
                     tournament = createTournament(resultSet);
-//                    tournament.addUser(user);
                     user.addTournament(tournament);
                 }
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return user;
+    }
+
+    public User getShortUserById(Long userId) {
+        User user = null;
+        try (Connection connection = ConnectionManager.getConnection()){
+            String sql = "SELECT * FROM users WHERE user_id = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setLong(1, userId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                user = createUser(resultSet);
             }
             resultSet.close();
             statement.close();
@@ -207,7 +238,6 @@ public class UserDao {
             return user;
 
         } catch (SQLException e) {
-            e.printStackTrace();
             return null;
         }
     }

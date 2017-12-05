@@ -10,7 +10,7 @@ import java.io.IOException;
 
 @WebFilter(servletNames = {"SaveForecast", "MatchesForForecast", "MatchesOfTournament", "SaveNewMatch", "ShowMatch",
 "UpdateMatch", "TournamentsAllMatches", "TournamentsForecasts", "TournamentsRegistration", "TournamentResultTable",
-"SaveTournament", "TournamentsForStatistic", "ShowTournament", "UsersForRegistration"})
+"SaveTournament", "TournamentsForStatistic", "ShowTournament", "UsersForRegistration", "ForecastsOfAnotherUser"})
 public class AuthenticationFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -22,19 +22,16 @@ public class AuthenticationFilter implements Filter {
         if (servletRequest instanceof HttpServletRequest && servletResponse instanceof HttpServletResponse) {
             HttpServletRequest req = (HttpServletRequest) servletRequest;
             HttpServletResponse resp = (HttpServletResponse) servletResponse;
-            String previousUrl = req.getHeader("Referer");
 
-            if (req.getSession().getAttribute("loggedUser") != null) {
-                UserLoggedDto loggedUser = (UserLoggedDto) req.getSession().getAttribute("loggedUser");
-                if (loggedUser.getUserStateId() == 1 || loggedUser.getUserStateId() == 3) {
-                    resp.sendRedirect("/user?id=" + loggedUser.getUserId());
+            if (isUserLogged(req)) {
+                UserLoggedDto loggedUser = getCurrentUser(req);
+                if (isBadRole(loggedUser)) {
+                    sendToPersonalAccount(loggedUser, resp);
                 } else {
-                    resp.sendRedirect(previousUrl);
-//                    filterChain.doFilter(servletRequest, servletResponse);
+                    filterChain.doFilter(servletRequest, servletResponse);
                 }
             } else {
-                resp.sendRedirect("/login");
-//                resp.sendRedirect(previousUrl);
+                sendToLogin(resp);
             }
         } else {
             filterChain.doFilter(servletRequest, servletResponse);
@@ -44,5 +41,25 @@ public class AuthenticationFilter implements Filter {
     @Override
     public void destroy() {
 
+    }
+
+    private boolean isBadRole(UserLoggedDto loggedUser) {
+        return loggedUser.getUserStateId() == 1 || loggedUser.getUserStateId() == 3;
+    }
+
+    private void sendToPersonalAccount(UserLoggedDto loggedUser, HttpServletResponse resp) throws IOException {
+        resp.sendRedirect("/user?id=" + loggedUser.getUserId());
+    }
+
+    private boolean isUserLogged(HttpServletRequest req) {
+        return  req.getSession().getAttribute("loggedUser") != null;
+    }
+
+    private void sendToLogin(HttpServletResponse resp) throws IOException {
+        resp.sendRedirect("/login");
+    }
+
+    private UserLoggedDto getCurrentUser(HttpServletRequest req) {
+        return (UserLoggedDto)  req.getSession().getAttribute("loggedUser");
     }
 }

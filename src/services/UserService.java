@@ -4,6 +4,7 @@ import DAO.UserDao;
 import DTO.*;
 import entities.Forecast;
 import entities.Match;
+import entities.Tournament;
 import entities.User;
 
 import java.sql.SQLException;
@@ -49,8 +50,8 @@ public final class UserService {
         }
     }
 
-    public UserViewDto getUserById(Long id) {
-        User foundedUser = UserDao.getInstance().getUserById(id);
+    public UserViewDto getUserById(Long userId) {
+        User foundedUser = UserDao.getInstance().getUserById(userId);
         if (foundedUser == null) {
             return null;
         }
@@ -58,8 +59,17 @@ public final class UserService {
         return new UserViewDto(foundedUser, state);
     }
 
+    public UserViewDto getShortUserById(Long userId) {
+        User foundedUser = UserDao.getInstance().getShortUserById(userId);
+        if (foundedUser == null) {
+            return null;
+        }
+        return new UserViewDto(foundedUser.getId(), foundedUser.getFirstName(), foundedUser.getSecondName());
+    }
+
     public List<UsersResultTableDto> getUsersWithStatistic(Long tournamentId) {
         List<User> usersOfTournament = UserDao.getInstance().getUsersOfTournament(tournamentId);
+
         return usersOfTournament.stream()
                 .map(user -> UserDao.getInstance().getUserWithStatistics(tournamentId, user.getId()))
                 .map(user -> new UsersResultTableDto(user.getId(), user.getFirstName(), user.getSecondName(),
@@ -67,7 +77,9 @@ public final class UserService {
                         guessedResultsCount(user),
                         guessedWinnersCount(user),
                         guessedDiffInResultsCount(user),
-                        guessedDrawCount(user)))
+                        guessedDrawCount(user),
+                        tournamentId
+                        ))
                 .sorted(Comparator.comparing(UsersResultTableDto::getTotalPoints).reversed())
                 .collect(Collectors.toList());
     }
@@ -145,10 +157,16 @@ public final class UserService {
                 .count();
     }
 
-    public UserViewDto changeUserState(UserViewDto userViewDto, int userState) {
+    public void changeUserState(UserViewDto userViewDto, int userState) {
         User updatedUser = UserDao.getInstance().updateUser(new User(userViewDto, userState));
-        String state = getState(updatedUser.getUserState());
-        return new UserViewDto(updatedUser, state);
+//        String state = getState(updatedUser.getUserState());
+//        return new UserViewDto(updatedUser, state);
+    }
+
+    public void changeUserPassword(Long userId, String password) {
+        User updatedUser = UserDao.getInstance().changePassword(new User(userId, password));
+//        String state = getState(updatedUser.getUserState());
+//        return new UserViewDto(updatedUser, state);
     }
 
     public List<UserViewDto> getUsersForRegistration() {

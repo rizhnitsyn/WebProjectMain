@@ -25,14 +25,13 @@ public class MatchUpdateServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Long matchId = Long.valueOf(req.getParameter("id"));
+        Long matchId = Long.valueOf(req.getParameter("matchId"));
         Long userId = ((UserLoggedDto) req.getSession().getAttribute("loggedUser")).getUserId();
 
         try {
             int firstTeamResult = Integer.parseInt(req.getParameter("firstTeamResult"));
             int secondTeamResult = Integer.parseInt(req.getParameter("secondTeamResult"));
             MatchViewDto updatedMatch = MatchService.getInstance().updateMatch(matchId, firstTeamResult, secondTeamResult);
-
 //            resp.sendRedirect("/match?id=" + updatedMatch.getId());
             resp.sendRedirect("/allMatches?id=" + updatedMatch.getTournamentId());
         } catch (NumberFormatException e) {

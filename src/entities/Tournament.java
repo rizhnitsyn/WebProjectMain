@@ -29,6 +29,12 @@ public class Tournament {
         this.id = id;
     }
 
+    public Tournament(Long id, String name, int stateId) {
+        this.id = id;
+        this.name = name;
+        this.stateId =stateId;
+    }
+
     public Tournament(Long id, String name, LocalDate startDate, int stateId) {
         this.id = id;
         this.name = name;

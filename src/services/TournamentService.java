@@ -5,6 +5,7 @@ import DAO.TeamDao;
 import DAO.TournamentDao;
 import DAO.UserDao;
 import DTO.TournamentCreateUpdateDto;
+import DTO.TournamentShortViewDto;
 import DTO.TournamentViewDto;
 import entities.Team;
 import entities.Tournament;
@@ -31,6 +32,14 @@ public final class TournamentService {
             }
         }
         return INSTANCE;
+    }
+
+    public TournamentShortViewDto getTournamentName(Long id) {
+        Tournament foundTournament = TournamentDao.getInstance().getShortTournamentById(id);
+        if (foundTournament == null) {
+            return null;
+        }
+        return new TournamentShortViewDto(foundTournament.getId(), foundTournament.getName(), foundTournament.getStateId());
     }
 
     public TournamentViewDto addTournament(TournamentCreateUpdateDto addDto) {

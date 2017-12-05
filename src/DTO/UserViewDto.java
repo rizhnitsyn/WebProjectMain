@@ -24,4 +24,10 @@ public class UserViewDto {
         this.userState = userState;
         this.userStateId = user.getUserState();
     }
+
+    public UserViewDto(Long id, String firstName, String secondName) {
+        this.id = id;
+        this.firstName = firstName;
+        this.secondName = secondName;
+    }
 }

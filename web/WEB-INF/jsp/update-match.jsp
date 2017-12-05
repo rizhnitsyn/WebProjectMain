@@ -16,13 +16,13 @@
 
 <form action="${pageContext.request.contextPath}/updateMatch" method="post">
     <h2 class="form-title">Турнир: ${requestScope.match.tournamentName}</h2>
-    <p>Начало матча: <span class="span-class">${requestScope.match.matchDateTime}</span></p>
+    <p>Начало матча: <span class="span-class">${requestScope.match.strMatchDateTime}</span></p>
     <p>Тип матча: <span class="span-class">${requestScope.match.matchType}</span></p>
     <p>Команды: <span class="span-class">${requestScope.match.firstTeam} - ${requestScope.match.secondTeam}</span></p>
     <p>Счет:</p>
     <input class="form-field" id="firstTeamResult" name="firstTeamResult"> -
     <input class="form-field" id="secondTeamResult" name="secondTeamResult"><br>
-    <button class="btn-class" type="submit" name="id" value="${requestScope.match.id}">Сохранить счет</button>
+    <button class="btn-class" type="submit" name="matchId" value="${requestScope.match.id}">Сохранить счет</button>
 </form>
 
 <%@include file="footer.jsp"%>

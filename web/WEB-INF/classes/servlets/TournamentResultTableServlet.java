@@ -4,6 +4,7 @@ import DTO.UsersResultTableDto;
 import entities.User;
 import services.MatchService;
 import services.TeamService;
+import services.TournamentService;
 import services.UserService;
 
 import javax.servlet.ServletException;
@@ -23,6 +24,7 @@ public class TournamentResultTableServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long tournamentId = Long.valueOf(req.getParameter("id"));
         req.setAttribute("users", UserService.getInstance().getUsersWithStatistic(tournamentId));
+        req.setAttribute("tournament", TournamentService.getInstance().getTournamentName(tournamentId));
         req.getServletContext()
                 .getRequestDispatcher(createViewPath("show-result-table"))
                 .forward(req, resp);

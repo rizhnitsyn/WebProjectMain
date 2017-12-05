@@ -521,6 +521,12 @@ tr:last-child td.last {
     /*color: #725129;*/
     text-shadow: #fdf2e4 0 1px 0;
 }
+.form-title2 {
+    margin-bottom:2px;
+    color: #42950b;
+    /*color: #725129;*/
+    text-shadow: #fdf2e4 0 1px 0;
+}
 .submit-container {
     margin:8px 0;
     text-align:right;
