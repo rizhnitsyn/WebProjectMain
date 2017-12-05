@@ -34,7 +34,7 @@ public class AuthenticationFilter implements Filter {
                 }
             } else {
                 resp.sendRedirect("/login");
-                resp.sendRedirect(previousUrl);
+//                resp.sendRedirect(previousUrl);
             }
         } else {
             filterChain.doFilter(servletRequest, servletResponse);
