@@ -29,4 +29,10 @@ public class TournamentResultTableServlet extends HttpServlet {
                 .getRequestDispatcher(createViewPath("show-result-table"))
                 .forward(req, resp);
     }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Long tournamentId = Long.valueOf(req.getParameter("idTournament"));
+        UserService.getInstance().printResultTable(tournamentId);
+    }
 }

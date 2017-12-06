@@ -21,17 +21,27 @@ public class UserShowUpdateServlet extends HttpServlet {
         req.setAttribute("user", UserService.getInstance().getUserById(id));
         req.setAttribute("userStates", UserService.getInstance().getUserStates());
         getServletContext()
-                .getRequestDispatcher(createViewPath("show-user-adminView"))
+                .getRequestDispatcher(createViewPath("show-user"))
                 .forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setCharacterEncoding("UTF-8");
-        Long id = Long.valueOf(req.getParameter("id"));
-        UserViewDto foundUser = UserService.getInstance().getUserById(id);
-        Integer userStateId = Integer.valueOf(req.getParameter("userState"));
-        UserService.getInstance().changeUserState(foundUser, userStateId);
-        resp.sendRedirect("/userList");
+
+        if (req.getParameter("idChangeState") != null) {
+            Long id = Long.valueOf(req.getParameter("idChangeState"));
+            UserViewDto foundUser = UserService.getInstance().getUserById(id);
+            Integer userStateId = Integer.valueOf(req.getParameter("userState"));
+            UserService.getInstance().changeUserState(foundUser, userStateId);
+            resp.sendRedirect("/userList");
+        }
+        if (req.getParameter("idPassword") != null) {
+            Long id = Long.valueOf(req.getParameter("idPassword"));
+            UserViewDto foundUser = UserService.getInstance().getUserById(id);
+            req.setAttribute("user", foundUser);
+            getServletContext()
+                    .getRequestDispatcher(createViewPath("update-user"))
+                    .forward(req, resp);
+        }
     }
 }

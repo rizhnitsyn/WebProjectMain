@@ -8,7 +8,7 @@
 <body>
 <%@include file="header.jsp"%>
 
-    <h2 class="form-title">Результаты турнира ${requestScope.tournament.name}</h2>
+    <h2 class="form-title">Результаты турнира: ${requestScope.tournament.name}</h2>
     <c:if test="${not empty requestScope.users}">
         <table class="simple-little-table">
         <caption>Общий итог</caption>
@@ -32,7 +32,10 @@
         </c:forEach>
         </table>
     </c:if>
-<%@include file="footer.jsp"%>
+<form action="${pageContext.request.contextPath}/resultTable" method="post">
+    <button class="btn-class" type="submit" name="idTournament" value="${requestScope.tournament.id}">Выгрузить в файл</button>
+</form>
 
+<%@include file="footer.jsp"%>
 </body>
 </html>

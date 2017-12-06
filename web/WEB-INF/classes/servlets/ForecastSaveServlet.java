@@ -36,8 +36,11 @@ public class ForecastSaveServlet extends HttpServlet {
             Integer secondTeamResult = Integer.valueOf(req.getParameter("secondTeamResult"));
             ForecastService.getInstance().addForecast(new ForecastAddDto(firstTeamResult, secondTeamResult, userId, matchId));
             MatchViewDto foundMatch = MatchService.getInstance().getMatchById(matchId, userId);
-            resp.sendRedirect("/allMatches?id=" + foundMatch.getTournamentId());
-//            resp.sendRedirect("/match?id=" + matchId);
+            if (foundMatch != null) {
+                resp.sendRedirect("/allMatches?id=" + foundMatch.getTournamentId());
+            } else {
+                resp.sendRedirect("/match?id=" + matchId);
+            }
         } catch (NumberFormatException e) {
             MatchViewDto foundMatch = MatchService.getInstance().getMatchById(matchId, userId);
             req.setAttribute("match", foundMatch);

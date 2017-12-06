@@ -10,7 +10,7 @@ import java.io.IOException;
 
 @WebFilter(servletNames = {"SaveForecast", "MatchesForForecast", "MatchesOfTournament", "SaveNewMatch", "ShowMatch",
 "UpdateMatch", "TournamentsAllMatches", "TournamentsForecasts", "TournamentsRegistration", "TournamentResultTable",
-"SaveTournament", "TournamentsForStatistic", "ShowTournament", "UsersForRegistration", "ForecastsOfAnotherUser"})
+"SaveTournament", "TournamentsForStatistic", "ShowTournament", "UsersForRegistration", "ForecastsOfAnotherUser", "ChangePassword"})
 public class AuthenticationFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {

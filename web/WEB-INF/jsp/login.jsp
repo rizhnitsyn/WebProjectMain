@@ -1,11 +1,4 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: rizhnitsyn
-  Date: 30.11.2017
-  Time: 13:17
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
     <title>Login</title>
@@ -17,12 +10,12 @@
 <body>
 <%@include file="header.jsp"%>
 
-    <div class="form-title"><h2>Вход</h2></div>
-    <div class="form-title">Логин</div>
+    <div class="form-title"><h2><fmt:message key="signIn"/></h2></div>
+    <div class="form-title"><fmt:message key="logInInput"/></div>
     <input class="form-field" type="text" id="name" name="name"/><br />
-    <div class="form-title">Пароль</div>
+    <div class="form-title"><fmt:message key="pass"/></div>
     <input class="form-field" type="password" id="pass" name="pass" /><br/>
-    <button class="btn-class" type="button" onclick="sendToServer()">Войти</button>
+    <button class="btn-class" type="button" onclick="sendToServer()"><fmt:message key="btLogIn"/></button>
     <div class="form-title" id="displayed-data"></div>
 
 <%@include file="footer.jsp"%>

@@ -6,12 +6,21 @@ import entities.Forecast;
 import entities.Match;
 import entities.Tournament;
 import entities.User;
+import utils.StaticContent;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static utils.StaticContent.*;
 
 public final class UserService {
     private static UserService INSTANCE;
@@ -65,6 +74,32 @@ public final class UserService {
             return null;
         }
         return new UserViewDto(foundedUser.getId(), foundedUser.getFirstName(), foundedUser.getSecondName());
+    }
+
+    public void printResultTable(Long tournamentId) {
+        List<UsersResultTableDto> users = UserService.getInstance().getUsersWithStatistic(tournamentId);
+        TournamentShortViewDto tournament = TournamentService.getInstance().getTournamentName(tournamentId);
+
+        if (!users.isEmpty()) {
+            synchronized (UserService.class) {
+                File file = new File(FILE_DIRECTORY, FILE_NAME + LocalTime.now().format(timeFormat) + FILE_SUFFIX);
+                try (FileWriter fileWriter = new FileWriter(file)) {
+                    fileWriter.write("Результаты турнира: " + tournament.getName() + "\n");
+                    fileWriter.write("------------------------------------------------------------");
+                    fileWriter.write("ФИО" + "6 очков" + "4 очка" + "3 очка" + "1 очко" + "БАЛЛЫ");
+                    for (UsersResultTableDto user : users) {
+                        fileWriter.write(user.getFirstName() + user.getSecondName());
+                        fileWriter.write(user.getGuessedResultCount());
+                        fileWriter.write(user.getGuessedDiffInResultsCount());
+                        fileWriter.write(user.getGuessedDrawCount());
+                        fileWriter.write(user.getGuessedWinnersCount());
+                        fileWriter.write(user.getTotalPoints());
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     public List<UsersResultTableDto> getUsersWithStatistic(Long tournamentId) {
@@ -158,15 +193,16 @@ public final class UserService {
     }
 
     public void changeUserState(UserViewDto userViewDto, int userState) {
-        User updatedUser = UserDao.getInstance().updateUser(new User(userViewDto, userState));
-//        String state = getState(updatedUser.getUserState());
-//        return new UserViewDto(updatedUser, state);
+        UserDao.getInstance().updateUser(new User(userViewDto, userState));
     }
 
-    public void changeUserPassword(Long userId, String password) {
+    public UserUpdateAnswerDto changeUserPassword(Long userId, String password) {
         User updatedUser = UserDao.getInstance().changePassword(new User(userId, password));
-//        String state = getState(updatedUser.getUserState());
-//        return new UserViewDto(updatedUser, state);
+        if (updatedUser != null) {
+            return new UserUpdateAnswerDto("Успешно", "/login");
+        } else {
+            return new UserUpdateAnswerDto("Произошла ошибка при смене пароля", "/login");
+        }
     }
 
     public List<UserViewDto> getUsersForRegistration() {
