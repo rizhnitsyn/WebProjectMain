@@ -17,6 +17,7 @@
     <input class="form-field" type="password" id="pass" name="pass" /><br/>
     <button class="btn-class" type="button" onclick="sendToServer()"><fmt:message key="btLogIn"/></button>
     <div class="form-title" id="displayed-data"></div>
+    <div class="form-title" id="displayed-data2"></div>
 
 <%@include file="footer.jsp"%>
 </body>

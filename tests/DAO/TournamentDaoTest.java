@@ -32,7 +32,7 @@ public class TournamentDaoTest {
 
         System.out.println(ld.format(dateDisplayFormat));
 
-//        System.out.println(LocalDate.parse("2016-12-10", dateSaveFormat));
+//        System.out.println(LocalDate.parse("2016-12-10", dateInputFormat));
 //        System.out.println(LocalDateTime.parse("2016-12-10 11:00", dateTimeSaveFormat));
         Assert.assertNotNull(tournament);
         Assert.assertEquals("Чемпионат Европы 2016", tournament.getName());

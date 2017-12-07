@@ -16,16 +16,14 @@ public final class StaticContent {
     public static final String FILE_NAME = "unloaded_file";
     public static final String FILE_SUFFIX = ".txt";
 
-    private static final String DATE_TIME_FORMAT_SAVE = "yyyy-MM-dd HH:mm:ss.s";
     private static final String DATE_FORMAT_SAVE = "yyyy-MM-dd";
     private static final String DATE_FORMAT_DISPLAY = "dd.MM.yyyy";
     private static final String DATE_TIME_FORMAT_DISPLAY = "dd.MM.yyyy HH:mm";
     private static final String DATE_TIME_FORMAT_INPUT = "yyyy-MM-dd'T'HH:mm";
     private static final String TIME_FORMAT = "HHmmss";
 
-    public static final DateTimeFormatter dateTimeSaveFormat = DateTimeFormatter.ofPattern(DATE_TIME_FORMAT_SAVE, Locale.UK);
-    public static final DateTimeFormatter dateSaveFormat = DateTimeFormatter.ofPattern(DATE_FORMAT_SAVE, Locale.UK);
 
+    public static final DateTimeFormatter dateInputFormat = DateTimeFormatter.ofPattern(DATE_FORMAT_SAVE, Locale.UK);
     public static final DateTimeFormatter dateTimeInputFormat = DateTimeFormatter.ofPattern(DATE_TIME_FORMAT_INPUT, Locale.UK);
 
     public static final DateTimeFormatter dateDisplayFormat = DateTimeFormatter.ofPattern(DATE_FORMAT_DISPLAY, Locale.UK);

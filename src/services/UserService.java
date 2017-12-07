@@ -4,26 +4,29 @@ import DAO.UserDao;
 import DTO.*;
 import entities.Forecast;
 import entities.Match;
-import entities.Tournament;
 import entities.User;
-import utils.StaticContent;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static utils.StaticContent.*;
 
 public final class UserService {
     private static UserService INSTANCE;
+
+    private static final Object LOCK = new Object();
 
     private UserService() {}
 
@@ -43,20 +46,47 @@ public final class UserService {
 }
 
     public UserLoggedDto checkRegistration(UserCreateDto dto) {
-        if (dto.getFirstName().isEmpty() || dto.getSecondName().isEmpty() || dto.getEmail().isEmpty() || dto.getLogin().isEmpty() || dto.getPassword().isEmpty()) {
+        String email = dto.getEmail();
+
+        if (dto.getFirstName().isEmpty() || dto.getSecondName().isEmpty() || email.isEmpty() || dto.getLogin().isEmpty() || dto.getPassword().isEmpty()) {
             return new UserLoggedDto(true,"Заполните все поля");
+        } else {
+            Pattern pattern = Pattern.compile("\\w+@[a-zA-Z]+\\.[a-zA-Z]+");
+            Matcher matcher = pattern.matcher(email);
+            if (matcher.matches()) {
+                return new UserLoggedDto(false, "Успешно");
+            }
+            return new UserLoggedDto(true,"Неверный формат Email");
         }
-        return new UserLoggedDto(false, "Успешно");
     }
 
-    public UserLoggedDto checkPassword(LoginDto dto) {
-        User loggedUser = UserDao.getInstance().checkUser(dto.getLogin(), dto.getPassword());
-        if (loggedUser != null) {
+    private String md5(String in) {
+        String result = null;
+        try {
+            MessageDigest digest = MessageDigest.getInstance("MD5");
+            digest.reset();
+            digest.update(in.getBytes());
+            BigInteger bigInt = new BigInteger(1, digest.digest());
+            result = bigInt.toString(16);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public UserLoggedDto checkHashPassword(LoginDto dto) {
+        User loggedUser  = UserDao.getInstance().getShortUser(dto.getLogin());
+
+        if (loggedUser != null && checkHashPassword(dto, loggedUser.getPassword())) {
             return new UserLoggedDto("Все данные введены верно", "/homepage", true, loggedUser.getId(), loggedUser.getFirstName(),
                     loggedUser.getSecondName(), loggedUser.getUserState());
         } else {
             return new UserLoggedDto("Неверно введены логин или пароль", false);
         }
+    }
+
+    private boolean checkHashPassword(LoginDto dto, String password) {
+        return md5(password + dto.getRandomNumber()).equals(dto.getPassword());
     }
 
     public UserViewDto getUserById(Long userId) {
@@ -76,30 +106,52 @@ public final class UserService {
         return new UserViewDto(foundedUser.getId(), foundedUser.getFirstName(), foundedUser.getSecondName());
     }
 
-    public void printResultTable(Long tournamentId) {
+    public UnloadFileDto printResultTable(UnloadFileDto unloadFileDto) {
+        Long tournamentId = unloadFileDto.getIdTournament();
         List<UsersResultTableDto> users = UserService.getInstance().getUsersWithStatistic(tournamentId);
         TournamentShortViewDto tournament = TournamentService.getInstance().getTournamentName(tournamentId);
 
         if (!users.isEmpty()) {
-            synchronized (UserService.class) {
+            synchronized (LOCK) {
                 File file = new File(FILE_DIRECTORY, FILE_NAME + LocalTime.now().format(timeFormat) + FILE_SUFFIX);
                 try (FileWriter fileWriter = new FileWriter(file)) {
-                    fileWriter.write("Результаты турнира: " + tournament.getName() + "\n");
-                    fileWriter.write("------------------------------------------------------------");
-                    fileWriter.write("ФИО" + "6 очков" + "4 очка" + "3 очка" + "1 очко" + "БАЛЛЫ");
+                    fileWriter.write(buildField("Результаты турнира: ", 30) + buildField(tournament.getName(),47) + "\n");
+                    fileWriter.write("------------------------------------------------------------------------------|" + "\n");
+                    fileWriter.write("            ФИО             |" + "6 очков  |" + "4 очка   |" + "3 очка   |" + "1 очко   |" + "БАЛЛЫ    |" + "\n");
+                    fileWriter.write("------------------------------------------------------------------------------|" + "\n");
                     for (UsersResultTableDto user : users) {
-                        fileWriter.write(user.getFirstName() + user.getSecondName());
-                        fileWriter.write(user.getGuessedResultCount());
-                        fileWriter.write(user.getGuessedDiffInResultsCount());
-                        fileWriter.write(user.getGuessedDrawCount());
-                        fileWriter.write(user.getGuessedWinnersCount());
-                        fileWriter.write(user.getTotalPoints());
+                        fileWriter.write(buildField(user.getFirstName() + " " + user.getSecondName(), 28));
+                        fileWriter.write(buildField(String.valueOf(user.getGuessedResultCount()), 9));
+                        fileWriter.write(buildField(String.valueOf(user.getGuessedDiffInResultsCount()), 9));
+                        fileWriter.write(buildField(String.valueOf(user.getGuessedDrawCount()), 9));
+                        fileWriter.write(buildField(String.valueOf(user.getGuessedWinnersCount()), 9));
+                        fileWriter.write(buildField(String.valueOf(user.getTotalPoints()), 9) + "\n");
                     }
+                    fileWriter.write("------------------------------------------------------------------------------|" + "\n");
+                    unloadFileDto.setMessage("Выгрузка прошла успешно");
+                    return unloadFileDto;
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    unloadFileDto.setMessage(e.toString());
+                    return unloadFileDto;
                 }
             }
         }
+        unloadFileDto.setMessage("Нета данных для выгрузки");
+        return unloadFileDto;
+    }
+
+    private String buildField(String myString, int totalLength) {
+        int spaceCount = totalLength - myString.length();
+        if (spaceCount <= 0) {
+            return myString + "|";
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(myString);
+        for (int i = 0; i < spaceCount; i++) {
+            stringBuilder.append(" ");
+        }
+        stringBuilder.append("|");
+        return stringBuilder.toString();
     }
 
     public List<UsersResultTableDto> getUsersWithStatistic(Long tournamentId) {

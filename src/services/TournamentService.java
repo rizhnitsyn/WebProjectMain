@@ -46,7 +46,7 @@ public final class TournamentService {
         try {
             Team team = TeamDao.getInstance().getTeamById(addDto.getOrganizerId());
             Tournament addTournament = new Tournament(
-                    addDto.getName(), team, LocalDate.parse(addDto.getStartDate(), dateSaveFormat), 1);
+                    addDto.getName(), team, LocalDate.parse(addDto.getStartDate(), dateInputFormat), 1);
             Tournament savedTournament = TournamentDao.getInstance().addTournament(addTournament);
             return new TournamentViewDto(false, savedTournament.getId(), savedTournament.getName(), savedTournament.getOrganizer().getTeamName(),
                     savedTournament.getStartDate(), getTournamentStateName(savedTournament.getStateId()));

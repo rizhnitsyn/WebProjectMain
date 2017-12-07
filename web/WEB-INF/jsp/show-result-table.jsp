@@ -4,6 +4,9 @@
 <head>
     <title>All Matches of Tournament</title>
     <link href="${pageContext.request.contextPath}/resources/css/style.css" rel="stylesheet">
+    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/unload-file.js"></script>
+
 </head>
 <body>
 <%@include file="header.jsp"%>
@@ -32,9 +35,10 @@
         </c:forEach>
         </table>
     </c:if>
-<form action="${pageContext.request.contextPath}/resultTable" method="post">
-    <button class="btn-class" type="submit" name="idTournament" value="${requestScope.tournament.id}">Выгрузить в файл</button>
-</form>
+<%--<form action="${pageContext.request.contextPath}/resultTable" method="post">--%>
+    <button class="btn-class" type="submit" id="idTournament" name="idTournament" value="${requestScope.tournament.id}" onclick="sendToServer()">Выгрузить в файл</button>
+    <div class="form-title" id="displayed-data"></div>
+<%--</form>--%>
 
 <%@include file="footer.jsp"%>
 </body>

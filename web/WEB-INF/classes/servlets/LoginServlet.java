@@ -29,9 +29,10 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
         Gson gson = new Gson();
+
         String jsonString = req.getReader().lines().collect(Collectors.joining("\n"));
         LoginDto loginDto = gson.fromJson(jsonString, LoginDto.class);
-        UserLoggedDto loggedUser = UserService.getInstance().checkPassword(loginDto);
+        UserLoggedDto loggedUser = UserService.getInstance().checkHashPassword(loginDto);
         String outputJsonString = gson.toJson(loggedUser);
         if (loggedUser.isAuthorized()) {
             req.getSession().removeAttribute("loggedUser");
@@ -39,5 +40,4 @@ public class LoginServlet extends HttpServlet {
         }
         resp.getWriter().write(outputJsonString);
     }
-
 }

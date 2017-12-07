@@ -113,16 +113,16 @@ public class UserDao {
         return user;
     }
 
-    public User checkUser(String login, String password) {
+    public User getShortUser(String login) {
         User user = null;
         try (Connection connection = ConnectionManager.getConnection()){
-            String sql = "SELECT * FROM users WHERE login = ? and password = ?";
+            String sql = "SELECT * FROM users WHERE login = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, login);
-            statement.setString(2, password);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 user = createUser(resultSet);
+                user.setPassword(resultSet.getString("password"));
             }
             resultSet.close();
             statement.close();
@@ -132,6 +132,25 @@ public class UserDao {
         }
         return user;
 
+    }
+
+    public String getPassword(String login) {
+        String password = null;
+        try (Connection connection = ConnectionManager.getConnection()){
+            String sql = "SELECT * FROM users WHERE login = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, login);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                password = resultSet.getString("password");
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return password;
     }
 
     public User getUserWithStatistics(Long tournamentId, Long userId) {

@@ -97,7 +97,8 @@ public class MatchDao {
                         resultSet.getLong("b.tournament_id"),
                         resultSet.getString("b.tournament_name"),
                         new Team(resultSet.getLong("b.team_organizer_id"), resultSet.getString("e.team_name")),
-                        LocalDate.parse(resultSet.getString("b.tournament_start_date"), dateSaveFormat),
+//                        LocalDate.parse(resultSet.getString("b.tournament_start_date"), dateInputFormat),
+                        resultSet.getDate("b.tournament_start_date").toLocalDate(),
                         resultSet.getInt("b.tournament_state_id"));
                 match = createMatch(resultSet);
                 match.setTournament(tournament);

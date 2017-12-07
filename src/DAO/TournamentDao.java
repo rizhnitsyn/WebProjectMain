@@ -7,13 +7,8 @@ import connection.ConnectionManager;
 import entities.User;
 
 import java.sql.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import static utils.StaticContent.dateSaveFormat;
-import static utils.StaticContent.dateTimeSaveFormat;
 
 public class TournamentDao {
     private static TournamentDao INSTANCE;
@@ -93,7 +88,7 @@ public class TournamentDao {
                         resultSet.getLong("a.tournament_id"),
                         resultSet.getString("a.tournament_name"),
                         new Team(resultSet.getLong("a.team_organizer_id"), resultSet.getString("e.team_name")),
-                        LocalDate.parse(resultSet.getString("a.tournament_start_date"), dateSaveFormat),
+                        resultSet.getDate("a.tournament_start_date").toLocalDate(),
                         resultSet.getInt("a.tournament_state_id"));
                 tournament.addFootballMatch(createMatch(resultSet));
                 user = createUser(resultSet);
@@ -116,13 +111,13 @@ public class TournamentDao {
     }
 
     private Match createMatch(ResultSet resultSet) throws SQLException {
-        String stringDate = resultSet.getString("b.match_datetime");
-        if (stringDate == null) {
+        Timestamp startTime = resultSet.getTimestamp("b.match_datetime");
+        if (startTime == null) {
             return null;
         }
         return new Match(
                 resultSet.getLong("b.match_id"),
-                LocalDateTime.parse(stringDate, dateTimeSaveFormat),
+                startTime.toLocalDateTime(),
                 resultSet.getInt("b.match_state_id"),
                 resultSet.getInt("b.match_type_id"));
     }
@@ -148,7 +143,7 @@ public class TournamentDao {
             String sql = "UPDATE tournaments SET tournament_name =?, tournament_start_date =?, tournament_state_id =? WHERE tournament_id =?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, tournament.getName());
-            statement.setDate(2, Date.valueOf(tournament.getStartDate().toString()));
+            statement.setDate(2, Date.valueOf(tournament.getStartDate()));
             statement.setLong(3,tournament.getStateId());
             statement.setLong(4,tournament.getId());
             statement.executeUpdate();

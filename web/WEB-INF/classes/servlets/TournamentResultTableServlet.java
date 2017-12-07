@@ -1,6 +1,8 @@
 package servlets;
 
+import DTO.UnloadFileDto;
 import DTO.UsersResultTableDto;
+import com.google.gson.Gson;
 import entities.User;
 import services.MatchService;
 import services.TeamService;
@@ -14,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static utils.StaticContent.createViewPath;
 
@@ -32,7 +35,17 @@ public class TournamentResultTableServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Long tournamentId = Long.valueOf(req.getParameter("idTournament"));
-        UserService.getInstance().printResultTable(tournamentId);
+        resp.setContentType("application/json");
+        Gson gson = new Gson();
+        String jsonString = req.getReader().lines().collect(Collectors.joining("\n"));
+        UnloadFileDto unloadFileDto = gson.fromJson(jsonString, UnloadFileDto.class);
+
+        Long tournamentID = unloadFileDto.getIdTournament();
+        UnloadFileDto answerDto = UserService.getInstance().printResultTable(unloadFileDto);
+
+        req.setAttribute("users", UserService.getInstance().getUsersWithStatistic(tournamentID));
+        req.setAttribute("tournament", TournamentService.getInstance().getTournamentName(tournamentID));
+
+        resp.getWriter().write(gson.toJson(answerDto));
     }
 }

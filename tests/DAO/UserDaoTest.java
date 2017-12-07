@@ -1,12 +1,18 @@
 package DAO;
 
+import DTO.UserLoggedDto;
 import entities.User;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class UserDaoTest {
 
@@ -53,5 +59,35 @@ public class UserDaoTest {
         List<User> users = userDao.getListOfUsers();
         Assert.assertNotNull(users);
         Assert.assertTrue(users.size() > 0);
+    }
+
+    @Test
+    public void testRegExp() {
+        String text = "ra@bsb.by1";
+        Pattern pattern = Pattern.compile("\\w+@[a-zA-Z]+\\.[a-zA-Z]+");
+        Matcher matcher = pattern.matcher(text);
+        if (matcher.matches()) {
+            System.out.println("good");
+        } else {
+            System.out.println("bad");
+        }
+
+
+    }
+
+    @Test
+    public void md5() {
+        String in = "11111";
+        String result = null;
+        try {
+            MessageDigest digest = MessageDigest.getInstance("MD5");
+            digest.reset();
+            digest.update(in.getBytes());
+            BigInteger bigInt = new BigInteger(1, digest.digest());
+            result = bigInt.toString(16);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        System.out.println(result);
     }
 }

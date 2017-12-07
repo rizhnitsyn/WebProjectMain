@@ -12,4 +12,5 @@ import java.io.Serializable;
 public class LoginDto implements Serializable {
     private String login;
     private String password;
+    private String randomNumber;
 }
