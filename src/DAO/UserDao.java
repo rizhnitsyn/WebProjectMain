@@ -207,7 +207,9 @@ public class UserDao {
 
     private void fillingUserWithData(User user, ResultSet rs) throws SQLException {
         Long forecastId = rs.getLong("d.forecast_id");
-        if (forecastId == 0) {
+        String teamResultFirst = rs.getString("e.first_team_result");
+        String teamResultSecond = rs.getString("e.second_team_result");
+        if (forecastId == 0 || teamResultFirst == null || teamResultSecond == null) {
             return;
         }
         Match match = new Match(

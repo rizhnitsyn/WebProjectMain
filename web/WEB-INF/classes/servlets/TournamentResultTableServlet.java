@@ -26,7 +26,9 @@ public class TournamentResultTableServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long tournamentId = Long.valueOf(req.getParameter("id"));
-        req.setAttribute("users", UserService.getInstance().getUsersWithStatistic(tournamentId));
+
+        List<UsersResultTableDto> usersWithStatistic = UserService.getInstance().getUsersWithStatistic(tournamentId);
+        req.setAttribute("users", usersWithStatistic);
         req.setAttribute("tournament", TournamentService.getInstance().getTournamentName(tournamentId));
         req.getServletContext()
                 .getRequestDispatcher(createViewPath("show-result-table"))

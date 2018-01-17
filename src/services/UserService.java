@@ -204,6 +204,7 @@ public final class UserService {
     }
 
     private int guessedResultsCount(User user) {
+
         return (int) user.getForecasts().stream()
                 .filter(forecast -> forecast.getFirstTeamForecast() == forecast.getMatch().getFirstTeamResult() &&
                         forecast.getSecondTeamForecast() == forecast.getMatch().getSecondTeamResult())
